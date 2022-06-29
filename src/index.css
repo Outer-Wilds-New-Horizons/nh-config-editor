@@ -11,3 +11,27 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.object-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.object-caret {
+    transition: transform 100ms;
+}
+
+.object-caret.open {
+    transform: rotate(90deg) translateX(-15%) translateY(15%);
+}
+
+.folder-caret {
+    transition: transform 100ms;
+    transform: translateY(-20%);
+}
+
+.folder-caret.open {
+    transform: rotate(90deg) translateX(-20%) translateY(0%);
+}
+
+

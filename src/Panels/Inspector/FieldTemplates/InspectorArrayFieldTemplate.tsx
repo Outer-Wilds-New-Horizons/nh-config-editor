@@ -10,8 +10,6 @@ function InspectorArrayFieldTemplate(props: ArrayFieldTemplateProps) {
 
     const [open, setOpen] = useState(false);
 
-    console.log(props.items);
-
     for (let i = 0; i < props.items.length; i++) {
         const e = props.items[i];
         const str = `Item #${i + 1}`

@@ -56,10 +56,14 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
         "resizable": true,
         "title": "New Horizons Config Editor",
-        "width": 800
+        "minWidth": 1200,
+        "width": 1200,
+        "height": 1000,
+        "minHeight": 1000,
+        "center": true,
+        "maximized": true
       }
     ]
   }

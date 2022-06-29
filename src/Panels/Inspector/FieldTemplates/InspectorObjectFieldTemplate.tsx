@@ -4,7 +4,6 @@ import {useState} from "react";
 import {Collapse} from "react-bootstrap";
 import {CaretRightFill} from "react-bootstrap-icons";
 
-import "../inspector.css";
 import {camelToTitleCase} from "../../../Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
