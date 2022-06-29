@@ -4,8 +4,8 @@ import Col from "react-bootstrap/Col";
 import {
     Box2,
     Bullseye,
-    FileEarmark,
     FileEarmarkCodeFill,
+    FileEarmarkFill,
     FileEarmarkImageFill,
     FileEarmarkMusicFill,
     FileMedicalFill,
@@ -20,7 +20,6 @@ export type ProjectItemProps = {
 }
 
 function getIcon(fileType: ProjectFileType): ReactElement {
-
     switch (fileType) {
         case "planet":
             return <Globe/>;
@@ -41,7 +40,7 @@ function getIcon(fileType: ProjectFileType): ReactElement {
         case "sound":
             return <FileEarmarkMusicFill/>;
         default:
-            return <FileEarmark/>;
+            return <FileEarmarkFill/>;
     }
 }
 

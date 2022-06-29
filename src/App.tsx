@@ -26,13 +26,14 @@ async function switchSchema(setSchema: CallableFunction) {
 function App() {
 
     const [schema, setSchema] = useState(body_schema as JSONSchema7);
+    const [projectPath, setProjectPath] = useState("C:/Users/bwc67/AppData/Roaming/OuterWildsModManager/OWML/Mods/xen.RealSolarSystem");
 
     return (
         <div className="App h-100">
             <Container fluid>
                 <Row>
                     <Col>
-                        <ProjectView/>
+                        <ProjectView projectPath={projectPath}/>
                     </Col>
                     <Col xs={8}>
                         <Inspector schema={schema}/>

@@ -17,8 +17,8 @@ function ProjectFolder(props: ProjectFolderProps) {
 
     const [open, setOpen] = useState(false);
 
-    return <Row className={"object-header"} onClick={() => setOpen(!open)}>
-        <Col className={"d-flex align-items-center"}>
+    return <Row>
+        <Col onClick={() => setOpen(!open)} className={"d-flex w-100 object-header align-items-center"}>
             <span>
                 <CaretRightFill className={"fs-6 my-auto folder-caret " + (open ? "open" : "")}/>
                 <span className={"fs-5 ms-2"}>{props.name}</span>

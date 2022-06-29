@@ -2,8 +2,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import ProjectItem from "./ProjectItem";
 import {invoke} from "@tauri-apps/api/tauri";
-import {useAsync} from "react-async";
 import {Spinner} from "react-bootstrap";
+import {useState} from "react";
 
 export type ProjectFileType =
     "planet" |
@@ -40,8 +40,6 @@ export type ProjectViewProps = {
 
 async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFile> {
 
-    //console.log(`Building ${path}`);
-
     const is_dir = await invoke("is_dir", {path});
 
     const child_paths: string[] = is_dir ? await invoke("list_dir", {path}) : [];
@@ -64,17 +62,15 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
 
     } else {
 
-        console.log(rootDir);
-
         if (rootDir === "planets" && extension === "json") {
             fileType = "planet";
         } else if (rootDir === "systems" && extension === "json") {
             fileType = "system";
         } else if (rootDir === "translations" && extension === "json") {
             fileType = "translation";
-        } else if (rootDir === null && fileName === "addon-manifest.json") {
+        } else if (fileName === "addon-manifest.json") {
             fileType = "addon_manifest";
-        } else if (rootDir === null && fileName === "manifest.json") {
+        } else if (fileName === "manifest.json") {
             fileType = "mod_manifest";
         } else if (rootDir === "assets" && (extension === "bundle" || extension === "assetbundle")) {
             fileType = "asset-bundle";
@@ -92,31 +88,28 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
 
 }
 
-async function buildProject(projectPath: string): Promise<ProjectFile[]> {
-
+async function buildProjectFiles(projectPath: string): Promise<ProjectFile[]> {
     const rootFilePaths: string[] = await invoke("list_dir", {path: projectPath});
     const rootFiles: ProjectFile[] = [];
+
     for (const rootFilePath of rootFilePaths) {
-
-        console.log(`Building ${rootFilePath}`);
-
         rootFiles.push(await recursiveBuild(rootFilePath, projectPath));
     }
-
-    console.log(rootFiles);
 
     return rootFiles;
 }
 
-function ProjectView() {
+function ProjectView(props: ProjectViewProps) {
 
-    const testProjectPath: string = "C:/Users/bwc67/AppData/Roaming/OuterWildsModManager/OWML/Mods/xen.RealSolarSystem"
+    const [loadStarted, setLoadStarted] = useState(false);
+    const [data, setData] = useState<ProjectFile[] | null>(null);
 
-    const {data, error, isPending} = useAsync({promise: buildProject(testProjectPath), promiseArgs: [testProjectPath]});
+    if (!loadStarted) {
+        setLoadStarted(true);
+        buildProjectFiles(props.projectPath).then((out) => setData(out));
+    }
 
-    if (isPending) return <Spinner animation={"border"} variant="primary"/>;
-    if (error) return <div>Error: {error.message}</div>;
-    if (data === undefined) return <div>No data</div>;
+    if (data === null) return <Spinner animation={"border"} variant="primary"/>;
 
     return <>
         <Row className={"border-bottom"}>
