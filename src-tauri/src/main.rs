@@ -12,7 +12,9 @@ fn main() {
             commands::list_dir,
             commands::is_dir,
             commands::get_metadata,
-            commands::root_dir])
+            commands::root_dir,
+            commands::load_image_as_base_64,
+            commands::read_file_as_string])
         .menu(tauri::Menu::os_default(&context.package_info().name))
         .run(context)
         .expect("error while running tauri application");

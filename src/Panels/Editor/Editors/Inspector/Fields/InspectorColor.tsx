@@ -1,8 +1,8 @@
 import {FieldProps} from "@rjsf/core";
-import Form from "react-bootstrap/Form";
-import {ChangeEvent, useState} from "react";
 import hexRgb from "hex-rgb";
+import {ChangeEvent, useState} from "react";
 import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
 declare type FormControlElement = HTMLInputElement | HTMLTextAreaElement;

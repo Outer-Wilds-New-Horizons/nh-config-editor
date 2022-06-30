@@ -1,6 +1,6 @@
 import {FieldProps} from "@rjsf/core";
-import {Form} from "react-bootstrap";
 import {useState} from "react";
+import {Form} from "react-bootstrap";
 
 function InspectorBoolean(props: FieldProps) {
     const [checked, setChecked] = useState((props.schema.default ?? false) as boolean);

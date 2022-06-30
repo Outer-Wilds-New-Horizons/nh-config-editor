@@ -1,18 +1,19 @@
-body {
+html, body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    height: 100vh;
+    max-height: 100vh;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.div#root {
+    height: 100vh;
+    max-height: 100vh;
 }
 
-.object-header {
+.tab-content {
+    height: 100%;
+}
+
+.interactable {
     cursor: pointer;
     user-select: none;
 }
@@ -27,11 +28,20 @@ code {
 
 .folder-caret {
     transition: transform 100ms;
-    transform: translateY(-20%);
 }
 
 .folder-caret.open {
-    transform: rotate(90deg) translateX(-20%) translateY(0%);
+    transform: rotate(90deg) translateX(-15%) translateY(0%);
 }
 
+.overflow-y-auto {
+    overflow-y: auto;
+}
 
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
+.inspector-form > div:last-child {
+    display: none;
+}

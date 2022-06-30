@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
-import {InfoCircle} from "react-bootstrap-icons";
 import {OverlayTrigger} from "react-bootstrap";
+import {InfoCircle} from "react-bootstrap-icons";
 
 export type InfoIconTriggerProps = {
     popover: PropTypes.ReactElementLike

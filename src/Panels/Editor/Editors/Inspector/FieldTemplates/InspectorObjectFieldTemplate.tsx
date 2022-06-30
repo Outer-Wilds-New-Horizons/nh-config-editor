@@ -1,10 +1,10 @@
 import {ObjectFieldTemplateProps} from "@rjsf/core";
-import Form from "react-bootstrap/Form";
 import {useState} from "react";
 import {Collapse} from "react-bootstrap";
 import {CaretRightFill} from "react-bootstrap-icons";
+import Form from "react-bootstrap/Form";
 
-import {camelToTitleCase} from "../../../Utils";
+import {camelToTitleCase} from "../../../../../Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 
@@ -14,15 +14,15 @@ function InspectorObjectFieldTemplate({title, description, properties, registry}
 
     const [open, setOpen] = useState(!shouldRenderLabel);
 
-    return <Form.Group className={"border-top border-bottom "}>
+    return <Form.Group className={shouldRenderLabel ? ("border rounded" + (open ? " pb-4" : "")) : ""}>
         {shouldRenderLabel &&
-            <h3 onClick={() => setOpen(!open)} className={"object-header h2 align-middle my-0 pb-1"}>
+            <h3 onClick={() => setOpen(!open)} className={"interactable h2 align-middle my-0 p-2"}>
                 <CaretRightFill className={"pb-2 pe-1 object-caret " + (open ? "open" : "")}/>
                 {camelToTitleCase(title)}
                 <DescriptionPopover id={title} title={title} description={description}/>
             </h3>
         }
-        <Collapse className={shouldRenderLabel ? "ms-4" : ""} in={open}>
+        <Collapse className={shouldRenderLabel ? "mx-4" : ""} in={open}>
             <div>
                 {
                     properties.map(e => (

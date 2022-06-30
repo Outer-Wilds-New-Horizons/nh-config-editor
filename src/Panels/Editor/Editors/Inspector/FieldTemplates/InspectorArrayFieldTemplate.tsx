@@ -1,8 +1,8 @@
 import {ArrayFieldTemplateProps} from "@rjsf/core";
 import {cloneElement, useState} from "react";
-import {CaretRightFill} from "react-bootstrap-icons";
-import {camelToTitleCase} from "../../../Utils";
 import {Button, Collapse} from "react-bootstrap";
+import {CaretRightFill} from "react-bootstrap-icons";
+import {camelToTitleCase} from "../../../../../Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 
@@ -12,14 +12,14 @@ function InspectorArrayFieldTemplate(props: ArrayFieldTemplateProps) {
 
     for (let i = 0; i < props.items.length; i++) {
         const e = props.items[i];
-        const str = `Item #${i + 1}`
+        const str = `Item #${i + 1}`;
         e.children = cloneElement(e.children, {epicLabel: str, title: str, name: str});
     }
 
-    return <div className={"border-bottom border-top"}>
-        <div className={"d-flex justify-content-between"}>
+    return <div className={"border rounded"}>
+        <div className={"d-flex justify-content-between p-2"}>
             <h4 className={"align-middle my-0 d-inline"}>
-            <span className={"object-header"} onClick={() => setOpen(!open)}>
+            <span className={"interactable"} onClick={() => setOpen(!open)}>
                 <CaretRightFill className={"pb-2 pe-1 object-caret " + (open ? "open" : "")}/>
                 {camelToTitleCase(props.title)}
             </span>
@@ -37,7 +37,7 @@ function InspectorArrayFieldTemplate(props: ArrayFieldTemplateProps) {
         </div>
 
         <Collapse in={open}>
-            <div className={"pb-2 ms-2"}>
+            <div className={"pb-2 mx-2"}>
                 {
                     props.items.map((element, index) =>
                         <div key={element.key}>

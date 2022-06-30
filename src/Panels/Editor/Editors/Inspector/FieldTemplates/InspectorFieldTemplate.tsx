@@ -1,11 +1,11 @@
-import Form from "react-bootstrap/Form";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import {FieldTemplateProps} from "@rjsf/core";
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import Row from "react-bootstrap/Row";
+import {camelToTitleCase} from "../../../../../Utils";
+import InspectorColor from "../Fields/InspectorColor";
 import InspectorVector2 from "../Fields/InspectorVector2";
 import InspectorVector3 from "../Fields/InspectorVector3";
-import InspectorColor from "../Fields/InspectorColor";
-import {camelToTitleCase} from "../../../Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 

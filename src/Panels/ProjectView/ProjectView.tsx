@@ -1,42 +1,13 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import ProjectItem from "./ProjectItem";
 import {invoke} from "@tauri-apps/api/tauri";
-import {Spinner} from "react-bootstrap";
 import {useState} from "react";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import {CommonProps} from "../../App";
+import CenteredSpinner from "../Common/CenteredSpinner";
+import {ProjectFile, ProjectFileType} from "./ProjectFile";
+import ProjectItem from "./ProjectItem";
 
-export type ProjectFileType =
-    "planet" |
-    "system" |
-    "translation" |
-    "addon_manifest" |
-    "mod_manifest" |
-    "asset-bundle" |
-    "xml" |
-    "image" |
-    "sound" |
-    "other";
-
-export class ProjectFile {
-
-    isFolder: boolean;
-    children: ProjectFile[];
-    name: string;
-    path: string;
-    fileType: ProjectFileType;
-
-    constructor(isFolder: boolean, children: ProjectFile[], name: string, path: string, fileType: ProjectFileType) {
-        this.isFolder = isFolder;
-        this.children = children;
-        this.name = name;
-        this.path = path;
-        this.fileType = fileType;
-    }
-}
-
-export type ProjectViewProps = {
-    projectPath: string
-}
+export type ProjectViewProps = { projectPath: string } & CommonProps;
 
 async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFile> {
 
@@ -72,7 +43,7 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
             fileType = "addon_manifest";
         } else if (fileName === "manifest.json") {
             fileType = "mod_manifest";
-        } else if (rootDir === "assets" && (extension === "bundle" || extension === "assetbundle")) {
+        } else if (extension === "" || extension === "bundle" || extension === "assetbundle") {
             fileType = "asset-bundle";
         } else if (extension === "xml") {
             fileType = "xml";
@@ -80,6 +51,8 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
             fileType = "image";
         } else if (extension === "mp3" || extension === "wav") {
             fileType = "sound";
+        } else if (extension === "dll") {
+            fileType = "binary";
         }
 
         return new ProjectFile(false, [], fileName, path, fileType);
@@ -109,17 +82,29 @@ function ProjectView(props: ProjectViewProps) {
         buildProjectFiles(props.projectPath).then((out) => setData(out));
     }
 
-    if (data === null) return <Spinner animation={"border"} variant="primary"/>;
+    if (data === null) return <CenteredSpinner animation={"border"} variant={"primary"}/>;
+
+    const openFile = (file: ProjectFile) => {
+
+        const check = props.openFiles.filter(f => f.path === file.path);
+
+        if (check.length === 0) {
+            props.setOpenFiles(props.openFiles.concat([file]));
+        }
+
+        props.setSelectedFile(file);
+
+    };
 
     return <>
         <Row className={"border-bottom"}>
             <Col>
-                <h1>TestProject</h1>
+                <h3 className={"my-2"}>TestProject</h3>
             </Col>
         </Row>
-        <Row>
+        <Row className={"border-bottom"}>
             <Col>
-                {data.map(item => (<ProjectItem file={item}/>))}
+                {data.map(item => (<ProjectItem key={item.path} openFile={openFile} file={item}/>))}
             </Col>
         </Row>
     </>
