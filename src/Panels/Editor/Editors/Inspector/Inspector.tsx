@@ -34,7 +34,7 @@ function Inspector(props: InspectorProps) {
     }
 
     const customFields = {
-        BooleanField: InspectorBoolean,
+        BooleanField: InspectorBoolean
     };
 
     return <Form className={"mx-3 inspector-form"} formData={formData} schema={props.schema} fields={customFields}

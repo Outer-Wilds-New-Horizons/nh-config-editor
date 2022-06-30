@@ -22,7 +22,7 @@ function ImageView(props: EditorProps) {
         return <CenteredSpinner animation={"border"} variant={"primary"}/>;
     } else {
         return <div className={"d-flex justify-content-center align-items-center h-100"}>
-            <Image src={"data:image/png;base64," + imageData} alt={props.file.name} fluid/>
+            <Image src={`data:image/png;base64,${imageData}`} alt={props.file.name} fluid/>
         </div>;
     }
 

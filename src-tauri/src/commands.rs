@@ -3,7 +3,7 @@ use std::fs;
 #[tauri::command]
 pub fn list_dir(path: String) -> Vec<String> {
     let mut result = Vec::new();
-    for entry in std::fs::read_dir(path).unwrap() {
+    for entry in fs::read_dir(path).unwrap() {
         let entry = entry.unwrap();
         result.push(entry.path().display().to_string());
     }
@@ -12,7 +12,7 @@ pub fn list_dir(path: String) -> Vec<String> {
 
 #[tauri::command]
 pub fn is_dir(path: String) -> bool {
-    return std::fs::metadata(path).unwrap().is_dir();
+    return fs::metadata(path).unwrap().is_dir();
 }
 
 #[tauri::command]

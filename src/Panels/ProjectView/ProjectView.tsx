@@ -1,35 +1,35 @@
-import {invoke} from "@tauri-apps/api/tauri";
-import {useState} from "react";
+import {invoke,} from "@tauri-apps/api/tauri";
+import {useState,} from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import {CommonProps} from "../../App";
+import {CommonProps,} from "../../App";
 import CenteredSpinner from "../Common/CenteredSpinner";
-import {ProjectFile, ProjectFileType} from "./ProjectFile";
+import {ProjectFile, ProjectFileType,} from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
 
 export type ProjectViewProps = { projectPath: string } & CommonProps;
 
-async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFile> {
+async function recursiveBuild(path: string, rootPath: string,): Promise<ProjectFile> {
 
-    const is_dir = await invoke("is_dir", {path});
+    const isDir = await invoke("is_dir", {path,});
 
-    const child_paths: string[] = is_dir ? await invoke("list_dir", {path}) : [];
+    const childPaths: string[] = isDir ? await invoke("list_dir", {path,}) : [];
 
-    const [fileName, extension] = await invoke("get_metadata", {path});
+    const [fileName, extension,] = await invoke("get_metadata", {path,});
 
-    const rootDir: string | null = is_dir ? null : await invoke("root_dir", {path, rootPath});
+    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath,});
 
     let fileType: ProjectFileType = "other";
 
-    if (is_dir) {
+    if (isDir) {
 
-        let children: ProjectFile[] = [];
+        const children: ProjectFile[] = [];
 
-        for (const childPath of child_paths) {
-            children.push(await recursiveBuild(childPath, rootPath));
+        for (const childPath of childPaths) {
+            children.push(await recursiveBuild(childPath, rootPath,));
         }
 
-        return new ProjectFile(true, children, fileName, path, "other");
+        return new ProjectFile(true, children, fileName, path, "other",);
 
     } else {
 
@@ -44,7 +44,7 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
         } else if (fileName === "manifest.json") {
             fileType = "mod_manifest";
         } else if (extension === "" || extension === "bundle" || extension === "assetbundle") {
-            fileType = "asset-bundle";
+            fileType = "asset_bundle";
         } else if (extension === "xml") {
             fileType = "xml";
         } else if (extension === "png" || extension === "jpg" || extension === "jpeg") {
@@ -55,44 +55,44 @@ async function recursiveBuild(path: string, rootPath: string): Promise<ProjectFi
             fileType = "binary";
         }
 
-        return new ProjectFile(false, [], fileName, path, fileType);
+        return new ProjectFile(false, [], fileName, path, fileType,);
 
     }
 
 }
 
-async function buildProjectFiles(projectPath: string): Promise<ProjectFile[]> {
-    const rootFilePaths: string[] = await invoke("list_dir", {path: projectPath});
+async function buildProjectFiles(projectPath: string,): Promise<ProjectFile[]> {
+    const rootFilePaths: string[] = await invoke("list_dir", {path: projectPath,});
     const rootFiles: ProjectFile[] = [];
 
     for (const rootFilePath of rootFilePaths) {
-        rootFiles.push(await recursiveBuild(rootFilePath, projectPath));
+        rootFiles.push(await recursiveBuild(rootFilePath, projectPath,));
     }
 
     return rootFiles;
 }
 
-function ProjectView(props: ProjectViewProps) {
+function ProjectView(props: ProjectViewProps,) {
 
-    const [loadStarted, setLoadStarted] = useState(false);
-    const [data, setData] = useState<ProjectFile[] | null>(null);
+    const [loadStarted, setLoadStarted,] = useState(false,);
+    const [data, setData,] = useState<ProjectFile[] | null>(null,);
 
     if (!loadStarted) {
-        setLoadStarted(true);
-        buildProjectFiles(props.projectPath).then((out) => setData(out));
+        setLoadStarted(true,);
+        buildProjectFiles(props.projectPath,).then((out,) => setData(out,));
     }
 
     if (data === null) return <CenteredSpinner animation={"border"} variant={"primary"}/>;
 
-    const openFile = (file: ProjectFile) => {
+    const openFile = (file: ProjectFile,) => {
 
-        const check = props.openFiles.filter(f => f.path === file.path);
+        const check = props.openFiles.filter(f => f.path === file.path,);
 
         if (check.length === 0) {
-            props.setOpenFiles(props.openFiles.concat([file]));
+            props.setOpenFiles(props.openFiles.concat([file,]));
         }
 
-        props.setSelectedFile(file);
+        props.setSelectedFile(file,);
 
     };
 
@@ -107,7 +107,7 @@ function ProjectView(props: ProjectViewProps) {
                 {data.map(item => (<ProjectItem key={item.path} openFile={openFile} file={item}/>))}
             </Col>
         </Row>
-    </>
+    </>;
 }
 
 export default ProjectView;

@@ -18,7 +18,7 @@ export type ProjectFileType =
     "translation" |
     "addon_manifest" |
     "mod_manifest" |
-    "asset-bundle" |
+    "asset_bundle" |
     "xml" |
     "image" |
     "sound" |
@@ -53,7 +53,7 @@ export class ProjectFile {
                 return <FileMedicalFill/>;
             case "mod_manifest":
                 return <FileMedicalFill/>;
-            case "asset-bundle":
+            case "asset_bundle":
                 return <Box2Fill/>;
             case "xml":
                 return <FileEarmarkCodeFill/>;

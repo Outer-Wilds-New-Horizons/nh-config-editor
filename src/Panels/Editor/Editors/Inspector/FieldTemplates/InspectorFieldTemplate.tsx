@@ -11,17 +11,17 @@ import DescriptionPopover from "./DescriptionPopover";
 
 function InspectorFieldTemplate(props: FieldTemplateProps) {
 
-    if (props.label != undefined && props.label.startsWith("$")) return <></>;
+    if (props.label !== undefined && props.label.startsWith("$")) return <></>;
 
     const colClass: string = props.schema.type !== "object" && props.schema.type !== "array" ? "offset-6" : "";
 
-    const schemaKeys = JSON.stringify(props.schema.properties == undefined ? [] : Object.keys(props.schema.properties));
+    const schemaKeys = JSON.stringify(props.schema.properties === undefined ? [] : Object.keys(props.schema.properties));
 
     const vector2 = schemaKeys === JSON.stringify(["x", "y"]);
     const vector3 = schemaKeys === JSON.stringify(["x", "y", "z"]) && props.label !== "coords";
     const color = schemaKeys === JSON.stringify(["r", "g", "b", "a"]);
 
-    const shouldDisplayLabel: boolean = props.displayLabel || vector2 || vector3 || color || props.schema.type == "boolean";
+    const shouldDisplayLabel: boolean = props.displayLabel || vector2 || vector3 || color || props.schema.type === "boolean";
 
     let elem = props.children;
 
@@ -33,11 +33,11 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
         elem = <InspectorColor onChange={props.onChange} {...props.children.props}/>;
     }
 
-    if (props.label == "") {
+    if (props.label === "") {
         console.log("EPIC LABEL!!!!");
     }
 
-    return <Form.Group as={Row} className={props.classNames + " my-2 align-items-center"}>
+    return <Form.Group as={Row} className={`${props.classNames} my-2 align-items-center`}>
         {shouldDisplayLabel && <>
             <Col>
                 <Form.Label className={"mb-0 h-100 user-select-none"}
@@ -51,7 +51,7 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
         {!shouldDisplayLabel && <Col className={colClass}>
             {props.children}
         </Col>}
-    </Form.Group>
+    </Form.Group>;
 }
 
 export default InspectorFieldTemplate;

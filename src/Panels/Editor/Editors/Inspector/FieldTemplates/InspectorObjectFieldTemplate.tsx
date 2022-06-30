@@ -1,24 +1,24 @@
-import {ObjectFieldTemplateProps} from "@rjsf/core";
-import {useState} from "react";
-import {Collapse} from "react-bootstrap";
-import {CaretRightFill} from "react-bootstrap-icons";
+import {ObjectFieldTemplateProps,} from "@rjsf/core";
+import {useState,} from "react";
+import {Collapse,} from "react-bootstrap";
+import {CaretRightFill,} from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 
-import {camelToTitleCase} from "../../../../../Utils";
+import {camelToTitleCase,} from "../../../../../Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 
-function InspectorObjectFieldTemplate({title, description, properties, registry}: ObjectFieldTemplateProps) {
+function InspectorObjectFieldTemplate({title, description, properties, registry,}: ObjectFieldTemplateProps,) {
 
-    const shouldRenderLabel: boolean = title != registry.rootSchema.title;
+    const shouldRenderLabel: boolean = title !== registry.rootSchema.title;
 
-    const [open, setOpen] = useState(!shouldRenderLabel);
+    const [open, setOpen,] = useState(!shouldRenderLabel,);
 
-    return <Form.Group className={shouldRenderLabel ? ("border rounded" + (open ? " pb-4" : "")) : ""}>
+    return <Form.Group className={shouldRenderLabel ? (`border rounded${open ? " pb-4" : ""}`) : ""}>
         {shouldRenderLabel &&
-            <h3 onClick={() => setOpen(!open)} className={"interactable h2 align-middle my-0 p-2"}>
-                <CaretRightFill className={"pb-2 pe-1 object-caret " + (open ? "open" : "")}/>
-                {camelToTitleCase(title)}
+            <h3 onClick={() => setOpen(!open,)} className={"interactable h2 align-middle my-0 p-2"}>
+                <CaretRightFill className={`pb-2 pe-1 object-caret ${open ? "open" : ""}`}/>
+                {camelToTitleCase(title,)}
                 <DescriptionPopover id={title} title={title} description={description}/>
             </h3>
         }
@@ -27,11 +27,11 @@ function InspectorObjectFieldTemplate({title, description, properties, registry}
                 {
                     properties.map(e => (
                         <div key={e.content.key}>{e.content}</div>
-                    ))
+                    ),)
                 }
             </div>
         </Collapse>
-    </Form.Group>
+    </Form.Group>;
 }
 
 export default InspectorObjectFieldTemplate;

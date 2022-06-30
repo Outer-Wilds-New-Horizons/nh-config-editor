@@ -25,7 +25,7 @@ function InspectorColor(props: FieldProps) {
         setAlpha(newAlpha);
         const rgbCol = hexRgb(currentCol);
         props.onChange({r: rgbCol.red, g: rgbCol.green, b: rgbCol.blue, a: newAlpha});
-    }
+    };
 
     return <Row>
         <Col>
@@ -35,7 +35,7 @@ function InspectorColor(props: FieldProps) {
             <Form.Control min={0} max={255} onChange={alphaChanged} type={"number"} placeholder={"alpha"}
                           value={currentAlpha}/>
         </Col>
-    </Row>
+    </Row>;
 }
 
 export default InspectorColor;

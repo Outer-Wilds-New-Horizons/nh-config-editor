@@ -19,10 +19,10 @@ function InspectorArrayFieldTemplate(props: ArrayFieldTemplateProps) {
     return <div className={"border rounded"}>
         <div className={"d-flex justify-content-between p-2"}>
             <h4 className={"align-middle my-0 d-inline"}>
-            <span className={"interactable"} onClick={() => setOpen(!open)}>
-                <CaretRightFill className={"pb-2 pe-1 object-caret " + (open ? "open" : "")}/>
-                {camelToTitleCase(props.title)}
-            </span>
+                <span className={"interactable"} onClick={() => setOpen(!open)}>
+                    <CaretRightFill className={`pb-2 pe-1 object-caret ${open ? "open" : ""}`}/>
+                    {camelToTitleCase(props.title)}
+                </span>
                 {props.schema.description !== undefined &&
                     <DescriptionPopover id={props.title} title={props.title} description={props.schema.description}/>
                 }
@@ -57,7 +57,7 @@ function InspectorArrayFieldTemplate(props: ArrayFieldTemplateProps) {
                 }
             </div>
         </Collapse>
-    </div>
+    </div>;
 
 }
 

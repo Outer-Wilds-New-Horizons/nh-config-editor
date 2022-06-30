@@ -15,7 +15,7 @@ function InspectorVector2(props: FieldProps) {
         (name === "x" ? setX : setY)(newVal);
         if (name === "x") props.onChange({x: newVal, y: y});
         else props.onChange({x: x, y: newVal});
-    }
+    };
 
     return <Row>
         <Col>
@@ -24,8 +24,8 @@ function InspectorVector2(props: FieldProps) {
         <Col>
             <Form.Control type={"number"} value={y} onChange={(e) => onUpdate(e.target.value, "y")}/>
         </Col>
-    </Row>
+    </Row>;
 
 }
 
-export default InspectorVector2
+export default InspectorVector2;

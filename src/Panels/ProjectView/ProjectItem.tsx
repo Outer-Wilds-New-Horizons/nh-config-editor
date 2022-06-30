@@ -13,7 +13,7 @@ function ProjectItem(props: ProjectItemProps) {
 
     if (props.file.isFolder) {
         return <ProjectFolder openFile={props.openFile} concrete={false} name={props.file.name}
-                              children={props.file.children}/>;
+                              folderChildren={props.file.children}/>;
     } else {
         return <Row className="interactable ms-2 w-100" onClick={() => props.openFile(props.file)}>
             <Col className="d-flex align-items-center">

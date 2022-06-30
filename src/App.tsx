@@ -1,6 +1,6 @@
 import {open} from "@tauri-apps/api/dialog";
 import {invoke} from "@tauri-apps/api/tauri";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import {useState} from "react";
 import Col from "react-bootstrap/Col";

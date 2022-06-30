@@ -11,7 +11,7 @@ function InfoIconTrigger(props: InfoIconTriggerProps) {
     return <OverlayTrigger delay={{show: 50, hide: 50}} trigger={["hover", "focus"]} placement={"right"}
                            overlay={props.popover}>
         <InfoCircle className={"ms-2 fs-6"} aria-label={"Info"}/>
-    </OverlayTrigger>
+    </OverlayTrigger>;
 }
 
 export default InfoIconTrigger;

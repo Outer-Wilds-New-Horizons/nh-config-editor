@@ -13,17 +13,17 @@ function InspectorVector3(props: FieldProps) {
     const onUpdate = (rawVal: string, name: string) => {
         let newVal = Number.parseFloat(rawVal);
         newVal = Number.isNaN(newVal) ? 0 : newVal;
-        if (name == "x") {
+        if (name === "x") {
             setX(newVal);
             props.onChange({x: newVal, y, z});
-        } else if (name == "y") {
+        } else if (name === "y") {
             setY(newVal);
             props.onChange({x, y: newVal, z});
         } else {
             setZ(newVal);
             props.onChange({x, y, z: newVal});
         }
-    }
+    };
 
     return <Row>
         <Col>
@@ -35,8 +35,8 @@ function InspectorVector3(props: FieldProps) {
         <Col>
             <Form.Control type={"number"} value={z} onChange={(e) => onUpdate(e.target.value, "z")}/>
         </Col>
-    </Row>
+    </Row>;
 
 }
 
-export default InspectorVector3
+export default InspectorVector3;
