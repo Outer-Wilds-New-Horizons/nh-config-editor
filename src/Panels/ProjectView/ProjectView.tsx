@@ -1,5 +1,7 @@
 import {invoke,} from "@tauri-apps/api/tauri";
 import {useState,} from "react";
+import {Button} from "react-bootstrap";
+import {ArrowClockwise} from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {CommonProps,} from "../../App";
@@ -9,27 +11,25 @@ import ProjectItem from "./ProjectItem";
 
 export type ProjectViewProps = { projectPath: string } & CommonProps;
 
-async function recursiveBuild(path: string, rootPath: string,): Promise<ProjectFile> {
+async function recursiveBuild(path: string, props: CommonProps): Promise<ProjectFile> {
 
-    const isDir = await invoke("is_dir", {path,});
+    const isDir: boolean = await invoke("is_dir", {path,});
 
     const childPaths: string[] = isDir ? await invoke("list_dir", {path,}) : [];
 
     const [fileName, extension,] = await invoke("get_metadata", {path,});
 
-    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath,});
+    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath: props.projectPath});
 
     let fileType: ProjectFileType = "other";
 
+    const children: ProjectFile[] = [];
+
     if (isDir) {
 
-        const children: ProjectFile[] = [];
-
         for (const childPath of childPaths) {
-            children.push(await recursiveBuild(childPath, rootPath,));
+            children.push(await recursiveBuild(childPath, props));
         }
-
-        return new ProjectFile(true, children, fileName, path, "other",);
 
     } else {
 
@@ -55,59 +55,69 @@ async function recursiveBuild(path: string, rootPath: string,): Promise<ProjectF
             fileType = "binary";
         }
 
-        return new ProjectFile(false, [], fileName, path, fileType,);
-
     }
+
+    if (props.currentlyRegisteredFiles[path]) {
+        props.currentlyRegisteredFiles[path].isFolder = isDir;
+        props.currentlyRegisteredFiles[path].children = children;
+        props.currentlyRegisteredFiles[path].name = fileName;
+        props.currentlyRegisteredFiles[path].fileType = fileType;
+    } else {
+        props.currentlyRegisteredFiles[path] = new ProjectFile(isDir, children, fileName, path, fileType);
+    }
+
+    return props.currentlyRegisteredFiles[path];
 
 }
 
-async function buildProjectFiles(projectPath: string,): Promise<ProjectFile[]> {
-    const rootFilePaths: string[] = await invoke("list_dir", {path: projectPath,});
+async function buildProjectFiles(props: CommonProps): Promise<ProjectFile[]> {
+    const rootFilePaths: string[] = await invoke("list_dir", {path: props.projectPath});
     const rootFiles: ProjectFile[] = [];
 
     for (const rootFilePath of rootFilePaths) {
-        rootFiles.push(await recursiveBuild(rootFilePath, projectPath,));
+        rootFiles.push(await recursiveBuild(rootFilePath, props));
     }
+
+    props.setCurrentlyRegisteredFiles(props.currentlyRegisteredFiles);
 
     return rootFiles;
 }
 
 function ProjectView(props: ProjectViewProps,) {
 
-    const [loadStarted, setLoadStarted,] = useState(false,);
-    const [data, setData,] = useState<ProjectFile[] | null>(null,);
+    const [loadStarted, setLoadStarted,] = useState(false);
+    const [data, setData] = useState<ProjectFile[] | null>(null,);
 
-    if (!loadStarted) {
-        setLoadStarted(true,);
-        buildProjectFiles(props.projectPath,).then((out,) => setData(out,));
-    }
-
-    if (data === null) return <CenteredSpinner animation={"border"} variant={"primary"}/>;
-
-    const openFile = (file: ProjectFile,) => {
-
-        const check = props.openFiles.filter(f => f.path === file.path,);
-
-        if (check.length === 0) {
-            props.setOpenFiles(props.openFiles.concat([file,]));
-        }
-
-        props.setSelectedFile(file,);
-
+    props.invalidateFileSystem.current = () => {
+        setLoadStarted(false);
     };
 
-    return <>
-        <Row className={"border-bottom"}>
-            <Col>
-                <h3 className={"my-2"}>TestProject</h3>
-            </Col>
-        </Row>
-        <Row className={"border-bottom"}>
-            <Col>
-                {data.map(item => (<ProjectItem key={item.path} openFile={openFile} file={item}/>))}
-            </Col>
-        </Row>
-    </>;
+    if (!loadStarted) {
+        setLoadStarted(true);
+        buildProjectFiles(props).then((out) => setData(out));
+    }
+
+    if (data === null) {
+        return <CenteredSpinner animation="border" variant="primary"/>;
+    } else {
+        return <>
+            <Row className="border-bottom">
+                <Col className="pe-0">
+                    <h3 className="my-2 d-inline">TestProject</h3>
+                    <Button onClick={() => setLoadStarted(false)} aria-label="Reload Project" variant="link" size="sm"
+                            className="float-end h-100 d-block my-auto">
+                        <ArrowClockwise/>
+                    </Button>
+                </Col>
+            </Row>
+            <Row className={"border-bottom"}>
+                <Col>
+                    {data.map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
+                </Col>
+            </Row>
+        </>;
+    }
+
 }
 
 export default ProjectView;

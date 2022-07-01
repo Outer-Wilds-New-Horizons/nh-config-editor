@@ -4,6 +4,7 @@ windows_subsystem = "windows"
 )]
 
 mod commands;
+mod menus;
 
 fn main() {
     let context = tauri::generate_context!();
@@ -14,8 +15,19 @@ fn main() {
             commands::get_metadata,
             commands::root_dir,
             commands::load_image_as_base_64,
-            commands::read_file_as_string])
-        .menu(tauri::Menu::os_default(&context.package_info().name))
+            commands::read_file_as_string,
+            commands::write_string_to_file,
+            commands::file_exists,
+            commands::canonicalize])
+        .menu(menus::make_main_menu())
+        .on_menu_event(|event| {
+            match event.menu_item_id() {
+                "quit" => {
+                    std::process::exit(0);
+                }
+                _ => {}
+            }
+        })
         .run(context)
         .expect("error while running tauri application");
 }

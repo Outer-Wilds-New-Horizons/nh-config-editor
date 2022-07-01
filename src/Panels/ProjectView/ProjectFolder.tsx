@@ -3,6 +3,7 @@ import {Collapse,} from "react-bootstrap";
 import {CaretRightFill, FolderFill,} from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import {CommonProps} from "../../App";
 import {ProjectFile,} from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
 
@@ -11,12 +12,22 @@ export type ProjectFolderProps = {
     concrete: boolean;
     name: string;
     folderChildren: ProjectFile[];
-    openFile: CallableFunction;
-}
+} & CommonProps;
 
 function ProjectFolder(props: ProjectFolderProps,) {
 
     const [open, setOpen,] = useState(false,);
+
+    const commonProps: CommonProps = {
+        currentlyRegisteredFiles: props.currentlyRegisteredFiles,
+        invalidateFileSystem: props.invalidateFileSystem,
+        openFiles: props.openFiles,
+        projectPath: props.projectPath,
+        selectedFile: props.selectedFile,
+        setCurrentlyRegisteredFiles: props.setCurrentlyRegisteredFiles,
+        setOpenFiles: props.setOpenFiles,
+        setSelectedFile: props.setSelectedFile,
+    };
 
     return <Row>
         <Col onClick={() => setOpen(!open,)} className={"d-flex w-100 interactable align-items-center"}>
@@ -29,7 +40,7 @@ function ProjectFolder(props: ProjectFolderProps,) {
         <Collapse in={open}>
             <div className={"ms-4"}>
                 {props.folderChildren.map(file => (
-                    <ProjectItem key={file.path} file={file} openFile={props.openFile}/>
+                    <ProjectItem key={file.path} file={file} {...commonProps}/>
                 ),)}
             </div>
         </Collapse>

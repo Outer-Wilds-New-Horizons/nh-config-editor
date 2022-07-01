@@ -5,7 +5,6 @@ import Editor from "./Editor";
 import EditorTab from "./EditorTab";
 
 function EditorFrame(props: CommonProps,) {
-
     if (props.selectedFile === null) {
         return <div className="d-flex h-100 user-select-none align-items-center justify-content-center">
             Select a file on the left to open it
@@ -25,7 +24,6 @@ function EditorFrame(props: CommonProps,) {
             </Row>
         </>;
     }
-
 }
 
 export default EditorFrame;

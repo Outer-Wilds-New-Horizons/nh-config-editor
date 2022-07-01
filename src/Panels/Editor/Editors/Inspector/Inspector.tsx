@@ -18,7 +18,7 @@ export type InspectorProps = {
 function Inspector(props: InspectorProps) {
 
     const [loadStarted, setLoadStarted] = useState(false);
-    const [formData, setFormData] = useState<string | null>(null);
+    const [loadDone, setLoadDone] = useState(false);
 
     const loadFile = async (): Promise<string> => {
         return await invoke("read_file_as_string", {path: props.file.path});
@@ -26,10 +26,17 @@ function Inspector(props: InspectorProps) {
 
     if (!loadStarted) {
         setLoadStarted(true);
-        loadFile().then((data) => setFormData(JSON.parse(data)));
+        if (props.file.path.startsWith("@@void@@/")) {
+            setLoadDone(true);
+        } else {
+            loadFile().then((data) => {
+                props.file.data = JSON.parse(data);
+                setLoadDone(true);
+            });
+        }
     }
 
-    if (formData === null) {
+    if (props.file.data === null || !loadDone) {
         return <CenteredSpinner animation={"border"} variant={"primary"}/>;
     }
 
@@ -37,7 +44,10 @@ function Inspector(props: InspectorProps) {
         BooleanField: InspectorBoolean
     };
 
-    return <Form className={"mx-3 inspector-form"} formData={formData} schema={props.schema} fields={customFields}
+    return <Form onChange={(newData) => {
+        props.file.setChanged(true);
+        props.file.data = newData.formData;
+    }} className={"mx-3 inspector-form"} formData={props.file.data} schema={props.schema} fields={customFields}
                  ArrayFieldTemplate={InspectorArrayFieldTemplate} ObjectFieldTemplate={InspectorObjectFieldTemplate}
                  FieldTemplate={InspectorFieldTemplate}/>;
 
