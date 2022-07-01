@@ -60,6 +60,7 @@ export async function setupAllEvents(): Promise<[CallableFunction, ActionRegistr
         new Action("Close", "CommandOrControl+W", "close"),
         // Close Project
         new Action("Reload Project", "CommandOrControl+R", "reload_project"),
+        new Action("Open Source", "CommandOrControl+O", "open_source"),
     ];
 
     for (const action of actions) {

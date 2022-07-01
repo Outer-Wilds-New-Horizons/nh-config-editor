@@ -28,7 +28,7 @@ export type CommonProps = {
 function App() {
 
     // noinspection JSUnusedLocalSymbols
-    const [projectPath, setProjectPath] = useState("C:/Users/bwc67/AppData/Roaming/OuterWildsModManager/OWML/Mods/xen.RealSolarSystem");
+    const [projectPath, setProjectPath] = useState("C:\\Users\\bwc67\\AppData\\Roaming\\OuterWildsModManager\\OWML\\Mods\\xen.RealSolarSystem");
     const [openFiles, setOpenFiles] = useState<ProjectFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<ProjectFile | null>(null);
     const [currentlyRegisteredFiles, setCurrentlyRegisteredFiles] = useState<PathToFile>({});
@@ -117,6 +117,10 @@ function App() {
 
     actionRegistry["Reload Project"].callback = () => {
         invalidateFileSystem.current();
+    };
+
+    actionRegistry["Open Source"].callback = () => {
+        invoke("show_in_explorer", {path: projectPath});
     };
 
 

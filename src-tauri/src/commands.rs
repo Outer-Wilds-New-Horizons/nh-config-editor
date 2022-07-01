@@ -55,3 +55,23 @@ pub fn read_file_as_string(path: String) -> String {
 pub fn write_string_to_file(path: String, content: String) {
     fs::write(path, content).expect("Couldn't Write File");
 }
+
+#[cfg(target_os = "windows")]
+fn open_in_explorer(path: String) {
+    std::process::Command::new("explorer").arg(path).spawn().unwrap();
+}
+
+#[cfg(target_os = "linux")]
+fn open_in_explorer(path: String) {
+    std::process::Command::new("xdg-open").arg(path).spawn().unwrap();
+}
+
+#[cfg(target_os = "macos")]
+fn open_in_explorer(path: String) {
+    std::process::Command::new("open").arg(path).spawn().unwrap();
+}
+
+#[tauri::command]
+pub fn show_in_explorer(path: String) {
+    open_in_explorer(path);
+}

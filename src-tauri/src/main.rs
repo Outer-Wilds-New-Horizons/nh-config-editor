@@ -18,7 +18,8 @@ fn main() {
             commands::read_file_as_string,
             commands::write_string_to_file,
             commands::file_exists,
-            commands::canonicalize])
+            commands::canonicalize,
+            commands::show_in_explorer])
         .menu(menus::make_main_menu())
         .on_menu_event(|event| {
             match event.menu_item_id() {
