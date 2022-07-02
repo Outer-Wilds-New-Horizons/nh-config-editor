@@ -27,6 +27,9 @@
             },
             "path": {
                 "all": true
+            },
+            "process": {
+                "exit": true
             }
         },
         "bundle": {
@@ -74,6 +77,7 @@
                 "fullscreen": false,
                 "resizable": true,
                 "title": "Welcome",
+                "url": "main_app.html",
                 "minWidth": 840,
                 "width": 840,
                 "height": 600,

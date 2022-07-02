@@ -1,14 +1,8 @@
-import {listen} from "@tauri-apps/api/event";
 import {isRegistered, register} from "@tauri-apps/api/globalShortcut";
-import {invoke} from "@tauri-apps/api/tauri";
 
 
 export type ActionRegistry = {
     [key: string]: Action;
-}
-
-type MenuEvent = {
-    payload: string;
 }
 
 class Action {
@@ -27,27 +21,10 @@ class Action {
         };
     }
 
-    async registerShortcut() {
-        if (this.shortcut && !(await isRegistered(this.shortcut))) {
-            await register(this.shortcut, () => this.callback());
-        }
-    }
-
     async register(menuRegistry: ActionRegistry, actionRegistry: ActionRegistry) {
 
-        // Due to react strict mode, this function runs twice.
-        // This results in it trying to register the same action twice (even though we check if it's already registered, it returns false for some reason).
-        // So, if you're running a dev build, set `DEV_MODE` to 1 to disable key-binds and avoid this error.
-
-        if (await invoke("get_env", {key: "DEV_MODE"}) !== "1") {
-            console.log(`Registering action: ${this.name}`);
-            await this.registerShortcut();
-        } else {
-            try {
-                await this.registerShortcut();
-            } catch (e) {
-                console.log("It's Morbin' Time");
-            }
+        if (this.shortcut && !(await isRegistered(this.shortcut))) {
+            await register(this.shortcut, () => this.callback());
         }
 
         if (this.menuItemId) {
@@ -60,7 +37,7 @@ class Action {
 
 }
 
-export async function setupAllEvents(): Promise<[CallableFunction, ActionRegistry]> {
+export async function setupAllEvents(): Promise<ActionRegistry> {
 
     const menuRegistry: ActionRegistry = {};
     const actionRegistry: ActionRegistry = {};
@@ -86,15 +63,7 @@ export async function setupAllEvents(): Promise<[CallableFunction, ActionRegistr
         await action.register(menuRegistry, actionRegistry);
     }
 
-    return [await listen("tauri://menu", (event: MenuEvent) => {
-
-        const action = menuRegistry[event.payload];
-
-        if (action) {
-            action.callback();
-        }
-
-    }), actionRegistry];
+    return actionRegistry;
 
 }
 

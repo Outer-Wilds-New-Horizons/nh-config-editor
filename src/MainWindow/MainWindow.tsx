@@ -1,12 +1,10 @@
-import {unregisterAll} from "@tauri-apps/api/globalShortcut";
 import {invoke} from "@tauri-apps/api/tauri";
 
-import {MutableRefObject, useEffect, useRef, useState} from "react";
+import {MutableRefObject, useRef, useState} from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import CenteredSpinner from "../Common/CenteredSpinner";
-import {ActionRegistry, setupAllEvents} from "./Events";
+import {setupAllEvents} from "./Events";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import {ProjectFile, ProjectFileType} from "./Panels/ProjectView/ProjectFile";
 import ProjectView from "./Panels/ProjectView/ProjectView";
@@ -23,6 +21,8 @@ export type CommonProps = {
     projectPath: string,
     invalidateFileSystem: MutableRefObject<CallableFunction>
 }
+
+const actionRegistry = await setupAllEvents();
 
 function MainWindow() {
 
@@ -45,28 +45,6 @@ function MainWindow() {
         projectPath,
         invalidateFileSystem
     };
-
-    const [loadDone, setLoadDone] = useState(false);
-    const [actionRegistry, setActionRegistry] = useState<ActionRegistry>({});
-
-    useEffect(() => {
-        let unregisterMenus: CallableFunction | null = null;
-        setupAllEvents().then(([unregister, registry]) => {
-            setLoadDone(true);
-            setActionRegistry(registry);
-            unregisterMenus = unregister;
-        });
-        return () => {
-            if (unregisterMenus) unregisterMenus();
-            unregisterAll();
-        };
-    }, []);
-
-    if (!loadDone) {
-        return <div className={"vh-100"}>
-            <CenteredSpinner animation={"border"} variant={"primary"}/>
-        </div>;
-    }
 
     const createNewFile = (fileType: ProjectFileType) => {
 

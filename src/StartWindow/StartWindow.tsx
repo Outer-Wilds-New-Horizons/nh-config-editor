@@ -1,7 +1,8 @@
 import {message, open} from "@tauri-apps/api/dialog";
 import {documentDir} from "@tauri-apps/api/path";
+import {exit} from "@tauri-apps/api/process";
 import {useEffect, useState} from "react";
-import {Folder2Open, PlusCircleDotted} from "react-bootstrap-icons";
+import {DoorOpen, Folder2Open, GearWide, PlusCircleDotted} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -67,8 +68,14 @@ function StartWindow() {
     return <div className="d-flex vh-100">
         <Container className="d-flex flex-column mh-100 vh-100 my-auto">
             <Row className="border-bottom border-2 mt-5 mb-3">
-                <Col>
-                    <h3>New Horizons Config Editor <span className="text-muted small">creative name, I know</span></h3>
+                <Col xs={6}>
+                    <h3>New Horizons Config Editor</h3>
+                </Col>
+                <Col className="d-flex align-items-center justify-content-end">
+                    <Button className="d-flex align-items-center me-2 py-1 rounded-pill" size="sm"
+                            variant="outline-secondary"><GearWide className="me-2"/>Settings</Button>
+                    <Button onClick={() => exit(0)} className="d-flex align-items-center py-1 rounded-pill" size="sm"
+                            variant="outline-danger"><DoorOpen className="me-2"/>Quit</Button>
                 </Col>
             </Row>
             <Row className="d-flex flex-grow-1">
