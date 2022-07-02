@@ -2,7 +2,7 @@ import {message, open} from "@tauri-apps/api/dialog";
 import {documentDir} from "@tauri-apps/api/path";
 import {exit} from "@tauri-apps/api/process";
 import {useEffect, useState} from "react";
-import {DoorOpen, Folder2Open, GearWide, PlusCircleDotted} from "react-bootstrap-icons";
+import {DoorOpen, Folder2Open, Gear, PlusCircleDotted} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -32,7 +32,7 @@ function StartWindow() {
     }, []);
 
     if (appData === null) {
-        return <CenteredSpinner animation="border" variant="primary"/>;
+        return <CenteredSpinner/>;
     }
 
     const openProject = async () => {
@@ -73,7 +73,7 @@ function StartWindow() {
                 </Col>
                 <Col className="d-flex align-items-center justify-content-end">
                     <Button className="d-flex align-items-center me-2 py-1 rounded-pill" size="sm"
-                            variant="outline-secondary"><GearWide className="me-2"/>Settings</Button>
+                            variant="outline-secondary"><Gear className="me-2"/>Settings</Button>
                     <Button onClick={() => exit(0)} className="d-flex align-items-center py-1 rounded-pill" size="sm"
                             variant="outline-danger"><DoorOpen className="me-2"/>Quit</Button>
                 </Col>

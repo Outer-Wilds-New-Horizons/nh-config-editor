@@ -1,9 +1,7 @@
-import {Spinner} from "react-bootstrap";
-import {SpinnerProps} from "react-bootstrap/Spinner";
-
-function CenteredSpinner(props: SpinnerProps) {
+function CenteredSpinner() {
     return <div className={"h-100 w-100 d-flex justify-content-center align-items-center"}>
-        <Spinner className={"text-center"} {...props}/>
+        <img className="nh-spinner" height="192" width="192" src="src/Common/Spinner/spinner_image.png"
+             alt="Loading..."/>
     </div>;
 }
 

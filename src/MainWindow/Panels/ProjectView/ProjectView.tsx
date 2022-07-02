@@ -109,7 +109,7 @@ function ProjectView(props: ProjectViewProps,) {
     }
 
     if (data === null) {
-        return <CenteredSpinner animation="border" variant="primary"/>;
+        return <CenteredSpinner/>;
     } else {
         return <>
             <Row className="border-bottom">
