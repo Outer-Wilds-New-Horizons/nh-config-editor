@@ -1,4 +1,27 @@
 use std::fs;
+use std::fs::create_dir;
+use std::path::Path;
+
+use super::build_project;
+
+#[tauri::command]
+pub fn get_env(key: String) -> String {
+    let env_var = std::env::var(key).unwrap_or("0".to_string());
+    return env_var;
+}
+
+#[tauri::command]
+pub fn zip_project(path: String, output_zip_name: String) {
+    let project_path = Path::new(&path);
+    let build_path = project_path.join("build");
+    let output_path = build_path.join(Path::new(&output_zip_name));
+
+    if !build_path.exists() {
+        create_dir(build_path).unwrap();
+    }
+
+    build_project::zip_dir(project_path.to_str().unwrap(), output_path.to_str().unwrap());
+}
 
 #[tauri::command]
 pub fn list_dir(path: String) -> Vec<String> {
@@ -17,22 +40,22 @@ pub fn is_dir(path: String) -> bool {
 
 #[tauri::command]
 pub fn get_metadata(path: String) -> (String, String) {
-    let path = std::path::Path::new(&path);
+    let path = Path::new(&path);
     return (path.file_name().unwrap_or_default().to_str().unwrap().to_string(),
             path.extension().unwrap_or_default().to_str().unwrap().to_string());
 }
 
 #[tauri::command]
 pub fn root_dir(path: String, root_path: String) -> String {
-    let p_path = std::path::Path::new(&path);
-    let p_root_path = std::path::Path::new(&root_path);
+    let p_path = Path::new(&path);
+    let p_root_path = Path::new(&root_path);
     let mut ancestors = p_path.strip_prefix(p_root_path).unwrap().ancestors();
     return ancestors.nth(ancestors.count() - 2).unwrap().to_str().unwrap().to_string();
 }
 
 #[tauri::command]
 pub fn canonicalize(path: String) -> String {
-    return std::path::Path::new(&path).canonicalize().unwrap().to_str().unwrap().to_string();
+    return Path::new(&path).canonicalize().unwrap().to_str().unwrap().to_string();
 }
 
 #[tauri::command]

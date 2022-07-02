@@ -5,10 +5,16 @@ import bodySchema from "../../Schemas/body_schema.json";
 import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
 import starSystemSchema from "../../Schemas/star_system_schema.json";
 import translationSchema from "../../Schemas/translation_schema.json";
-
+import {stripDefaultsFromJsonSchema} from "../../Utils";
 import {ProjectFile} from "../ProjectView/ProjectFile";
 import ImageView from "./Editors/ImageView";
 import Inspector from "./Editors/Inspector/Inspector";
+
+stripDefaultsFromJsonSchema(bodySchema as JSONSchema7);
+stripDefaultsFromJsonSchema(starSystemSchema as JSONSchema7);
+stripDefaultsFromJsonSchema(addonManifestSchema as JSONSchema7);
+stripDefaultsFromJsonSchema(modManifestSchema as JSONSchema7);
+stripDefaultsFromJsonSchema(translationSchema as JSONSchema7);
 
 export type EditorProps = {
     file: ProjectFile

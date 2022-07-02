@@ -41,7 +41,3 @@ html, body {
 .overflow-x-hidden {
     overflow-x: hidden;
 }
-
-.inspector-form > div:last-child {
-    display: none;
-}

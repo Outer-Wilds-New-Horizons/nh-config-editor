@@ -83,6 +83,17 @@ async function buildProjectFiles(props: CommonProps): Promise<ProjectFile[]> {
     return rootFiles;
 }
 
+export function compareItems(a: ProjectFile, b: ProjectFile): number {
+    if (a.isFolder && !b.isFolder) {
+        return -1;
+    } else if (!a.isFolder && b.isFolder) {
+        return 1;
+    } else {
+        return a.name.localeCompare(b.name);
+    }
+}
+
+
 function ProjectView(props: ProjectViewProps,) {
 
     const [loadStarted, setLoadStarted,] = useState(false);
@@ -112,7 +123,7 @@ function ProjectView(props: ProjectViewProps,) {
             </Row>
             <Row className={"border-bottom"}>
                 <Col>
-                    {data.map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
+                    {data.sort(compareItems).map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
                 </Col>
             </Row>
         </>;

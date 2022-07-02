@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import {CommonProps} from "../../App";
 import {ProjectFile,} from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
+import {compareItems} from "./ProjectView";
 
 
 export type ProjectFolderProps = {
@@ -39,7 +40,7 @@ function ProjectFolder(props: ProjectFolderProps,) {
         </Col>
         <Collapse in={open}>
             <div className={"ms-4"}>
-                {props.folderChildren.map(file => (
+                {props.folderChildren.sort(compareItems).map(file => (
                     <ProjectItem key={file.path} file={file} {...commonProps}/>
                 ),)}
             </div>

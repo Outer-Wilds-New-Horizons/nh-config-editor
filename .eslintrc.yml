@@ -43,4 +43,6 @@ rules:
     prefer-template: error
     spaced-comment: warn
     yoda: warn
+    no-new-symbol: off
+    symbol-description: off
 

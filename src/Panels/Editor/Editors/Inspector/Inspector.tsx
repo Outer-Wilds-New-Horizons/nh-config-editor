@@ -1,7 +1,8 @@
-import Form from "@rjsf/core";
+import Form, {UiSchema} from "@rjsf/core";
 import {invoke} from "@tauri-apps/api/tauri";
 import {JSONSchema7} from "json-schema";
 import {useState} from "react";
+import {deleteEmptyObjects} from "../../../../Utils";
 import CenteredSpinner from "../../../Common/CenteredSpinner";
 import {ProjectFile} from "../../../ProjectView/ProjectFile";
 import InspectorBoolean from "./Fields/InspectorBoolean";
@@ -44,10 +45,22 @@ function Inspector(props: InspectorProps) {
         BooleanField: InspectorBoolean
     };
 
-    return <Form onChange={(newData) => {
+    const uiSchema: UiSchema = {
+        "ui:submitButtonOptions": {
+            norender: true,
+            submitText: "",
+            props: {}
+        }
+    };
+
+    const onChange = (newData: object) => {
         props.file.setChanged(true);
-        props.file.data = newData.formData;
-    }} className={"mx-3 inspector-form"} formData={props.file.data} schema={props.schema} fields={customFields}
+        newData = deleteEmptyObjects(newData) as object;
+        props.file.data = newData;
+    };
+
+    return <Form onChange={(newData) => onChange(newData.formData)} className={"mx-3 inspector-form"}
+                 formData={props.file.data} schema={props.schema} uiSchema={uiSchema} fields={customFields}
                  ArrayFieldTemplate={InspectorArrayFieldTemplate} ObjectFieldTemplate={InspectorObjectFieldTemplate}
                  FieldTemplate={InspectorFieldTemplate}/>;
 

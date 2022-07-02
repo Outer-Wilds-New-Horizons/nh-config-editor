@@ -187,7 +187,7 @@ export class ProjectFile {
             filters: [
                 {name: "JSON file", extensions: ["json"]},
             ],
-            defaultPath: `${props.projectPath}/${this.getRootDirName()}/${this.name}`,
+            defaultPath: `${props.projectPath}\\${this.getRootDirName()}\\${this.name}`,
         });
 
         if (path !== null) {

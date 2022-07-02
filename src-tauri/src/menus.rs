@@ -43,20 +43,16 @@ fn make_file_submenu() -> Submenu {
 }
 
 fn make_project_submenu() -> Submenu {
+    let open_explorer = CustomMenuItem::new("open_explorer", "Open In Explorer");
+    let build_project = CustomMenuItem::new("build_project", "Build Project");
     let settings = CustomMenuItem::new("project_settings", "Project Settings");
-    let build_debug = CustomMenuItem::new("build_debug", "Build Debug");
-    let build_release = CustomMenuItem::new("build_release", "Build Release");
     let analyze = CustomMenuItem::new("analyze", "Analyze");
-    let open_source_folder = CustomMenuItem::new("open_source", "Open Source Folder");
-    let open_build_folder = CustomMenuItem::new("open_build", "Open Build Folder");
 
     let project_menu = Submenu::new("Project", Menu::new()
+        .add_item(open_explorer)
+        .add_item(build_project)
         .add_item(settings)
-        .add_item(build_debug)
-        .add_item(build_release)
-        .add_item(analyze)
-        .add_item(open_source_folder)
-        .add_item(open_build_folder),
+        .add_item(analyze),
     );
 
     return project_menu;

@@ -100,6 +100,7 @@ function App() {
     };
 
     actionRegistry["Save"].callback = () => {
+        console.log("Save Clicked");
         selectedFile?.save(commonProps);
     };
 
@@ -119,8 +120,14 @@ function App() {
         invalidateFileSystem.current();
     };
 
-    actionRegistry["Open Source"].callback = () => {
+    actionRegistry["Open In Explorer"].callback = () => {
         invoke("show_in_explorer", {path: projectPath});
+    };
+
+    actionRegistry["Build Project"].callback = () => {
+        invoke("zip_project", {path: projectPath, outputZipName: "TestBuild.zip"}).then(() => {
+            invoke("show_in_explorer", {path: `${projectPath}\\build`});
+        });
     };
 
 
