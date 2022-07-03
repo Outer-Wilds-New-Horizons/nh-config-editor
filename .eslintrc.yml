@@ -45,4 +45,5 @@ rules:
     yoda: warn
     no-new-symbol: off
     symbol-description: off
+    '@typescript-eslint/no-non-null-assertion': off
 

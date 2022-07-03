@@ -10,7 +10,7 @@ declare type FormControlElement = HTMLInputElement | HTMLTextAreaElement;
 
 function InspectorColor(props: FieldProps) {
 
-    const [currentCol, setCol] = useState("#" + rgbHex(props.formData?.r ?? 0, props.formData?.g ?? 0, props.formData?.b ?? 0));
+    const [currentCol, setCol] = useState(`#${rgbHex(props.formData?.r ?? 0, props.formData?.g ?? 0, props.formData?.b ?? 0)}`);
     const [currentAlpha, setAlpha] = useState(props.formData?.a ?? 0);
 
     const colChanged = (e: ChangeEvent<FormControlElement>) => {

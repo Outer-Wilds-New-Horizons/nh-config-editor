@@ -74,7 +74,7 @@ function MainWindow() {
         setSelectedFile,
         currentlyRegisteredFiles,
         setCurrentlyRegisteredFiles,
-        project: project!,
+        project: project,
         invalidateFileSystem
     };
 
@@ -134,8 +134,8 @@ function MainWindow() {
         console.log("Close Project Clicked");
 
         const webview = new WebviewWindow("welcome", {
-            url: `index.html#START`,
-            title: `Welcome`,
+            url: "index.html#START",
+            title: "Welcome",
             center: true,
             minWidth: 840,
             width: 840,

@@ -9,7 +9,7 @@ export function camelToTitleCase(s: string) {
 }
 
 export function deleteDefaultValues(obj: { [key: string]: object }, schema: JSONSchema7 | undefined, rootSchema: JSONSchema7) {
-    //Recursively crawl the object and remove all default values
+    // Recursively crawl the object and remove all default values
 
     if (schema?.$ref !== undefined) {
         schema = rootSchema.definitions![schema.$ref.split("/").pop() as string] as JSONSchema7;

@@ -10,7 +10,7 @@ export type RecentProjectProps = {
 
 function RecentProject(props: RecentProjectProps) {
     return <ListGroup.Item onClick={props.onClick} action
-                           className={`interactable border-bottom text-nowrap`}>
+                           className={"interactable border-bottom text-nowrap"}>
         <span className="user-select-none">{props.project.name}</span>
         <span className="text-muted d-block text-truncate ms-2 small user-select-none">{props.project.path}</span>
     </ListGroup.Item>;
