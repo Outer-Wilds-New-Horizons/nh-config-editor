@@ -11,6 +11,8 @@ const NewProjectWindow = React.lazy(() => import("./NewProjectWindow/NewProjectW
 
 const root = document.getElementById("root");
 
+document.oncontextmenu = () => false;
+
 if (root === null) {
     console.error("Catastrophic Failure");
 } else {
