@@ -26,11 +26,11 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
     let elem = props.children;
 
     if (vector2) {
-        elem = <InspectorVector2 onChange={props.onChange} {...props.children.props}/>;
+        elem = <InspectorVector2 formData={props.formData} onChange={props.onChange} {...props.children.props}/>;
     } else if (vector3) {
-        elem = <InspectorVector3 onChange={props.onChange} {...props.children.props}/>;
+        elem = <InspectorVector3 formData={props.formData} onChange={props.onChange} {...props.children.props}/>;
     } else if (color) {
-        elem = <InspectorColor onChange={props.onChange} {...props.children.props}/>;
+        elem = <InspectorColor formData={props.formData} onChange={props.onChange} {...props.children.props}/>;
     }
 
     if (props.label === "") {

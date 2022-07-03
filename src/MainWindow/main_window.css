@@ -26,3 +26,11 @@
 .overflow-x-hidden {
     overflow-x: hidden;
 }
+
+.menubar-item {
+    background-color: white !important;
+}
+
+.menubar-item::after {
+    display: none;
+}

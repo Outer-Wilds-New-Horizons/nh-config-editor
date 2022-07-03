@@ -1,15 +1,11 @@
 import {invoke,} from "@tauri-apps/api/tauri";
 import {useState,} from "react";
-import {Button} from "react-bootstrap";
-import {ArrowClockwise} from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import CenteredSpinner from "../../../Common/CenteredSpinner";
 import {CommonProps,} from "../../MainWindow";
 import {ProjectFile, ProjectFileType,} from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
-
-export type ProjectViewProps = { projectPath: string } & CommonProps;
 
 async function recursiveBuild(path: string, props: CommonProps): Promise<ProjectFile> {
 
@@ -19,7 +15,7 @@ async function recursiveBuild(path: string, props: CommonProps): Promise<Project
 
     const [fileName, extension,] = await invoke("get_metadata", {path,});
 
-    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath: props.projectPath});
+    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath: props.project.path});
 
     let fileType: ProjectFileType = "other";
 
@@ -71,7 +67,7 @@ async function recursiveBuild(path: string, props: CommonProps): Promise<Project
 }
 
 async function buildProjectFiles(props: CommonProps): Promise<ProjectFile[]> {
-    const rootFilePaths: string[] = await invoke("list_dir", {path: props.projectPath});
+    const rootFilePaths: string[] = await invoke("list_dir", {path: props.project.path});
     const rootFiles: ProjectFile[] = [];
 
     for (const rootFilePath of rootFilePaths) {
@@ -94,7 +90,7 @@ export function compareItems(a: ProjectFile, b: ProjectFile): number {
 }
 
 
-function ProjectView(props: ProjectViewProps,) {
+function ProjectView(props: CommonProps) {
 
     const [loadStarted, setLoadStarted,] = useState(false);
     const [data, setData] = useState<ProjectFile[] | null>(null,);
@@ -111,22 +107,20 @@ function ProjectView(props: ProjectViewProps,) {
     if (data === null) {
         return <CenteredSpinner/>;
     } else {
-        return <>
+        return <div className="d-flex flex-grow-1 flex-column">
             <Row className="border-bottom">
-                <Col className="pe-0">
-                    <h3 className="my-2 d-inline">TestProject</h3>
-                    <Button onClick={() => setLoadStarted(false)} aria-label="Reload Project" variant="link" size="sm"
-                            className="float-end h-100 d-block my-auto">
-                        <ArrowClockwise/>
-                    </Button>
+                <Col className="pe-0 py-1 pb-2">
+                    <h3 className="my-2 d-inline user-select-none">{props.project.name}</h3>
                 </Col>
             </Row>
-            <Row className={"border-bottom"}>
-                <Col>
-                    {data.sort(compareItems).map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
+            <Row className="flex-grow-1">
+                <Col className="position-relative overflow-y-auto">
+                    <div className="position-absolute top-0 bottom-0">
+                        {data.sort(compareItems).map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
+                    </div>
                 </Col>
             </Row>
-        </>;
+        </div>;
     }
 
 }

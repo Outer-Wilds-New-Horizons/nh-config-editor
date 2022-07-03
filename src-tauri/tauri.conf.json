@@ -30,6 +30,9 @@
             },
             "process": {
                 "exit": true
+            },
+            "window": {
+                "all": true
             }
         },
         "bundle": {
@@ -56,7 +59,9 @@
                 "providerShortName": null,
                 "signingIdentity": null
             },
-            "resources": [],
+            "resources": [
+                "resources/**/*.*"
+            ],
             "shortDescription": "",
             "targets": "all",
             "windows": {

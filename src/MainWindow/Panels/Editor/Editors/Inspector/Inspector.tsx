@@ -1,9 +1,8 @@
-import Form, {UiSchema} from "@rjsf/core";
+import Form, {UiSchema, utils} from "@rjsf/core";
 import {invoke} from "@tauri-apps/api/tauri";
 import {JSONSchema7} from "json-schema";
 import {useState} from "react";
 import CenteredSpinner from "../../../../../Common/CenteredSpinner";
-import {deleteEmptyObjects} from "../../../../../Utils";
 import {ProjectFile} from "../../../ProjectView/ProjectFile";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
@@ -31,14 +30,14 @@ function Inspector(props: InspectorProps) {
             setLoadDone(true);
         } else {
             loadFile().then((data) => {
-                props.file.data = JSON.parse(data);
+                props.file.data = utils.getDefaultFormState(props.file.getSchema(), JSON.parse(data), props.file.getSchema());
                 setLoadDone(true);
             });
         }
     }
 
     if (props.file.data === null || !loadDone) {
-        return <CenteredSpinner animation={"border"} variant={"primary"}/>;
+        return <CenteredSpinner/>;
     }
 
     const customFields = {
@@ -55,7 +54,6 @@ function Inspector(props: InspectorProps) {
 
     const onChange = (newData: object) => {
         props.file.setChanged(true);
-        newData = deleteEmptyObjects(newData) as object;
         props.file.data = newData;
     };
 

@@ -23,7 +23,7 @@ function ProjectFolder(props: ProjectFolderProps,) {
         currentlyRegisteredFiles: props.currentlyRegisteredFiles,
         invalidateFileSystem: props.invalidateFileSystem,
         openFiles: props.openFiles,
-        projectPath: props.projectPath,
+        project: props.project,
         selectedFile: props.selectedFile,
         setCurrentlyRegisteredFiles: props.setCurrentlyRegisteredFiles,
         setOpenFiles: props.setOpenFiles,
@@ -31,15 +31,15 @@ function ProjectFolder(props: ProjectFolderProps,) {
     };
 
     return <Row>
-        <Col onClick={() => setOpen(!open,)} className={"d-flex w-100 interactable align-items-center"}>
-            <span className={"d-flex align-items-center"}>
+        <Col onClick={() => setOpen(!open,)} className="ps-2 d-flex w-100 interactable align-items-center">
+            <span className="d-flex align-items-center pe-0 me-0">
                 <CaretRightFill className={`fs-6 my-auto folder-caret ${(open ? "open" : "")}`}/>
-                <FolderFill className={"ms-1 my-auto"}/>
-                <span className={"fs-5 ms-2"}>{props.name}</span>
+                <FolderFill className="ms-1 my-auto"/>
+                <span className="fs-5 ms-2">{props.name}</span>
             </span>
         </Col>
         <Collapse in={open}>
-            <div className={"ms-4"}>
+            <div className="ms-4">
                 {props.folderChildren.sort(compareItems).map(file => (
                     <ProjectItem key={file.path} file={file} {...commonProps}/>
                 ),)}

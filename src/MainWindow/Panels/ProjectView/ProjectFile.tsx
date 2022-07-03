@@ -1,5 +1,7 @@
 import {ask, save} from "@tauri-apps/api/dialog";
+import {sep} from "@tauri-apps/api/path";
 import {invoke} from "@tauri-apps/api/tauri";
+import {JSONSchema7} from "json-schema";
 import {ReactElement} from "react";
 import {
     Box2Fill,
@@ -13,7 +15,13 @@ import {
     Globe,
     Translate
 } from "react-bootstrap-icons";
+import {deleteDefaultValues, deleteEmptyObjects} from "../../../Utils";
 import {CommonProps} from "../../MainWindow";
+import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
+import bodySchema from "../../Schemas/body_schema.json";
+import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
+import starSystemSchema from "../../Schemas/star_system_schema.json";
+import translationSchema from "../../Schemas/translation_schema.json";
 
 type JSONObject = {
     [key: string]: string | boolean | number | JSONObject;
@@ -115,6 +123,23 @@ export class ProjectFile {
         }
     }
 
+    getSchema(): JSONSchema7 {
+        switch (this.fileType) {
+            case "planet":
+                return bodySchema as JSONSchema7;
+            case "system":
+                return starSystemSchema as JSONSchema7;
+            case "translation":
+                return translationSchema as JSONSchema7;
+            case "addon_manifest":
+                return addonManifestSchema as JSONSchema7;
+            case "mod_manifest":
+                return modManifestSchema as JSONSchema7;
+            default:
+                return {type: "null"};
+        }
+    }
+
     getSchemaLink(): string {
         switch (this.fileType) {
             case "planet":
@@ -135,10 +160,10 @@ export class ProjectFile {
     getContentToSave(minify: boolean): string {
 
         if (this.isJson()) {
-            const dataToSave: JSONObject = new Object(this.data) as JSONObject;
-
+            let dataToSave: JSONObject = new Object(this.data) as JSONObject;
+            deleteDefaultValues(dataToSave as { [key: string]: object }, this.getSchema(), this.getSchema());
+            dataToSave = deleteEmptyObjects(dataToSave) as JSONObject;
             if (!minify) dataToSave["$schema"] = this.getSchemaLink();
-
             if (minify) {
                 return JSON.stringify(dataToSave);
             } else {
@@ -160,7 +185,7 @@ export class ProjectFile {
 
     close(props: CommonProps): void {
         if (this.changed) {
-            ask("Are you sure you want to close this file without saving?", "Confirm").then((result) => {
+            ask("Are you sure you want to close this file without saving?", this.name).then((result) => {
                 if (result) {
                     this.forceClose(props);
                 }
@@ -187,7 +212,7 @@ export class ProjectFile {
             filters: [
                 {name: "JSON file", extensions: ["json"]},
             ],
-            defaultPath: `${props.projectPath}\\${this.getRootDirName()}\\${this.name}`,
+            defaultPath: `${props.project.path}${sep}${this.getRootDirName()}${sep}${this.name}`,
         });
 
         if (path !== null) {

@@ -4,7 +4,7 @@ windows_subsystem = "windows"
 )]
 
 mod commands;
-//mod menus;
+// mod menus;
 mod build_project;
 
 fn main() {
@@ -22,7 +22,9 @@ fn main() {
             commands::canonicalize,
             commands::show_in_explorer,
             commands::get_env,
-            commands::zip_project])
+            commands::zip_project,
+            commands::copy_file,
+            commands::mk_dir])
         .on_menu_event(|event| {
             match event.menu_item_id() {
                 "quit" => {

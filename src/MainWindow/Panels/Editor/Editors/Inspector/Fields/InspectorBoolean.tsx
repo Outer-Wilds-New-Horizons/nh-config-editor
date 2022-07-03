@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Form} from "react-bootstrap";
 
 function InspectorBoolean(props: FieldProps) {
-    const [checked, setChecked] = useState((props.schema.default ?? false) as boolean);
+    const [checked, setChecked] = useState((props.formData ?? false) as boolean);
     return <Form.Switch className={"my-2"} onChange={() => {
         setChecked(!checked);
         props.onChange(!checked);

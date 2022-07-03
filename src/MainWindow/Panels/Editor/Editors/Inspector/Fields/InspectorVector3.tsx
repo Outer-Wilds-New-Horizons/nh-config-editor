@@ -6,9 +6,9 @@ import Row from "react-bootstrap/Row";
 
 function InspectorVector3(props: FieldProps) {
 
-    const [x, setX] = useState(0);
-    const [y, setY] = useState(0);
-    const [z, setZ] = useState(0);
+    const [x, setX] = useState(props.formData?.x ?? 0);
+    const [y, setY] = useState(props.formData?.y ?? 0);
+    const [z, setZ] = useState(props.formData?.z ?? 0);
 
     const onUpdate = (rawVal: string, name: string) => {
         let newVal = Number.parseFloat(rawVal);
@@ -25,7 +25,7 @@ function InspectorVector3(props: FieldProps) {
         }
     };
 
-    return <Row>
+    return <Row className="gx-1">
         <Col>
             <Form.Control type={"number"} value={x} onChange={(e) => onUpdate(e.target.value, "x")}/>
         </Col>

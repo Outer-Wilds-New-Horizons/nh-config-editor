@@ -25,7 +25,10 @@ export class AppData {
             const newData = new AppData();
             newData.settings = loadedData.settings;
             for (const projectPath of loadedData.recentProjects) {
-                newData.recentProjects.push(await Project.load(projectPath) ?? new Project("Error Loading Project", projectPath));
+                if (newData.recentProjects.filter(p => p.path === projectPath).length === 0) {
+                    const newProject = await Project.load(projectPath) ?? new Project("Error Loading Project", "", projectPath);
+                    newData.recentProjects.unshift(newProject);
+                }
             }
             return newData;
         } else {

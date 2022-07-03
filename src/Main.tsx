@@ -7,6 +7,7 @@ import "./Common/common.css";
 
 const MainWindow = React.lazy(() => import("./MainWindow/MainWindow"));
 const StartWindow = React.lazy(() => import("./StartWindow/StartWindow"));
+const NewProjectWindow = React.lazy(() => import("./NewProjectWindow/NewProjectWindow"));
 
 const root = document.getElementById("root");
 
@@ -19,6 +20,9 @@ if (root === null) {
     switch (document.location.hash) {
         case "#MAIN":
             page = <MainWindow/>;
+            break;
+        case "#NEWPROJECT":
+            page = <NewProjectWindow/>;
             break;
         case "#START":
         default:

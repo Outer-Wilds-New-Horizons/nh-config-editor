@@ -19,9 +19,9 @@ function ImageView(props: EditorProps) {
     }
 
     if (imageData === null) {
-        return <CenteredSpinner animation={"border"} variant={"primary"}/>;
+        return <CenteredSpinner/>;
     } else {
-        return <div className={"d-flex justify-content-center align-items-center h-100"}>
+        return <div className="mx-5 d-flex justify-content-center align-items-center h-100">
             <Image src={`data:image/png;base64,${imageData}`} alt={props.file.name} fluid/>
         </div>;
     }

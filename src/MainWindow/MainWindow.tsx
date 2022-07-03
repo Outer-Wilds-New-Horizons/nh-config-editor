@@ -1,10 +1,18 @@
+import {process} from "@tauri-apps/api";
+import {message} from "@tauri-apps/api/dialog";
+import {sep} from "@tauri-apps/api/path";
 import {invoke} from "@tauri-apps/api/tauri";
+import {getCurrent, WebviewWindow} from "@tauri-apps/api/window";
 
 import {MutableRefObject, useRef, useState} from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import {setupAllEvents} from "./Events";
+import CenteredSpinner from "../Common/CenteredSpinner";
+import {Project} from "../Common/Project";
+import {MenuBar, setupAllEvents} from "./Actions";
+
+import "./main_window.css";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import {ProjectFile, ProjectFileType} from "./Panels/ProjectView/ProjectFile";
 import ProjectView from "./Panels/ProjectView/ProjectView";
@@ -12,28 +20,52 @@ import ProjectView from "./Panels/ProjectView/ProjectView";
 export type PathToFile = { [key: string]: ProjectFile };
 
 export type CommonProps = {
+    project: Project,
     openFiles: ProjectFile[],
     setOpenFiles: CallableFunction,
     selectedFile: ProjectFile | null,
     setSelectedFile: CallableFunction,
     currentlyRegisteredFiles: PathToFile,
     setCurrentlyRegisteredFiles: CallableFunction,
-    projectPath: string,
     invalidateFileSystem: MutableRefObject<CallableFunction>
 }
 
 const actionRegistry = await setupAllEvents();
 
+const projectPath = new URLSearchParams(window.location.search).get("path");
+let project: Project | null = null;
+
+if (projectPath === null) {
+    message("No project path specified", {
+        type: "error",
+        title: "Error"
+    });
+} else {
+    const newProject = await Project.load(decodeURIComponent(projectPath));
+    if (newProject === null) {
+        message("Project could not be loaded", {
+            type: "error",
+            title: "Error"
+        });
+    } else {
+        project = newProject;
+    }
+}
+
 function MainWindow() {
 
     // noinspection JSUnusedLocalSymbols
-    const [projectPath, setProjectPath] = useState("C:\\Users\\bwc67\\AppData\\Roaming\\OuterWildsModManager\\OWML\\Mods\\xen.RealSolarSystem");
     const [openFiles, setOpenFiles] = useState<ProjectFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<ProjectFile | null>(null);
     const [currentlyRegisteredFiles, setCurrentlyRegisteredFiles] = useState<PathToFile>({});
     const invalidateFileSystem = useRef(() => {
         return;
     });
+
+    if (project === null) {
+        process.exit(1);
+        return <CenteredSpinner/>;
+    }
 
     const commonProps: CommonProps = {
         openFiles,
@@ -42,7 +74,7 @@ function MainWindow() {
         setSelectedFile,
         currentlyRegisteredFiles,
         setCurrentlyRegisteredFiles,
-        projectPath,
+        project: project!,
         invalidateFileSystem
     };
 
@@ -56,12 +88,12 @@ function MainWindow() {
 
     };
 
-    actionRegistry["New Planet"].callback = () => createNewFile("planet");
-    actionRegistry["New Star System"].callback = () => createNewFile("system");
-    actionRegistry["New Translation"].callback = () => createNewFile("translation");
+    actionRegistry["new_planet"].callback = () => createNewFile("planet");
+    actionRegistry["new_system"].callback = () => createNewFile("system");
+    actionRegistry["new_translation"].callback = () => createNewFile("translation");
 
     const findOrMakeAddonManifest = async () => {
-        const filePath = `${projectPath}/addon-manifest.json`;
+        const filePath = `${project!.path}${sep}addon-manifest.json`;
         if (!(await invoke("file_exists", {path: filePath}))) {
             const newFile = new ProjectFile(false, [], "addon-manifest.json", filePath, "addon_manifest");
             newFile.data = {};
@@ -70,51 +102,79 @@ function MainWindow() {
         }
     };
 
-    actionRegistry["Create Addon Manifest"].callback = () => {
+    actionRegistry["make_manifest"].callback = () => {
         findOrMakeAddonManifest().then(() => {
-            currentlyRegisteredFiles[`${projectPath}/addon-manifest.json`].open(commonProps);
+            currentlyRegisteredFiles[`${project!.path}${sep}addon-manifest.json`].open(commonProps);
         });
     };
 
-    actionRegistry["Save"].callback = () => {
+    actionRegistry["save"].callback = () => {
         console.log("Save Clicked");
         selectedFile?.save(commonProps);
     };
 
-    actionRegistry["Save All"].callback = () => {
+    actionRegistry["save_all"].callback = () => {
         for (const file of openFiles) {
             file.save(commonProps);
         }
     };
 
-    actionRegistry["Close"].callback = () => {
-        selectedFile?.close(commonProps);
+    actionRegistry["close_all"].callback = () => {
+        for (const file of openFiles) {
+            file.close(commonProps);
+        }
     };
 
-    // Close Project
-
-    actionRegistry["Reload Project"].callback = () => {
+    actionRegistry["reload"].callback = () => {
         invalidateFileSystem.current();
     };
 
-    actionRegistry["Open In Explorer"].callback = () => {
-        invoke("show_in_explorer", {path: projectPath});
+    actionRegistry["close_project"].callback = () => {
+
+        console.log("Close Project Clicked");
+
+        const webview = new WebviewWindow("welcome", {
+            url: `index.html#START`,
+            title: `Welcome`,
+            center: true,
+            minWidth: 840,
+            width: 840,
+            height: 600,
+            minHeight: 600,
+            resizable: true,
+            maximized: true
+        });
+
+        webview.once("tauri://created", () => {
+            getCurrent().close();
+        });
+
     };
 
-    actionRegistry["Build Project"].callback = () => {
-        invoke("zip_project", {path: projectPath, outputZipName: "TestBuild.zip"}).then(() => {
-            invoke("show_in_explorer", {path: `${projectPath}\\build`});
+    actionRegistry["open_explorer"].callback = () => {
+        invoke("show_in_explorer", {path: project!.path});
+    };
+
+    actionRegistry["build"].callback = () => {
+        invoke("zip_project", {path: project!.path, outputZipName: `${project!.uniqueName}.zip`}).then(() => {
+            invalidateFileSystem.current();
+            invoke("show_in_explorer", {path: `${project!.path}\\build`});
         });
     };
 
+    actionRegistry["quit"].callback = () => process.exit(0);
+
 
     return (
-        <Container fluid className={"vh-100"}>
-            <Row className="h-100 overflow-hidden">
-                <Col className="border-end h-100">
+        <Container fluid className="vh-100 flex-column d-flex">
+            <Row className="py-0">
+                <MenuBar/>
+            </Row>
+            <Row className="flex-grow-1 border-top overflow-hidden">
+                <Col className="d-flex flex-column border-end">
                     <ProjectView {...commonProps}/>
                 </Col>
-                <Col className="p-0 h-100" xs={8}>
+                <Col className="p-0 h-100 d-flex flex-column" xs={8}>
                     <EditorFrame {...commonProps}/>
                 </Col>
             </Row>

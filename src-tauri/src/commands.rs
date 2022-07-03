@@ -98,3 +98,14 @@ fn open_in_explorer(path: String) {
 pub fn show_in_explorer(path: String) {
     open_in_explorer(path);
 }
+
+#[tauri::command]
+pub fn copy_file(src: String, dest: String) {
+    fs::create_dir_all(Path::new(&dest).parent().unwrap()).unwrap();
+    fs::copy(src, dest).expect("Couldn't Copy File");
+}
+
+#[tauri::command]
+pub fn mk_dir(path: String) {
+    fs::create_dir_all(path).expect("Couldn't Create Directory");
+}

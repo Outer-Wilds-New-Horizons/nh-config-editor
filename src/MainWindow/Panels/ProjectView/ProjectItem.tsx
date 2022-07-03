@@ -15,10 +15,10 @@ function ProjectItem(props: ProjectItemProps) {
         return <ProjectFolder concrete={false} name={props.file.name}
                               folderChildren={props.file.children} {...props}/>;
     } else {
-        return <Row className="interactable ms-2 w-100" onClick={() => props.file.open(props)}>
+        return <Row className="interactable" onClick={() => props.file.open(props)}>
             <Col className="d-flex align-items-center">
-                {cloneElement(props.file.getIcon(), {"className": "fs-6 my-auto"})}
-                <span className="fs-5 ms-2">{props.file.name}</span>
+                {cloneElement(props.file.getIcon(), {"className": "my-auto ms-3"})}
+                <span className="fs-5 ms-2 text-nowrap">{props.file.name}</span>
             </Col>
         </Row>;
     }

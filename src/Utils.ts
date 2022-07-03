@@ -8,28 +8,31 @@ export function camelToTitleCase(s: string) {
             .join(" ");
 }
 
-export function stripDefaultsFromJsonSchema(schema: JSONSchema7) {
+export function deleteDefaultValues(obj: { [key: string]: object }, schema: JSONSchema7 | undefined, rootSchema: JSONSchema7) {
+    //Recursively crawl the object and remove all default values
 
-    if (schema.default !== undefined) {
-        delete schema.default;
+    if (schema?.$ref !== undefined) {
+        schema = rootSchema.definitions![schema.$ref.split("/").pop() as string] as JSONSchema7;
     }
 
-    if (schema.definitions !== undefined) {
-        for (const key in schema.definitions) {
-            stripDefaultsFromJsonSchema(schema.definitions[key] as JSONSchema7);
+    if (schema === undefined) {
+        return obj;
+    }
+
+    if (schema.type === "object" && schema.properties !== undefined) {
+        for (const key in obj) {
+            if (obj[key] === (schema.properties[key] as JSONSchema7).default) {
+                delete obj[key];
+            }
         }
-    }
-
-    if (schema.type === "object") {
-        for (const key in schema.properties) {
-            stripDefaultsFromJsonSchema(schema.properties[key] as JSONSchema7);
+        for (const key in obj) {
+            deleteDefaultValues(obj[key] as { [key: string]: object }, schema.properties[key] as JSONSchema7, rootSchema);
         }
     } else if (schema.type === "array") {
-        if (schema.items as JSONSchema7) {
-            stripDefaultsFromJsonSchema(schema.items as JSONSchema7);
+        for (const val of (obj as unknown as object[])) {
+            deleteDefaultValues(val as { [key: string]: object }, schema.items as JSONSchema7, rootSchema);
         }
     }
-
 }
 
 // The following code removes empty objects from the form data.
