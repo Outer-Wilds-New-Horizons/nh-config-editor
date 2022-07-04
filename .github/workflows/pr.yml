@@ -11,6 +11,9 @@ jobs:
         name: Lint And Prettify
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout
+              uses: actions/checkout@v2.4.2
+
             - name: Setup Node
               uses: actions/setup-node@v3.3.0
 
