@@ -20,6 +20,7 @@ fn filter_files(entry: &walkdir::DirEntry, root_path: &Path) -> bool {
             file_name.eq("config.json") ||
             file_name.eq("build") ||
             top_dir.eq("build") ||
+            top_dir.starts_with(".") ||
             extension.eq("md"));
 }
 
