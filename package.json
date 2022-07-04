@@ -1,7 +1,8 @@
 {
   "name": "nh-config-editor",
   "private": true,
-  "version": "0.0.0",
+  "packageManager": "pnpm@6.11.0",
+  "version": "0.1.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "schema": "ts-json-schema-generator -f \"tsconfig.json\" -p \"src/Common/AppData/Settings.ts\" -t \"Settings\" -o \"src/Common/AppData/SettingsSchema.json\"",
