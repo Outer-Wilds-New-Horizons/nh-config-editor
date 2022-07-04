@@ -38,11 +38,7 @@
             "type": "object"
         },
         "Theme": {
-            "enum": [
-                "Follow System",
-                "Default Light",
-                "Default Dark"
-            ],
+            "enum": ["Follow System", "Default Light", "Default Dark"],
             "type": "string"
         }
     }
