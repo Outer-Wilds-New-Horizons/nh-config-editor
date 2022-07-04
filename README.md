@@ -1,3 +1,14 @@
+[![forthebadge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-rust.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/built-with-swag.svg)](https://forthebadge.com)
+
+[![Version](https://img.shields.io/github/package-json/v/bwc9876/nh-config-editor?style=for-the-badge)](https://github.com/Bwc9876/nh-config-editor/releases)
+[![License](https://img.shields.io/github/license/Bwc9876/nh-config-editor?style=for-the-badge)](https://github.com/Bwc9876/nh-config-editor/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/bwc9876/nh-config-editor/total?logo=github&style=for-the-badge)](https://github.com/Bwc9876/nh-config-editor/releases)
+
+[![Build Release](https://img.shields.io/github/workflow/status/Bwc9876/nh-config-editor/Build%20Release?style=for-the-badge)](https://github.com/Bwc9876/nh-config-editor/actions/workflows/build_release.yml)
+[![CodeQL](https://img.shields.io/github/workflow/status/Bwc9876/nh-config-editor/CodeQL?label=CodeQL&style=for-the-badge)](https://github.com/Bwc9876/nh-config-editor/actions/workflows/codeql-analysis.yml)
+
 # New Horizons Config Editor
 
 An application you can use to graphically edit your New Horizons configs!
