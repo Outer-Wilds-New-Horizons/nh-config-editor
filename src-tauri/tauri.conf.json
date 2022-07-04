@@ -23,10 +23,7 @@
             },
             "fs": {
                 "all": true,
-                "scope": [
-                    "$APP/*",
-                    "$CONFIG/*"
-                ]
+                "scope": ["$APP/*", "$CONFIG/*"]
             },
             "path": {
                 "all": true
@@ -66,9 +63,7 @@
                 "providerShortName": null,
                 "signingIdentity": null
             },
-            "resources": [
-                "resources/**/*.*"
-            ],
+            "resources": ["resources/**/*.*"],
             "shortDescription": "",
             "targets": "all",
             "windows": {

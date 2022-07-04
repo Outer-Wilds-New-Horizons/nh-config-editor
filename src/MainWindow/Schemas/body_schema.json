@@ -4,9 +4,7 @@
     "type": "object",
     "description": "Describes a body to generate",
     "additionalProperties": false,
-    "required": [
-        "name"
-    ],
+    "required": ["name"],
     "properties": {
         "AsteroidBelt": {
             "description": "Generate asteroids around this body",
@@ -351,34 +349,14 @@
         "CloudPrefabType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "GiantsDeep",
-                "QuantumMoon",
-                "Basic"
-            ],
-            "enum": [
-                "giantsDeep",
-                "quantumMoon",
-                "basic"
-            ]
+            "x-enumNames": ["GiantsDeep", "QuantumMoon", "Basic"],
+            "enum": ["giantsDeep", "quantumMoon", "basic"]
         },
         "CloudFluidType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "None",
-                "Water",
-                "Cloud",
-                "Sand",
-                "Plasma"
-            ],
-            "enum": [
-                "none",
-                "water",
-                "cloud",
-                "sand",
-                "plasma"
-            ]
+            "x-enumNames": ["None", "Water", "Cloud", "Sand", "Plasma"],
+            "enum": ["none", "water", "cloud", "sand", "plasma"]
         },
         "MGradient": {
             "type": "object",
@@ -479,14 +457,8 @@
         "GravityFallOff": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Linear",
-                "InverseSquared"
-            ],
-            "enum": [
-                "linear",
-                "inverseSquared"
-            ]
+            "x-enumNames": ["Linear", "InverseSquared"],
+            "enum": ["linear", "inverseSquared"]
         },
         "CloakModule": {
             "type": "object",
@@ -565,18 +537,8 @@
         "FunnelType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Sand",
-                "Water",
-                "Lava",
-                "Star"
-            ],
-            "enum": [
-                "sand",
-                "water",
-                "lava",
-                "star"
-            ]
+            "x-enumNames": ["Sand", "Water", "Lava", "Star"],
+            "enum": ["sand", "water", "lava", "star"]
         },
         "HeightMapModule": {
             "type": "object",
@@ -1026,36 +988,14 @@
         "NomaiTextArcType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Adult",
-                "Child",
-                "Stranger"
-            ],
-            "enum": [
-                "adult",
-                "child",
-                "stranger"
-            ]
+            "x-enumNames": ["Adult", "Child", "Stranger"],
+            "enum": ["adult", "child", "stranger"]
         },
         "NomaiTextType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Wall",
-                "Scroll",
-                "Computer",
-                "Cairn",
-                "Recorder",
-                "PreCrashRecorder"
-            ],
-            "enum": [
-                "wall",
-                "scroll",
-                "computer",
-                "cairn",
-                "recorder",
-                "preCrashRecorder"
-            ]
+            "x-enumNames": ["Wall", "Scroll", "Computer", "Cairn", "Recorder", "PreCrashRecorder"],
+            "enum": ["wall", "scroll", "computer", "cairn", "recorder", "preCrashRecorder"]
         },
         "RaftInfo": {
             "type": "object",
@@ -1110,16 +1050,8 @@
         "RevealVolumeType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Enter",
-                "Observe",
-                "Snapshot"
-            ],
-            "enum": [
-                "enter",
-                "observe",
-                "snapshot"
-            ]
+            "x-enumNames": ["Enter", "Observe", "Snapshot"],
+            "enum": ["enter", "observe", "snapshot"]
         },
         "ScatterInfo": {
             "type": "object",
@@ -1260,12 +1192,7 @@
                 "VisionTorchTarget",
                 "StandingVisionTorch"
             ],
-            "enum": [
-                "slideReel",
-                "autoProjector",
-                "visionTorchTarget",
-                "standingVisionTorch"
-            ]
+            "enum": ["slideReel", "autoProjector", "visionTorchTarget", "standingVisionTorch"]
         },
         "QuantumGroupInfo": {
             "type": "object",
@@ -1304,16 +1231,8 @@
         "QuantumGroupType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Sockets",
-                "States",
-                "FailedValidation"
-            ],
-            "enum": [
-                "sockets",
-                "states",
-                "FailedValidation"
-            ]
+            "x-enumNames": ["Sockets", "States", "FailedValidation"],
+            "enum": ["sockets", "states", "FailedValidation"]
         },
         "QuantumSocketInfo": {
             "type": "object",
@@ -1389,16 +1308,8 @@
         "TornadoType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "Downwards",
-                "Upwards",
-                "Hurricane"
-            ],
-            "enum": [
-                "downwards",
-                "upwards",
-                "hurricane"
-            ]
+            "x-enumNames": ["Downwards", "Upwards", "Hurricane"],
+            "enum": ["downwards", "upwards", "hurricane"]
         },
         "VolcanoInfo": {
             "type": "object",
@@ -1768,14 +1679,8 @@
         "SingularityType": {
             "type": "string",
             "description": "",
-            "x-enumNames": [
-                "BlackHole",
-                "WhiteHole"
-            ],
-            "enum": [
-                "blackHole",
-                "whiteHole"
-            ]
+            "x-enumNames": ["BlackHole", "WhiteHole"],
+            "enum": ["blackHole", "whiteHole"]
         },
         "SpawnModule": {
             "type": "object",
