@@ -8,7 +8,7 @@ export type EditorTabProps = EditorProps & CommonProps;
 
 function EditorTab(props: EditorTabProps) {
 
-    let classes = "border-bottom interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
+    let classes = "border-bottom lt-border interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
 
     const [changed, setChanged] = useState(false);
 

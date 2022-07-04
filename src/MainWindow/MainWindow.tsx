@@ -130,6 +130,7 @@ function MainWindow() {
                 file.data = null;
             }
             setOpenFiles([]);
+            setSelectedFile(null);
         } else {
             ask("There are unsaved changes. Are you sure you want to close all files?", {
                 type: "warning",
@@ -140,6 +141,7 @@ function MainWindow() {
                         file.data = null;
                     }
                     setOpenFiles([]);
+                    setSelectedFile(null);
                 }
             });
         }
