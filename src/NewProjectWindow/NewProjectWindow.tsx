@@ -1,5 +1,5 @@
 import {message, open} from "@tauri-apps/api/dialog";
-import {documentDir, resolveResource, sep} from "@tauri-apps/api/path";
+import {resolveResource, sep} from "@tauri-apps/api/path";
 import {invoke} from "@tauri-apps/api/tauri";
 import {FormEvent, useState} from "react";
 import {Form, InputGroup} from "react-bootstrap";
@@ -11,7 +11,6 @@ import RecentProjects from "../Common/AppData/RecentProjects";
 import {Project} from "../Common/Project";
 import {useSettings} from "../Wrapper";
 
-const docsFolder = (await documentDir()).slice(0, -1);
 
 const templateContents = [
     ".gitattributes",
@@ -27,9 +26,9 @@ function NewProjectWindow() {
 
     const [projectName, setProjectName] = useState(settings.defaultProjectName);
     const [authorName, setAuthorName] = useState(settings.defaultAuthor);
-    const [parentPath, setParentPath] = useState(docsFolder);
+    const [parentPath, setParentPath] = useState(settings.defaultProjectFolder);
 
-    const uniqueName = `${authorName}.${projectName.replace(" ", "")}`;
+    const uniqueName = `${authorName}.${projectName.replaceAll(" ", "")}`;
     const projectPath = `${parentPath}${sep}${uniqueName}`;
 
     const browseClicked = () => {
@@ -66,7 +65,7 @@ function NewProjectWindow() {
                 version: "0.0.0",
                 owmlVersion: "2.1.0",
                 dependencies: ["xen.NewHorizons"],
-            })
+            }, null, 4),
         });
 
         await invoke("mk_dir", {path: `${projectPath}${sep}planets`});
@@ -81,18 +80,27 @@ function NewProjectWindow() {
         await newProject.openInMain();
     };
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        invoke("file_exists", {path: projectPath}).then(exists => {
-            if (exists) {
-                message("This project already exists", {
-                    type: "error",
-                    title: "Error",
-                });
-            } else {
-                makeProject();
-            }
-        });
+
+        if (await invoke("file_exists", {path: projectPath})) {
+            await message("This project already exists", {
+                type: "error",
+                title: "Error",
+            });
+        } else if (!await invoke("file_exists", {path: parentPath})) {
+            await message("The parent folder does not exist", {
+                type: "error",
+                title: "Error",
+            });
+        } else if (!await invoke("is_dir", {path: parentPath})) {
+            await message("The parent folder is not a folder", {
+                type: "error",
+                title: "Error",
+            });
+        } else {
+            await makeProject();
+        }
     };
 
     return <Container className="mb-2 mt-4">
@@ -114,7 +122,7 @@ function NewProjectWindow() {
                         aria-lable="Browse" type="button"><Folder2Open/></Button>
                 <Form.Control onChange={(e) => setParentPath(e.target.value)}
                               id="projectFolder" value={parentPath} required type="text"/>
-                <InputGroup.Text>{uniqueName}</InputGroup.Text>
+                <InputGroup.Text>{sep}{uniqueName}</InputGroup.Text>
             </InputGroup>
             <Button className="mt-5" variant="primary" type="submit">Create Project</Button>
         </Form>

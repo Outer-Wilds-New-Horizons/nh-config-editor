@@ -4,12 +4,12 @@
 
 First, make a fork of this repo, make a branch, clone, etc.
 
-Next up, make sure you have rust and npm installed.
+Next up, make sure you have rust and pnpm installed.
 
-Then, run `npm install` in the root directory.
+Then, run `pnpm install` in the root directory.
 
 ```bash
-$ npm install
+$ pnpm install
 ```
 
 ## Development Runtime
@@ -17,7 +17,7 @@ $ npm install
 To run the development runtime, run `tauri dev` through npm.
 
 ```bash
-$ npm run tauri dev
+$ pnpm run tauri dev
 ```
 
 ## Building
@@ -25,5 +25,13 @@ $ npm run tauri dev
 To build a production version of the app, run `tauri build` though npm.
 
 ```bash
-$ npm run tauri build
+$ pnpm run tauri build
+```
+
+## Linting
+
+Please lint your code before committing.
+
+```bash
+$ pnpm run lint
 ```

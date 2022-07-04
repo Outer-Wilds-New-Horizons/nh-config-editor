@@ -1,3 +1,4 @@
+import {documentDir} from "@tauri-apps/api/path";
 import {Theme} from "../Theme/ThemeManager";
 import AppData from "./AppData";
 
@@ -23,9 +24,9 @@ export type Settings = {
     defaultAuthor: string;
 
     /**
-     * @description Whether to allow for manual editing of RGB values opposed to the color picker
+     * @description The default folder to place new projects in.
      */
-    manualColor: boolean;
+    defaultProjectFolder: string;
 
     /**
      * @description Whether to minify all json files when building the project
@@ -37,7 +38,7 @@ export const defaultSettings: Settings = {
     theme: "Follow System",
     defaultProjectName: "New Project",
     defaultAuthor: "Slate",
-    manualColor: false,
+    defaultProjectFolder: (await documentDir()).slice(0, -1),
     minify: true
 };
 

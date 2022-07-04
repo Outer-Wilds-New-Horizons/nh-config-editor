@@ -23,7 +23,7 @@ fn filter_files(entry: &walkdir::DirEntry, root_path: &Path) -> bool {
             extension.eq("md"));
 }
 
-pub fn zip_dir(raw_path: &str, zip_name: &str)
+pub fn zip_dir(raw_path: &str, zip_name: &str, minify_json: bool)
 {
     let path = Path::new(raw_path);
     let mut zip = zip::ZipWriter::new(File::create(zip_name).unwrap());
@@ -40,7 +40,7 @@ pub fn zip_dir(raw_path: &str, zip_name: &str)
         if path.is_file() {
             zip.start_file(name.to_str().unwrap(), options).unwrap();
 
-            if path.extension().unwrap_or_default().to_str().unwrap().eq("json") {
+            if minify_json && path.extension().unwrap_or_default().to_str().unwrap().eq("json") {
                 let json = minify(&read_to_string(path).expect("Error Reading JSON"));
                 buffer.extend(json.as_bytes());
                 zip.write_all(&*buffer).unwrap();

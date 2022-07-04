@@ -11,7 +11,7 @@ pub fn get_env(key: String) -> String {
 }
 
 #[tauri::command]
-pub fn zip_project(path: String, output_zip_name: String) {
+pub fn zip_project(path: String, output_zip_name: String, minify: bool) {
     let project_path = Path::new(&path);
     let build_path = project_path.join("build");
     let output_path = build_path.join(Path::new(&output_zip_name));
@@ -20,7 +20,7 @@ pub fn zip_project(path: String, output_zip_name: String) {
         create_dir(build_path).unwrap();
     }
 
-    build_project::zip_dir(project_path.to_str().unwrap(), output_path.to_str().unwrap());
+    build_project::zip_dir(project_path.to_str().unwrap(), output_path.to_str().unwrap(), minify);
 }
 
 #[tauri::command]

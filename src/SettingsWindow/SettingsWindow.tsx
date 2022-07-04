@@ -1,6 +1,7 @@
 import Form, {UiSchema} from "@rjsf/core";
-import {ask} from "@tauri-apps/api/dialog";
+import {ask, message} from "@tauri-apps/api/dialog";
 import {emit} from "@tauri-apps/api/event";
+import {invoke} from "@tauri-apps/api/tauri";
 import {getAll, WebviewWindow} from "@tauri-apps/api/window";
 import {JSONSchema7} from "json-schema";
 import {useState} from "react";
@@ -58,6 +59,15 @@ function SettingsWindow() {
     };
 
     const onSave = async () => {
+
+        if (!await invoke("file_exists", {path: settings.defaultProjectFolder}) || !await invoke("is_dir", {path: settings.defaultProjectFolder})) {
+            await message("defaultProjectFolder is invalid, Please enter a path to a folder", {
+                type: "warning",
+                title: "Invalid Path"
+            });
+            return;
+        }
+
         await SettingsManager.save(settings);
         await emit("nh://settings-changed", settings);
 
@@ -69,6 +79,8 @@ function SettingsWindow() {
                 await emit("nh://reload");
             }
         }
+
+        await close();
     };
 
     const onReset = async () => {
@@ -96,7 +108,7 @@ function SettingsWindow() {
         </Row>
         <Row className="mb-3">
             <Col>
-                <Button onClick={() => onSave().then(close)} className="w-100">Save</Button>
+                <Button onClick={onSave} className="w-100">Save</Button>
             </Col>
             <Col>
                 <Button onClick={onReset} className="w-100" variant="danger">Reset</Button>

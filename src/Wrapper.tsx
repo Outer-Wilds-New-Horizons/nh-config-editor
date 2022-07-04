@@ -18,8 +18,8 @@ function Wrapper() {
 
     const [settings, setSettings] = React.useState(loadedSettings);
 
-    listen("nh://settings-changed", (event: Event<Settings>) => {
-        setSettings(event.payload);
+    listen("nh://settings-changed", (event: Event<string>) => {
+        setSettings(JSON.parse(event.payload) as Settings);
     });
 
     listen("nh://reload", () => {

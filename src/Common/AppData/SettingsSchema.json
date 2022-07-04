@@ -10,13 +10,13 @@
                     "description": "The default author of new projects.",
                     "type": "string"
                 },
+                "defaultProjectFolder": {
+                    "description": "The default folder to place new projects in.",
+                    "type": "string"
+                },
                 "defaultProjectName": {
                     "description": "The default name of new projects.",
                     "type": "string"
-                },
-                "manualColor": {
-                    "description": "Whether to allow for manual editing of RGB values opposed to the color picker",
-                    "type": "boolean"
                 },
                 "minify": {
                     "description": "Whether to minify all json files when building the project",
@@ -32,7 +32,7 @@
                 "theme",
                 "defaultProjectName",
                 "defaultAuthor",
-                "manualColor",
+                "defaultProjectFolder",
                 "minify"
             ],
             "type": "object"

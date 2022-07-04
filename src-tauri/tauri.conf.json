@@ -1,8 +1,8 @@
 {
     "$schema": "..\\node_modules/@tauri-apps/cli\\schema.json",
     "build": {
-        "beforeBuildCommand": "npm run schema && npm run build",
-        "beforeDevCommand": "npm run schema && npm run dev",
+        "beforeBuildCommand": "pnpm run schema && pnpm run build",
+        "beforeDevCommand": "pnpm run schema && pnpm run dev",
         "devPath": "http://localhost:3000",
         "distDir": "../dist"
     },
@@ -87,13 +87,13 @@
             {
                 "label": "main",
                 "fullscreen": false,
-                "resizable": true,
+                "resizable": false,
                 "title": "Welcome",
                 "url": "index.html#START",
-                "minWidth": 840,
-                "width": 840,
-                "height": 600,
-                "minHeight": 600,
+                "minWidth": 1100,
+                "width": 1100,
+                "height": 650,
+                "minHeight": 650,
                 "center": true,
                 "maximized": true
             }

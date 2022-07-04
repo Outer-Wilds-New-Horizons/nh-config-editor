@@ -12,6 +12,7 @@ import {openAboutWindow} from "../AboutWindow/AboutWindow";
 import {Project} from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import {openSettingsWindow} from "../SettingsWindow/SettingsWindow";
+import {useSettings} from "../Wrapper";
 
 import "./main_window.css";
 import {setupAllEvents} from "./MenuBar/Actions";
@@ -65,10 +66,14 @@ function MainWindow() {
         return;
     });
 
+    const settings = useSettings();
+
     if (project === null) {
         process.exit(1);
         return <CenteredSpinner/>;
     }
+
+    const filesHaveChanged = () => openFiles.length > 0 && openFiles.filter(file => file.changed).length > 0;
 
     const commonProps: CommonProps = {
         openFiles,
@@ -110,7 +115,6 @@ function MainWindow() {
     };
 
     actionRegistry["save"].callback = () => {
-        console.log("Save Clicked");
         selectedFile?.save(commonProps);
     };
 
@@ -121,7 +125,7 @@ function MainWindow() {
     };
 
     actionRegistry["close_all"].callback = () => {
-        if (openFiles.filter(f => f.changed).length === 0) {
+        if (!filesHaveChanged()) {
             for (const file of openFiles) {
                 file.forceClose(commonProps);
             }
@@ -144,23 +148,29 @@ function MainWindow() {
         invalidateFileSystem.current();
     };
 
-    actionRegistry["close_project"].callback = () => {
+    actionRegistry["close_project"].callback = async () => {
 
-        console.log("Close Project Clicked");
+        if (filesHaveChanged()) {
+            const result = await ask("There are unsaved changes, are you sure you want to close the project?", {
+                type: "warning",
+                title: "Close Project",
+            });
+            if (!result) return;
+        }
 
         const webview = new WebviewWindow("welcome", {
             url: "index.html#START",
             title: "Welcome",
             center: true,
-            minWidth: 840,
-            width: 840,
-            height: 600,
-            minHeight: 600,
+            minWidth: 1100,
+            width: 1100,
+            height: 650,
+            minHeight: 650,
             resizable: true,
             maximized: true
         });
 
-        webview.once("tauri://created", () => {
+        await webview.once("tauri://created", () => {
             getCurrent().close();
         });
 
@@ -171,10 +181,17 @@ function MainWindow() {
     };
 
     const buildProject = async () => {
+
+        console.log(`Minify: ${settings.minify}`);
+
         for (const file of openFiles) {
             await file.save(commonProps);
         }
-        await invoke("zip_project", {path: project!.path, outputZipName: `${project!.uniqueName}.zip`});
+        await invoke("zip_project", {
+            path: project!.path,
+            outputZipName: `${project!.uniqueName}.zip`,
+            minify: settings.minify
+        });
         invalidateFileSystem.current();
         await invoke("show_in_explorer", {path: `${project!.path}${sep}build`});
     };
@@ -185,10 +202,12 @@ function MainWindow() {
 
     actionRegistry["settings"].callback = openSettingsWindow;
 
+    actionRegistry["help"].callback = () => message("No", {title: ""});
+
     actionRegistry["about"].callback = openAboutWindow;
 
     actionRegistry["soft_reset"].callback = () => {
-        if (openFiles.filter(f => f.changed).length === 0) {
+        if (!filesHaveChanged()) {
             window.location.reload();
         } else {
             ask("There are unsaved changes. Are you sure you want to reload?", {
