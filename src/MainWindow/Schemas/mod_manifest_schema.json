@@ -2,14 +2,7 @@
     "$schema": "http://json-schema.org/draft-04/schema",
     "type": "object",
     "additionalProperties": false,
-    "required": [
-        "name",
-        "uniqueName",
-        "author",
-        "filename",
-        "version",
-        "owmlVersion"
-    ],
+    "required": ["name", "uniqueName", "author", "filename", "version", "owmlVersion"],
     "properties": {
         "$schema": {
             "type": "string",
@@ -26,48 +19,29 @@
         "author": {
             "type": "string",
             "description": "The author of the mod",
-            "examples": [
-                "John Doe",
-                "Bwc9876",
-                "xen-42"
-            ]
+            "examples": ["John Doe", "Bwc9876", "xen-42"]
         },
         "name": {
             "type": "string",
             "description": "The human-readable name of the mod",
-            "examples": [
-                "Example Mod",
-                "My Cool Mod"
-            ]
+            "examples": ["Example Mod", "My Cool Mod"]
         },
         "uniqueName": {
             "type": "string",
             "description": "The unique name of the mod",
-            "examples": [
-                "Bwc9876.TimeSaver",
-                "Me.MyMod",
-                "Me.MyCoolMod"
-            ]
+            "examples": ["Bwc9876.TimeSaver", "Me.MyMod", "Me.MyCoolMod"]
         },
         "version": {
             "type": "string",
             "description": "The version of the mod (should follow semver)",
             "pattern": "^\\d+\\.\\d+\\.\\d+$",
-            "examples": [
-                "1.0.0",
-                "2.0.1",
-                "0.1.4"
-            ]
+            "examples": ["1.0.0", "2.0.1", "0.1.4"]
         },
         "owmlVersion": {
             "type": "string",
             "description": "The version of the OWML that this mod was created with",
             "pattern": "^\\d+\\.\\d+\\.\\d+$",
-            "examples": [
-                "1.0.0",
-                "2.0.1",
-                "0.1.4"
-            ]
+            "examples": ["1.0.0", "2.0.1", "0.1.4"]
         },
         "dependencies": {
             "type": "array",
@@ -75,11 +49,7 @@
             "items": {
                 "type": "string",
                 "description": "The uniqueName of the dependency",
-                "examples": [
-                    "Bwc9876.TimeSaver",
-                    "Me.MyMod",
-                    "Me.MyCoolMod"
-                ]
+                "examples": ["Bwc9876.TimeSaver", "Me.MyMod", "Me.MyCoolMod"]
             },
             "uniqueItems": true
         },
@@ -92,21 +62,13 @@
             "type": "string",
             "description": "The minimum version of the game that this mod is compatible with",
             "pattern": "^\\d+\\.\\d+\\.\\d+$",
-            "examples": [
-                "1.0.0",
-                "2.0.1",
-                "0.1.4"
-            ]
+            "examples": ["1.0.0", "2.0.1", "0.1.4"]
         },
         "maxGameVersion": {
             "type": "string",
             "description": "The maximum version of the game that this mod is compatible with",
             "pattern": "^\\d+\\.\\d+\\.\\d+$",
-            "examples": [
-                "1.0.0",
-                "2.0.1",
-                "0.1.4"
-            ]
+            "examples": ["1.0.0", "2.0.1", "0.1.4"]
         },
         "pathsToPreserve": {
             "type": "array",
@@ -114,11 +76,7 @@
             "items": {
                 "type": "string",
                 "description": "The path to preserve",
-                "examples": [
-                    "MyMod/MyMod.dll",
-                    "MyMod/MyMod.xml",
-                    "MyMod/MyMod.json"
-                ]
+                "examples": ["MyMod/MyMod.dll", "MyMod/MyMod.xml", "MyMod/MyMod.json"]
             },
             "uniqueItems": true
         },
@@ -128,11 +86,7 @@
             "items": {
                 "type": "string",
                 "description": "The uniqueName of the conflicting mod",
-                "examples": [
-                    "Bwc9876.TimeSaver",
-                    "Me.MyMod",
-                    "Me.MyCoolMod"
-                ]
+                "examples": ["Bwc9876.TimeSaver", "Me.MyMod", "Me.MyCoolMod"]
             },
             "uniqueItems": true
         },

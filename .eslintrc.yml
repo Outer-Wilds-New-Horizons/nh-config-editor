@@ -23,8 +23,8 @@ rules:
     quotes:
         - error
         - double
-        -   avoidEscape: true
-            allowTemplateLiterals: false
+        - avoidEscape: true
+          allowTemplateLiterals: false
     no-duplicate-imports: error
     no-unreachable: error
     camelcase: error

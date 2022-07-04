@@ -36,7 +36,8 @@ $list-group-action-active-bg: $gray-600;
 $nav-tabs-border-color: $gray-600;
 $nav-tabs-link-active-bg: $gray-800;
 $nav-tabs-link-active-color: $gray-200;
-$nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-color $nav-tabs-link-active-bg $nav-tabs-border-color;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-color
+    $nav-tabs-link-active-bg $nav-tabs-border-color;
 $nav-tabs-link-hover-border-color: $gray-700 $gray-700 $nav-tabs-border-color;
 $headings-color: $gray-100;
 $dropdown-border-color: $gray-700;
@@ -49,10 +50,10 @@ $dropdown-bg: $body-bg;
 @import "node_modules/bootstrap/scss/bootstrap";
 
 .menubar-item {
-  background-color: $body-bg !important;
-  color: $body-color !important;
+    background-color: $body-bg !important;
+    color: $body-color !important;
 }
 
 .lt-border {
-  border-color: $gray-700 !important;
+    border-color: $gray-700 !important;
 }
