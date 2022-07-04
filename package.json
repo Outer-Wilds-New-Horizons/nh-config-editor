@@ -10,7 +10,10 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "lint": "eslint src/**/*.ts src/**/*.tsx --fix && prettier --write ."
+        "lint": "eslint src/**/*.ts src/**/*.tsx",
+        "lint-fix": "eslint src/**/*.ts src/**/*.tsx --fix",
+        "prettify": "prettier --write .",
+        "lint-prettify": "pnpm lint && pnpm prettify"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.5",
