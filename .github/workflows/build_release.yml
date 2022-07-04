@@ -46,7 +46,7 @@ jobs:
             -   name: Get pnpm Store Directory
                 id: pnpm-cache
                 run: |
-                    echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"     
+                    echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
 
             -   name: Setup pnpm Cache
                 uses: actions/cache@v3
@@ -54,7 +54,7 @@ jobs:
                     path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
                     key: ${{ matrix.platform }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
                     restore-keys: |
-                        "${{ runner.os }}-pnpm-store-" 
+                        "${{ runner.os }}-pnpm-store-"
 
             -   name: Install pnpm Dependencies
                 run: pnpm install
@@ -68,7 +68,7 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     tagName: v__VERSION__ # tauri-action replaces \_\_VERSION\_\_ with the app version
-                    releaseName: 'Version __VERSION__'
-                    releaseBody: 'See the assets to download this version and install.'
+                    releaseName: "Version __VERSION__"
+                    releaseBody: "See the assets to download this version and install."
                     releaseDraft: true
                     prerelease: false

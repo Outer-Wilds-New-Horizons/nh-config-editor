@@ -1,14 +1,19 @@
-import {JSONSchema7} from "json-schema";
+import { JSONSchema7 } from "json-schema";
 
 export function camelToTitleCase(s: string) {
-    return !s || s.indexOf(" ") >= 0 ? s :
-        (s.charAt(0).toUpperCase() + s.substring(1))
-            .split(/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g)
-            .map((x: string) => x.replace(/(\d+)/g, "$1 "))
-            .join(" ");
+    return !s || s.indexOf(" ") >= 0
+        ? s
+        : (s.charAt(0).toUpperCase() + s.substring(1))
+              .split(/(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g)
+              .map((x: string) => x.replace(/(\d+)/g, "$1 "))
+              .join(" ");
 }
 
-export function deleteDefaultValues(obj: { [key: string]: object }, schema: JSONSchema7 | undefined, rootSchema: JSONSchema7) {
+export function deleteDefaultValues(
+    obj: { [key: string]: object },
+    schema: JSONSchema7 | undefined,
+    rootSchema: JSONSchema7
+) {
     // Recursively crawl the object and remove all default values
 
     if (schema?.$ref !== undefined) {
@@ -26,11 +31,19 @@ export function deleteDefaultValues(obj: { [key: string]: object }, schema: JSON
             }
         }
         for (const key in obj) {
-            deleteDefaultValues(obj[key] as { [key: string]: object }, schema.properties[key] as JSONSchema7, rootSchema);
+            deleteDefaultValues(
+                obj[key] as { [key: string]: object },
+                schema.properties[key] as JSONSchema7,
+                rootSchema
+            );
         }
     } else if (schema.type === "array") {
-        for (const val of (obj as unknown as object[])) {
-            deleteDefaultValues(val as { [key: string]: object }, schema.items as JSONSchema7, rootSchema);
+        for (const val of obj as unknown as object[]) {
+            deleteDefaultValues(
+                val as { [key: string]: object },
+                schema.items as JSONSchema7,
+                rootSchema
+            );
         }
     }
 }
@@ -80,6 +93,6 @@ export function deleteEmptyObjects(t: object) {
         case Object:
             return filter(map(t, deleteEmptyObjects), nonEmpty);
         default:
-            return nonEmpty(t) ? t : empty;  // <-
+            return nonEmpty(t) ? t : empty; // <-
     }
 }

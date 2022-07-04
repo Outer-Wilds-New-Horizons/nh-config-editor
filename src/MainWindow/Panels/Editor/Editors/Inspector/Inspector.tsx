@@ -1,27 +1,25 @@
-import Form, {UiSchema, utils} from "@rjsf/core";
-import {invoke} from "@tauri-apps/api/tauri";
-import {JSONSchema7} from "json-schema";
-import {useState} from "react";
+import Form, { UiSchema, utils } from "@rjsf/core";
+import { invoke } from "@tauri-apps/api/tauri";
+import { JSONSchema7 } from "json-schema";
+import { useState } from "react";
 import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
-import {ProjectFile} from "../../../ProjectView/ProjectFile";
+import { ProjectFile } from "../../../ProjectView/ProjectFile";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "./FieldTemplates/InspectorFieldTemplate";
 import InspectorObjectFieldTemplate from "./FieldTemplates/InspectorObjectFieldTemplate";
 
-
 export type InspectorProps = {
-    schema: JSONSchema7,
-    file: ProjectFile
-}
+    schema: JSONSchema7;
+    file: ProjectFile;
+};
 
 function Inspector(props: InspectorProps) {
-
     const [loadStarted, setLoadStarted] = useState(false);
     const [loadDone, setLoadDone] = useState(false);
 
     const loadFile = async (): Promise<string> => {
-        return await invoke("read_file_as_string", {path: props.file.path});
+        return await invoke("read_file_as_string", { path: props.file.path });
     };
 
     if (!loadStarted) {
@@ -30,14 +28,18 @@ function Inspector(props: InspectorProps) {
             setLoadDone(true);
         } else {
             loadFile().then((data) => {
-                props.file.data = utils.getDefaultFormState(props.file.getSchema(), JSON.parse(data), props.file.getSchema());
+                props.file.data = utils.getDefaultFormState(
+                    props.file.getSchema(),
+                    JSON.parse(data),
+                    props.file.getSchema()
+                );
                 setLoadDone(true);
             });
         }
     }
 
     if (props.file.data === null || !loadDone) {
-        return <CenteredSpinner/>;
+        return <CenteredSpinner />;
     }
 
     const customFields = {
@@ -57,11 +59,19 @@ function Inspector(props: InspectorProps) {
         props.file.data = newData;
     };
 
-    return <Form onChange={(newData) => onChange(newData.formData)} className={"mx-3 inspector-form"}
-                 formData={props.file.data} schema={props.schema} uiSchema={uiSchema} fields={customFields}
-                 ArrayFieldTemplate={InspectorArrayFieldTemplate} ObjectFieldTemplate={InspectorObjectFieldTemplate}
-                 FieldTemplate={InspectorFieldTemplate}/>;
-
+    return (
+        <Form
+            onChange={(newData) => onChange(newData.formData)}
+            className={"mx-3 inspector-form"}
+            formData={props.file.data}
+            schema={props.schema}
+            uiSchema={uiSchema}
+            fields={customFields}
+            ArrayFieldTemplate={InspectorArrayFieldTemplate}
+            ObjectFieldTemplate={InspectorObjectFieldTemplate}
+            FieldTemplate={InspectorFieldTemplate}
+        />
+    );
 }
 
 export default Inspector;

@@ -1,11 +1,10 @@
-import {FieldProps} from "@rjsf/core";
-import {useState} from "react";
+import { FieldProps } from "@rjsf/core";
+import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 
 function InspectorVector3(props: FieldProps) {
-
     const [x, setX] = useState(props.formData?.x ?? 0);
     const [y, setY] = useState(props.formData?.y ?? 0);
     const [z, setZ] = useState(props.formData?.z ?? 0);
@@ -15,28 +14,41 @@ function InspectorVector3(props: FieldProps) {
         newVal = Number.isNaN(newVal) ? 0 : newVal;
         if (name === "x") {
             setX(newVal);
-            props.onChange({x: newVal, y, z});
+            props.onChange({ x: newVal, y, z });
         } else if (name === "y") {
             setY(newVal);
-            props.onChange({x, y: newVal, z});
+            props.onChange({ x, y: newVal, z });
         } else {
             setZ(newVal);
-            props.onChange({x, y, z: newVal});
+            props.onChange({ x, y, z: newVal });
         }
     };
 
-    return <Row className="gx-1">
-        <Col>
-            <Form.Control type={"number"} value={x} onChange={(e) => onUpdate(e.target.value, "x")}/>
-        </Col>
-        <Col>
-            <Form.Control type={"number"} value={y} onChange={(e) => onUpdate(e.target.value, "y")}/>
-        </Col>
-        <Col>
-            <Form.Control type={"number"} value={z} onChange={(e) => onUpdate(e.target.value, "z")}/>
-        </Col>
-    </Row>;
-
+    return (
+        <Row className="gx-1">
+            <Col>
+                <Form.Control
+                    type={"number"}
+                    value={x}
+                    onChange={(e) => onUpdate(e.target.value, "x")}
+                />
+            </Col>
+            <Col>
+                <Form.Control
+                    type={"number"}
+                    value={y}
+                    onChange={(e) => onUpdate(e.target.value, "y")}
+                />
+            </Col>
+            <Col>
+                <Form.Control
+                    type={"number"}
+                    value={z}
+                    onChange={(e) => onUpdate(e.target.value, "z")}
+                />
+            </Col>
+        </Row>
+    );
 }
 
 export default InspectorVector3;

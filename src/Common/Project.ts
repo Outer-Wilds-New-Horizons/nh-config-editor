@@ -1,9 +1,8 @@
-import {sep} from "@tauri-apps/api/path";
-import {invoke} from "@tauri-apps/api/tauri";
-import {getAll, WebviewWindow} from "@tauri-apps/api/window";
+import { sep } from "@tauri-apps/api/path";
+import { invoke } from "@tauri-apps/api/tauri";
+import { getAll, WebviewWindow } from "@tauri-apps/api/window";
 
 export class Project {
-
     name: string;
     uniqueName: string;
     path: string;
@@ -17,15 +16,16 @@ export class Project {
     }
 
     static async load(path: string): Promise<Project | null> {
-
-        if (!await invoke("file_exists", {path: path})) {
+        if (!(await invoke("file_exists", { path: path }))) {
             return null;
         }
-        if (!await invoke("file_exists", {path: `${path}${sep}manifest.json`})) {
+        if (!(await invoke("file_exists", { path: `${path}${sep}manifest.json` }))) {
             return null;
         }
 
-        const rawData: string = await invoke("read_file_as_string", {path: `${path}${sep}manifest.json`});
+        const rawData: string = await invoke("read_file_as_string", {
+            path: `${path}${sep}manifest.json`
+        });
 
         let data: object | null = null;
 
@@ -45,11 +45,9 @@ export class Project {
         } else {
             return null;
         }
-
     }
 
     async openInMain() {
-
         const webview = new WebviewWindow("mainApp", {
             url: `index.html?path=${encodeURIComponent(this.path)}#MAIN`,
             title: `${this.name} | New Horizons Config Editor`,
@@ -63,9 +61,9 @@ export class Project {
         });
 
         await webview.once("tauri://created", () => {
-            getAll().filter(w => w.label !== "mainApp").forEach(window => window.close());
+            getAll()
+                .filter((w) => w.label !== "mainApp")
+                .forEach((window) => window.close());
         });
-
     }
-
 }

@@ -1,34 +1,32 @@
-import {invoke,} from "@tauri-apps/api/tauri";
-import {useState,} from "react";
+import { invoke } from "@tauri-apps/api/tauri";
+import { useState } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
-import {CommonProps,} from "../../MainWindow";
-import {ProjectFile, ProjectFileType,} from "./ProjectFile";
+import { CommonProps } from "../../MainWindow";
+import { ProjectFile, ProjectFileType } from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
 
 async function recursiveBuild(path: string, props: CommonProps): Promise<ProjectFile> {
+    const isDir: boolean = await invoke("is_dir", { path });
 
-    const isDir: boolean = await invoke("is_dir", {path,});
+    const childPaths: string[] = isDir ? await invoke("list_dir", { path }) : [];
 
-    const childPaths: string[] = isDir ? await invoke("list_dir", {path,}) : [];
+    const [fileName, extension] = await invoke("get_metadata", { path });
 
-    const [fileName, extension,] = await invoke("get_metadata", {path,});
-
-    const rootDir: string | null = isDir ? null : await invoke("root_dir", {path, rootPath: props.project.path});
+    const rootDir: string | null = isDir
+        ? null
+        : await invoke("root_dir", { path, rootPath: props.project.path });
 
     let fileType: ProjectFileType = "other";
 
     const children: ProjectFile[] = [];
 
     if (isDir) {
-
         for (const childPath of childPaths) {
             children.push(await recursiveBuild(childPath, props));
         }
-
     } else {
-
         if (rootDir === "planets" && extension === "json") {
             fileType = "planet";
         } else if (rootDir === "systems" && extension === "json") {
@@ -50,7 +48,6 @@ async function recursiveBuild(path: string, props: CommonProps): Promise<Project
         } else if (extension === "dll") {
             fileType = "binary";
         }
-
     }
 
     if (props.currentlyRegisteredFiles[path]) {
@@ -59,15 +56,22 @@ async function recursiveBuild(path: string, props: CommonProps): Promise<Project
         props.currentlyRegisteredFiles[path].name = fileName;
         props.currentlyRegisteredFiles[path].fileType = fileType;
     } else {
-        props.currentlyRegisteredFiles[path] = new ProjectFile(isDir, children, fileName, path, fileType);
+        props.currentlyRegisteredFiles[path] = new ProjectFile(
+            isDir,
+            children,
+            fileName,
+            path,
+            fileType
+        );
     }
 
     return props.currentlyRegisteredFiles[path];
-
 }
 
 async function buildProjectFiles(props: CommonProps): Promise<ProjectFile[]> {
-    const rootFilePaths: string[] = await invoke("list_dir", {path: props.project.path});
+    const rootFilePaths: string[] = await invoke("list_dir", {
+        path: props.project.path
+    });
     const rootFiles: ProjectFile[] = [];
 
     for (const rootFilePath of rootFilePaths) {
@@ -89,11 +93,9 @@ export function compareItems(a: ProjectFile, b: ProjectFile): number {
     }
 }
 
-
 function ProjectView(props: CommonProps) {
-
-    const [loadStarted, setLoadStarted,] = useState(false);
-    const [data, setData] = useState<ProjectFile[] | null>(null,);
+    const [loadStarted, setLoadStarted] = useState(false);
+    const [data, setData] = useState<ProjectFile[] | null>(null);
 
     props.invalidateFileSystem.current = () => {
         setLoadStarted(false);
@@ -105,25 +107,27 @@ function ProjectView(props: CommonProps) {
     }
 
     if (data === null) {
-        return <CenteredSpinner/>;
+        return <CenteredSpinner />;
     } else {
-        return <div className="d-flex flex-grow-1 flex-column">
-            <Row className="border-bottom lt-border">
-                <Col className="pe-0 py-1 pb-2">
-                    <h3 className="my-2 d-inline user-select-none">{props.project.name}</h3>
-                </Col>
-            </Row>
-            <Row className="flex-grow-1">
-                <Col className="position-relative overflow-y-auto">
-                    <div className="position-absolute top-0 bottom-0">
-                        {data.sort(compareItems).map(item => (<ProjectItem key={item.path} file={item} {...props}/>))}
-                    </div>
-                </Col>
-            </Row>
-        </div>;
+        return (
+            <div className="d-flex flex-grow-1 flex-column">
+                <Row className="border-bottom lt-border">
+                    <Col className="pe-0 py-1 pb-2">
+                        <h3 className="my-2 d-inline user-select-none">{props.project.name}</h3>
+                    </Col>
+                </Row>
+                <Row className="flex-grow-1">
+                    <Col className="position-relative overflow-y-auto">
+                        <div className="position-absolute top-0 bottom-0">
+                            {data.sort(compareItems).map((item) => (
+                                <ProjectItem key={item.path} file={item} {...props} />
+                            ))}
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        );
     }
-
 }
 
 export default ProjectView;
-

@@ -1,27 +1,23 @@
-import Form, {UiSchema} from "@rjsf/core";
-import {ask, message} from "@tauri-apps/api/dialog";
-import {emit} from "@tauri-apps/api/event";
-import {invoke} from "@tauri-apps/api/tauri";
-import {getAll, WebviewWindow} from "@tauri-apps/api/window";
-import {JSONSchema7} from "json-schema";
-import {useState} from "react";
+import Form, { UiSchema } from "@rjsf/core";
+import { ask, message } from "@tauri-apps/api/dialog";
+import { emit } from "@tauri-apps/api/event";
+import { invoke } from "@tauri-apps/api/tauri";
+import { getAll, WebviewWindow } from "@tauri-apps/api/window";
+import { JSONSchema7 } from "json-schema";
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import {SettingsManager} from "../Common/AppData/Settings";
+import { SettingsManager } from "../Common/AppData/Settings";
 
 import settingsSchema from "../Common/AppData/SettingsSchema.json";
 import InspectorBoolean from "../MainWindow/Panels/Editor/Editors/Inspector/Fields/InspectorBoolean";
-import InspectorArrayFieldTemplate
-    from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorArrayFieldTemplate";
-import InspectorFieldTemplate
-    from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorFieldTemplate";
-import InspectorObjectFieldTemplate
-    from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorObjectFieldTemplate";
+import InspectorArrayFieldTemplate from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorArrayFieldTemplate";
+import InspectorFieldTemplate from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorFieldTemplate";
+import InspectorObjectFieldTemplate from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorObjectFieldTemplate";
 
 export const openSettingsWindow = () => {
-
     const webview = new WebviewWindow("settings", {
         title: "Settings",
         width: 700,
@@ -31,15 +27,15 @@ export const openSettingsWindow = () => {
     });
 
     webview.once("tauri://created", () => {
-        getAll().find(w => w.label === "new_project")?.close();
+        getAll()
+            .find((w) => w.label === "new_project")
+            ?.close();
     });
-
 };
 
 const initialSettings = await SettingsManager.get();
 
 function SettingsWindow() {
-
     const [settings, setSettings] = useState(initialSettings);
 
     const customFields = {
@@ -55,12 +51,16 @@ function SettingsWindow() {
     };
 
     const close = () => {
-        getAll().find(w => w.label === "settings")?.close();
+        getAll()
+            .find((w) => w.label === "settings")
+            ?.close();
     };
 
     const onSave = async () => {
-
-        if (!await invoke("file_exists", {path: settings.defaultProjectFolder}) || !await invoke("is_dir", {path: settings.defaultProjectFolder})) {
+        if (
+            !(await invoke("file_exists", { path: settings.defaultProjectFolder })) ||
+            !(await invoke("is_dir", { path: settings.defaultProjectFolder }))
+        ) {
             await message("defaultProjectFolder is invalid, Please enter a path to a folder", {
                 type: "warning",
                 title: "Invalid Path"
@@ -72,9 +72,12 @@ function SettingsWindow() {
         await emit("nh://settings-changed", settings);
 
         if (settings.theme !== initialSettings.theme) {
-            const result = await ask("You have changed the theme. You need to reload the app to apply the changes. Do you want to reload now? (Any unsaved changes will be lost!)", {
-                title: "Restart Required"
-            });
+            const result = await ask(
+                "You have changed the theme. You need to reload the app to apply the changes. Do you want to reload now? (Any unsaved changes will be lost!)",
+                {
+                    title: "Restart Required"
+                }
+            );
             if (result) {
                 await emit("nh://reload");
             }
@@ -84,9 +87,12 @@ function SettingsWindow() {
     };
 
     const onReset = async () => {
-        const result = await ask("Are you sure you want to reset all settings to their default values? (Any unsaved changes will be lost!)", {
-            title: "Reset Settings"
-        });
+        const result = await ask(
+            "Are you sure you want to reset all settings to their default values? (Any unsaved changes will be lost!)",
+            {
+                title: "Reset Settings"
+            }
+        );
         if (result) {
             await SettingsManager.reset();
             setSettings(await SettingsManager.get());
@@ -95,30 +101,43 @@ function SettingsWindow() {
         }
     };
 
-    return <Container className="d-flex flex-column vh-100 mt-0">
-        <Row className="flex-grow-1">
-            <Col className="position-relative">
-                <div className="position-absolute top-0 bottom-0 w-100">
-                    <Form onChange={(e) => setSettings(e.formData)} formData={settings} uiSchema={uiSchema}
-                          schema={settingsSchema as JSONSchema7} ArrayFieldTemplate={InspectorArrayFieldTemplate}
-                          ObjectFieldTemplate={InspectorObjectFieldTemplate}
-                          FieldTemplate={InspectorFieldTemplate} fields={customFields}/>
-                </div>
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col>
-                <Button onClick={onSave} className="w-100">Save</Button>
-            </Col>
-            <Col>
-                <Button onClick={onReset} className="w-100" variant="danger">Reset</Button>
-            </Col>
-            <Col>
-                <Button onClick={close} className="w-100" variant="secondary">Cancel</Button>
-            </Col>
-        </Row>
-    </Container>;
-
+    return (
+        <Container className="d-flex flex-column vh-100 mt-0">
+            <Row className="flex-grow-1">
+                <Col className="position-relative">
+                    <div className="position-absolute top-0 bottom-0 w-100">
+                        <Form
+                            onChange={(e) => setSettings(e.formData)}
+                            formData={settings}
+                            uiSchema={uiSchema}
+                            schema={settingsSchema as JSONSchema7}
+                            ArrayFieldTemplate={InspectorArrayFieldTemplate}
+                            ObjectFieldTemplate={InspectorObjectFieldTemplate}
+                            FieldTemplate={InspectorFieldTemplate}
+                            fields={customFields}
+                        />
+                    </div>
+                </Col>
+            </Row>
+            <Row className="mb-3">
+                <Col>
+                    <Button onClick={onSave} className="w-100">
+                        Save
+                    </Button>
+                </Col>
+                <Col>
+                    <Button onClick={onReset} className="w-100" variant="danger">
+                        Reset
+                    </Button>
+                </Col>
+                <Col>
+                    <Button onClick={close} className="w-100" variant="secondary">
+                        Cancel
+                    </Button>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
 
 export default SettingsWindow;

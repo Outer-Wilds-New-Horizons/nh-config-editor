@@ -1,12 +1,11 @@
-import {documentDir} from "@tauri-apps/api/path";
-import {Theme} from "../Theme/ThemeManager";
+import { documentDir } from "@tauri-apps/api/path";
+import { Theme } from "../Theme/ThemeManager";
 import AppData from "./AppData";
 
 /**
  * @comment ATTENTION: This file is auto-updated on every build, you don't need to edit it manually.
  */
 export type Settings = {
-
     /**
      * @comment The theme to use.
      * @default "Follow System"
@@ -32,7 +31,7 @@ export type Settings = {
      * @description Whether to minify all json files when building the project
      */
     minify: boolean;
-}
+};
 
 export const defaultSettings: Settings = {
     theme: "Follow System",
@@ -43,5 +42,3 @@ export const defaultSettings: Settings = {
 };
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);
-
-

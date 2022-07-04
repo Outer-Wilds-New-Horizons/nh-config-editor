@@ -1,38 +1,38 @@
-import {process} from "@tauri-apps/api";
-import {ask, message} from "@tauri-apps/api/dialog";
-import {sep} from "@tauri-apps/api/path";
-import {invoke} from "@tauri-apps/api/tauri";
-import {getCurrent, WebviewWindow} from "@tauri-apps/api/window";
+import { process } from "@tauri-apps/api";
+import { ask, message } from "@tauri-apps/api/dialog";
+import { sep } from "@tauri-apps/api/path";
+import { invoke } from "@tauri-apps/api/tauri";
+import { getCurrent, WebviewWindow } from "@tauri-apps/api/window";
 
-import {MutableRefObject, useRef, useState} from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import {openAboutWindow} from "../AboutWindow/AboutWindow";
-import {Project} from "../Common/Project";
+import { openAboutWindow } from "../AboutWindow/AboutWindow";
+import { Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
-import {openSettingsWindow} from "../SettingsWindow/SettingsWindow";
-import {useSettings} from "../Wrapper";
+import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
+import { useSettings } from "../Wrapper";
 
 import "./main_window.css";
-import {setupAllEvents} from "./MenuBar/Actions";
+import { setupAllEvents } from "./MenuBar/Actions";
 import MenuBar from "./MenuBar/MenuBar";
 import EditorFrame from "./Panels/Editor/EditorFrame";
-import {ProjectFile, ProjectFileType} from "./Panels/ProjectView/ProjectFile";
+import { ProjectFile, ProjectFileType } from "./Panels/ProjectView/ProjectFile";
 import ProjectView from "./Panels/ProjectView/ProjectView";
 
 export type PathToFile = { [key: string]: ProjectFile };
 
 export type CommonProps = {
-    project: Project,
-    openFiles: ProjectFile[],
-    setOpenFiles: CallableFunction,
-    selectedFile: ProjectFile | null,
-    setSelectedFile: CallableFunction,
-    currentlyRegisteredFiles: PathToFile,
-    setCurrentlyRegisteredFiles: CallableFunction,
-    invalidateFileSystem: MutableRefObject<CallableFunction>
-}
+    project: Project;
+    openFiles: ProjectFile[];
+    setOpenFiles: CallableFunction;
+    selectedFile: ProjectFile | null;
+    setSelectedFile: CallableFunction;
+    currentlyRegisteredFiles: PathToFile;
+    setCurrentlyRegisteredFiles: CallableFunction;
+    invalidateFileSystem: MutableRefObject<CallableFunction>;
+};
 
 const actionRegistry = await setupAllEvents();
 
@@ -57,7 +57,6 @@ if (projectPath === null) {
 }
 
 function MainWindow() {
-
     // noinspection JSUnusedLocalSymbols
     const [openFiles, setOpenFiles] = useState<ProjectFile[]>([]);
     const [selectedFile, setSelectedFile] = useState<ProjectFile | null>(null);
@@ -70,10 +69,11 @@ function MainWindow() {
 
     if (project === null) {
         process.exit(1);
-        return <CenteredSpinner/>;
+        return <CenteredSpinner />;
     }
 
-    const filesHaveChanged = () => openFiles.length > 0 && openFiles.filter(file => file.changed).length > 0;
+    const filesHaveChanged = () =>
+        openFiles.length > 0 && openFiles.filter((file) => file.changed).length > 0;
 
     const commonProps: CommonProps = {
         openFiles,
@@ -87,13 +87,15 @@ function MainWindow() {
     };
 
     const createNewFile = (fileType: ProjectFileType) => {
-
         let currentNumber = 1;
 
-        while (openFiles.filter(file => file.name === `new_${fileType}_${currentNumber}.json`).length > 0) currentNumber++;
+        while (
+            openFiles.filter((file) => file.name === `new_${fileType}_${currentNumber}.json`)
+                .length > 0
+        )
+            currentNumber++;
 
         ProjectFile.createNew(commonProps, `new_${fileType}_${currentNumber}.json`, fileType);
-
     };
 
     actionRegistry["new_planet"].callback = () => createNewFile("planet");
@@ -102,8 +104,14 @@ function MainWindow() {
 
     const findOrMakeAddonManifest = async () => {
         const filePath = `${project!.path}${sep}addon-manifest.json`;
-        if (!(await invoke("file_exists", {path: filePath}))) {
-            const newFile = new ProjectFile(false, [], "addon-manifest.json", filePath, "addon_manifest");
+        if (!(await invoke("file_exists", { path: filePath }))) {
+            const newFile = new ProjectFile(
+                false,
+                [],
+                "addon-manifest.json",
+                filePath,
+                "addon_manifest"
+            );
             newFile.data = {};
             await newFile.save(commonProps);
             invalidateFileSystem.current();
@@ -134,8 +142,8 @@ function MainWindow() {
         } else {
             ask("There are unsaved changes. Are you sure you want to close all files?", {
                 type: "warning",
-                title: "Close All Files",
-            }).then(result => {
+                title: "Close All Files"
+            }).then((result) => {
                 if (result) {
                     for (const file of openFiles) {
                         file.data = null;
@@ -152,12 +160,14 @@ function MainWindow() {
     };
 
     actionRegistry["close_project"].callback = async () => {
-
         if (filesHaveChanged()) {
-            const result = await ask("There are unsaved changes, are you sure you want to close the project?", {
-                type: "warning",
-                title: "Close Project",
-            });
+            const result = await ask(
+                "There are unsaved changes, are you sure you want to close the project?",
+                {
+                    type: "warning",
+                    title: "Close Project"
+                }
+            );
             if (!result) return;
         }
 
@@ -176,15 +186,13 @@ function MainWindow() {
         await webview.once("tauri://created", () => {
             getCurrent().close();
         });
-
     };
 
     actionRegistry["open_explorer"].callback = () => {
-        invoke("show_in_explorer", {path: project!.path});
+        invoke("show_in_explorer", { path: project!.path });
     };
 
     const buildProject = async () => {
-
         console.log(`Minify: ${settings.minify}`);
 
         for (const file of openFiles) {
@@ -196,7 +204,7 @@ function MainWindow() {
             minify: settings.minify
         });
         invalidateFileSystem.current();
-        await invoke("show_in_explorer", {path: `${project!.path}${sep}build`});
+        await invoke("show_in_explorer", { path: `${project!.path}${sep}build` });
     };
 
     actionRegistry["build"].callback = () => {
@@ -205,7 +213,7 @@ function MainWindow() {
 
     actionRegistry["settings"].callback = openSettingsWindow;
 
-    actionRegistry["help"].callback = () => message("No", {title: ""});
+    actionRegistry["help"].callback = () => message("No", { title: "" });
 
     actionRegistry["about"].callback = openAboutWindow;
 
@@ -215,8 +223,8 @@ function MainWindow() {
         } else {
             ask("There are unsaved changes. Are you sure you want to reload?", {
                 type: "warning",
-                title: "Reload",
-            }).then(result => {
+                title: "Reload"
+            }).then((result) => {
                 if (result) {
                     window.location.reload();
                 }
@@ -226,18 +234,17 @@ function MainWindow() {
 
     actionRegistry["quit"].callback = () => process.exit(0);
 
-
     return (
         <Container fluid className="vh-100 flex-column d-flex">
             <Row className="py-0">
-                <MenuBar/>
+                <MenuBar />
             </Row>
             <Row className="flex-grow-1 border-top lt-border overflow-hidden">
                 <Col className="d-flex flex-column border-end lt-border">
-                    <ProjectView {...commonProps}/>
+                    <ProjectView {...commonProps} />
                 </Col>
                 <Col className="p-0 h-100 d-flex flex-column" xs={8}>
-                    <EditorFrame {...commonProps}/>
+                    <EditorFrame {...commonProps} />
                 </Col>
             </Row>
         </Container>

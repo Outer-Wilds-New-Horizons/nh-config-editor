@@ -1,8 +1,8 @@
-import {ask, save} from "@tauri-apps/api/dialog";
-import {sep} from "@tauri-apps/api/path";
-import {invoke} from "@tauri-apps/api/tauri";
-import {JSONSchema7} from "json-schema";
-import {ReactElement} from "react";
+import { ask, save } from "@tauri-apps/api/dialog";
+import { sep } from "@tauri-apps/api/path";
+import { invoke } from "@tauri-apps/api/tauri";
+import { JSONSchema7 } from "json-schema";
+import { ReactElement } from "react";
 import {
     Box2Fill,
     Bullseye,
@@ -15,8 +15,8 @@ import {
     Globe,
     Translate
 } from "react-bootstrap-icons";
-import {deleteDefaultValues, deleteEmptyObjects} from "../../../Common/Utils";
-import {CommonProps} from "../../MainWindow";
+import { deleteDefaultValues, deleteEmptyObjects } from "../../../Common/Utils";
+import { CommonProps } from "../../MainWindow";
 import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
 import bodySchema from "../../Schemas/body_schema.json";
 import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
@@ -25,23 +25,22 @@ import translationSchema from "../../Schemas/translation_schema.json";
 
 type JSONObject = {
     [key: string]: string | boolean | number | JSONObject;
-}
+};
 
 export type ProjectFileType =
-    "planet" |
-    "system" |
-    "translation" |
-    "addon_manifest" |
-    "mod_manifest" |
-    "asset_bundle" |
-    "xml" |
-    "image" |
-    "sound" |
-    "binary" |
-    "other";
+    | "planet"
+    | "system"
+    | "translation"
+    | "addon_manifest"
+    | "mod_manifest"
+    | "asset_bundle"
+    | "xml"
+    | "image"
+    | "sound"
+    | "binary"
+    | "other";
 
 export class ProjectFile {
-
     isFolder: boolean;
     children: ProjectFile[];
     name: string;
@@ -50,7 +49,13 @@ export class ProjectFile {
     data: object | null = null;
     changed = false;
 
-    constructor(isFolder: boolean, children: ProjectFile[], name: string, path: string, fileType: ProjectFileType) {
+    constructor(
+        isFolder: boolean,
+        children: ProjectFile[],
+        name: string,
+        path: string,
+        fileType: ProjectFileType
+    ) {
         this.isFolder = isFolder;
         this.children = children;
         this.name = name;
@@ -58,7 +63,11 @@ export class ProjectFile {
         this.fileType = fileType;
     }
 
-    static async createNew(props: CommonProps, name: string, fileType: ProjectFileType): Promise<void> {
+    static async createNew(
+        props: CommonProps,
+        name: string,
+        fileType: ProjectFileType
+    ): Promise<void> {
         const newFile = new ProjectFile(false, [], name, "", fileType);
         newFile.path = `@@void@@/${newFile.getRootDirName()}/${name}`;
         newFile.setChanged(true);
@@ -74,27 +83,27 @@ export class ProjectFile {
     getIcon(): ReactElement {
         switch (this.fileType) {
             case "planet":
-                return <Globe/>;
+                return <Globe />;
             case "system":
-                return <Bullseye/>;
+                return <Bullseye />;
             case "translation":
-                return <Translate/>;
+                return <Translate />;
             case "addon_manifest":
-                return <FileMedicalFill/>;
+                return <FileMedicalFill />;
             case "mod_manifest":
-                return <FileMedicalFill/>;
+                return <FileMedicalFill />;
             case "asset_bundle":
-                return <Box2Fill/>;
+                return <Box2Fill />;
             case "xml":
-                return <FileEarmarkCodeFill/>;
+                return <FileEarmarkCodeFill />;
             case "image":
-                return <FileEarmarkImageFill/>;
+                return <FileEarmarkImageFill />;
             case "sound":
-                return <FileEarmarkMusicFill/>;
+                return <FileEarmarkMusicFill />;
             case "binary":
-                return <FileEarmarkBinaryFill/>;
+                return <FileEarmarkBinaryFill />;
             default:
-                return <FileEarmarkFill/>;
+                return <FileEarmarkFill />;
         }
     }
 
@@ -103,11 +112,13 @@ export class ProjectFile {
     }
 
     isJson(): boolean {
-        return this.fileType === "planet" ||
+        return (
+            this.fileType === "planet" ||
             this.fileType === "system" ||
             this.fileType === "translation" ||
             this.fileType === "addon_manifest" ||
-            this.fileType === "mod_manifest";
+            this.fileType === "mod_manifest"
+        );
     }
 
     getRootDirName(): string {
@@ -136,7 +147,7 @@ export class ProjectFile {
             case "mod_manifest":
                 return modManifestSchema as JSONSchema7;
             default:
-                return {type: "null"};
+                return { type: "null" };
         }
     }
 
@@ -158,10 +169,13 @@ export class ProjectFile {
     }
 
     getContentToSave(minify: boolean): string {
-
         if (this.isJson()) {
             let dataToSave: JSONObject = new Object(this.data) as JSONObject;
-            deleteDefaultValues(dataToSave as { [key: string]: object }, this.getSchema(), this.getSchema());
+            deleteDefaultValues(
+                dataToSave as { [key: string]: object },
+                this.getSchema(),
+                this.getSchema()
+            );
             dataToSave = deleteEmptyObjects(dataToSave) as JSONObject;
             if (!minify) dataToSave["$schema"] = this.getSchemaLink();
             if (minify) {
@@ -172,11 +186,10 @@ export class ProjectFile {
         } else {
             return "";
         }
-
     }
 
     open(props: CommonProps): void {
-        const check = props.openFiles.filter(f => f.path === this.path,);
+        const check = props.openFiles.filter((f) => f.path === this.path);
         if (check.length === 0) {
             props.setOpenFiles(props.openFiles.concat([this]));
         }
@@ -185,18 +198,20 @@ export class ProjectFile {
 
     close(props: CommonProps): void {
         if (this.changed) {
-            ask("Are you sure you want to close this file without saving?", this.name).then((result) => {
-                if (result) {
-                    this.forceClose(props);
+            ask("Are you sure you want to close this file without saving?", this.name).then(
+                (result) => {
+                    if (result) {
+                        this.forceClose(props);
+                    }
                 }
-            });
+            );
         } else {
             this.forceClose(props);
         }
     }
 
     forceClose(props: CommonProps): void {
-        const newFiles = props.openFiles.filter(file => file !== this);
+        const newFiles = props.openFiles.filter((file) => file !== this);
         if (newFiles.length === 0) {
             props.setSelectedFile(null);
         } else if (props.selectedFile === this) {
@@ -206,18 +221,15 @@ export class ProjectFile {
     }
 
     async saveAs(props: CommonProps) {
-
         const path: string | null = await save({
             title: "Save as",
-            filters: [
-                {name: "JSON file", extensions: ["json"]},
-            ],
-            defaultPath: `${props.project.path}${sep}${this.getRootDirName()}${sep}${this.name}`,
+            filters: [{ name: "JSON file", extensions: ["json"] }],
+            defaultPath: `${props.project.path}${sep}${this.getRootDirName()}${sep}${this.name}`
         });
 
         if (path !== null) {
             this.path = path;
-            this.name = (await invoke("get_metadata", {path: this.path}) as string[])[0];
+            this.name = ((await invoke("get_metadata", { path: this.path })) as string[])[0];
             await this.save(props);
             props.currentlyRegisteredFiles[path] = this;
             props.invalidateFileSystem.current();
@@ -228,9 +240,11 @@ export class ProjectFile {
         if (this.path.startsWith("@@void@@/")) {
             await this.saveAs(props);
         } else if (this.canSave()) {
-            await invoke("write_string_to_file", {path: this.path, content: this.getContentToSave(false)});
+            await invoke("write_string_to_file", {
+                path: this.path,
+                content: this.getContentToSave(false)
+            });
             this.setChanged(false);
         }
     }
-
 }

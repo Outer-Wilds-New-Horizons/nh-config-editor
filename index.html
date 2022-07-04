@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <link href="/src/Common/Images/favicon.ico" rel="icon"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <link href="/src/Common/Images/favicon.ico" rel="icon" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>New Horizons Config Editor</title>
     <script src="/src/Main.tsx" type="module"></script>
     <!-- Styles we need before react mounts -->
-    <style>.nh-spinner {
-        animation: spin 1s linear infinite;
-    }
+    <style>
+        .nh-spinner {
+            animation: spin 1s linear infinite;
+        }
 
-    @keyframes spin {
-        from {
-            transform: rotateY(0deg) scale(0.3)
+        @keyframes spin {
+            from {
+                transform: rotateY(0deg) scale(0.3);
+            }
+            to {
+                transform: rotateY(360deg) scale(0.3);
+            }
         }
-        to {
-            transform: rotateY(360deg) scale(0.3)
-        }
-    }</style>
+    </style>
 </head>
 <body>
 <div id="root">
-    <div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
-        <img alt="Loading..." class="nh-spinner" src="src/Common/Images/spinner_image.png"/>
+    <div style="height: 100vh; display: flex; align-items: center; justify-content: center">
+        <img
+          alt="Loading..."
+          class="nh-spinner"
+          src="src/Common/Images/spinner_image.png"
+        />
     </div>
 </div>
 </body>

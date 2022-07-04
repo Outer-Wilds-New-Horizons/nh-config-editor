@@ -1,16 +1,15 @@
-import {invoke} from "@tauri-apps/api/tauri";
-import {useState} from "react";
+import { invoke } from "@tauri-apps/api/tauri";
+import { useState } from "react";
 import Image from "react-bootstrap/Image";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
-import {EditorProps} from "../Editor";
+import { EditorProps } from "../Editor";
 
 function ImageView(props: EditorProps) {
-
     const [loadStarted, setLoadStarted] = useState(false);
     const [imageData, setImageData] = useState<string | null>(null);
 
     const loadImage = async (): Promise<string> => {
-        return await invoke("load_image_as_base_64", {imgPath: props.file.path});
+        return await invoke("load_image_as_base_64", { imgPath: props.file.path });
     };
 
     if (!loadStarted) {
@@ -19,13 +18,14 @@ function ImageView(props: EditorProps) {
     }
 
     if (imageData === null) {
-        return <CenteredSpinner/>;
+        return <CenteredSpinner />;
     } else {
-        return <div className="mx-5 d-flex justify-content-center align-items-center h-100">
-            <Image src={`data:image/png;base64,${imageData}`} alt={props.file.name} fluid/>
-        </div>;
+        return (
+            <div className="mx-5 d-flex justify-content-center align-items-center h-100">
+                <Image src={`data:image/png;base64,${imageData}`} alt={props.file.name} fluid />
+            </div>
+        );
     }
-
 }
 
 export default ImageView;

@@ -1,21 +1,21 @@
-import {Popover, PopoverBody, PopoverHeader} from "react-bootstrap";
+import { Popover, PopoverBody, PopoverHeader } from "react-bootstrap";
 import InfoIconTrigger from "./InfoIconTrigger";
 
 export type DescriptionPopoverProps = {
-    id: string,
-    title: string,
-    description: string
-}
+    id: string;
+    title: string;
+    description: string;
+};
 
 function DescriptionPopover(props: DescriptionPopoverProps) {
-    const popover = <Popover id={`${props.id}-popover`}>
-        <PopoverHeader>{props.title}</PopoverHeader>
-        <PopoverBody>
-            {props.description}
-        </PopoverBody>
-    </Popover>;
+    const popover = (
+        <Popover id={`${props.id}-popover`}>
+            <PopoverHeader>{props.title}</PopoverHeader>
+            <PopoverBody>{props.description}</PopoverBody>
+        </Popover>
+    );
 
-    return <InfoIconTrigger popover={popover}/>;
+    return <InfoIconTrigger popover={popover} />;
 }
 
 export default DescriptionPopover;

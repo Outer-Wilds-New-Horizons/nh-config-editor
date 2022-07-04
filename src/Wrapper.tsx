@@ -1,6 +1,6 @@
-import {Event, listen} from "@tauri-apps/api/event";
+import { Event, listen } from "@tauri-apps/api/event";
 import React from "react";
-import {Settings, SettingsManager} from "./Common/AppData/Settings";
+import { Settings, SettingsManager } from "./Common/AppData/Settings";
 import "./Common/common.css";
 import CenteredSpinner from "./Common/Spinner/CenteredSpinner";
 import ThemeManager from "./Common/Theme/ThemeManager";
@@ -15,7 +15,6 @@ const loadedSettings = await SettingsManager.get();
 const SettingsContext = React.createContext(loadedSettings);
 
 function Wrapper() {
-
     const [settings, setSettings] = React.useState(loadedSettings);
 
     listen("nh://settings-changed", (event: Event<string>) => {
@@ -30,29 +29,29 @@ function Wrapper() {
 
     switch (document.location.hash) {
         case "#MAIN":
-            page = <MainWindow/>;
+            page = <MainWindow />;
             break;
         case "#SETTINGS":
-            page = <SettingsWindow/>;
+            page = <SettingsWindow />;
             break;
         case "#ABOUT":
-            page = <AboutWindow/>;
+            page = <AboutWindow />;
             break;
         case "#NEWPROJECT":
-            page = <NewProjectWindow/>;
+            page = <NewProjectWindow />;
             break;
         case "#START":
         default:
-            page = <StartWindow/>;
+            page = <StartWindow />;
             break;
     }
 
-    return <SettingsContext.Provider value={settings}>
-        <ThemeManager theme={settings.theme}/>
-        <React.Suspense fallback={<CenteredSpinner/>}>
-            {page}
-        </React.Suspense>
-    </SettingsContext.Provider>;
+    return (
+        <SettingsContext.Provider value={settings}>
+            <ThemeManager theme={settings.theme} />
+            <React.Suspense fallback={<CenteredSpinner />}>{page}</React.Suspense>
+        </SettingsContext.Provider>
+    );
 }
 
 export default Wrapper;

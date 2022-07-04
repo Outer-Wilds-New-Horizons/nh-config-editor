@@ -6,10 +6,11 @@ extends:
     - plugin:react/recommended
     - plugin:react/jsx-runtime
     - plugin:@typescript-eslint/recommended
-parser: '@typescript-eslint/parser'
+    - prettier
+parser: "@typescript-eslint/parser"
 settings:
     react:
-        version: 'detect'
+        version: "detect"
 parserOptions:
     ecmaFeatures:
         jsx: true
@@ -17,20 +18,13 @@ parserOptions:
     sourceType: module
 plugins:
     - react
-    - '@typescript-eslint'
+    - "@typescript-eslint"
 rules:
-    indent:
-        - error
-        - 4
-    linebreak-style:
-        - error
-        - windows
     quotes:
         - error
         - double
-    semi:
-        - error
-        - always
+        -   avoidEscape: true
+            allowTemplateLiterals: false
     no-duplicate-imports: error
     no-unreachable: error
     camelcase: error
@@ -45,5 +39,4 @@ rules:
     yoda: warn
     no-new-symbol: off
     symbol-description: off
-    '@typescript-eslint/no-non-null-assertion': off
-
+    "@typescript-eslint/no-non-null-assertion": off

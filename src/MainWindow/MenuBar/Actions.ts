@@ -1,12 +1,10 @@
-import {isRegistered, register} from "@tauri-apps/api/globalShortcut";
-
+import { isRegistered, register } from "@tauri-apps/api/globalShortcut";
 
 export type ActionRegistry = {
     [key: string]: Action;
-}
+};
 
 export class Action {
-
     id: string;
     name: string;
     shortcut?: string;
@@ -22,15 +20,12 @@ export class Action {
     }
 
     async register(actionRegistry: ActionRegistry) {
-
         if (this.shortcut && !(await isRegistered(this.shortcut))) {
             await register(this.shortcut, () => this.callback());
         }
 
         actionRegistry[this.id] = this;
-
     }
-
 }
 
 export type ActionGroupItem = Action | "separator";
@@ -38,11 +33,11 @@ export type ActionGroupItem = Action | "separator";
 export type ActionGroup = {
     title: string;
     actions: ActionGroupItem[];
-}
+};
 
 export type ActionBar = {
     groups: ActionGroup[];
-}
+};
 
 export const menuBar: ActionBar = {
     groups: [
@@ -62,7 +57,7 @@ export const menuBar: ActionBar = {
                 new Action("settings", "Settings", "CommandOrControl+I"),
                 "separator",
                 new Action("close_project", "Close Project", "CommandOrControl+Alt+W"),
-                new Action("quit", "Quit", "CommandOrControl+Q"),
+                new Action("quit", "Quit", "CommandOrControl+Q")
             ]
         },
         {
@@ -84,7 +79,6 @@ export const menuBar: ActionBar = {
 };
 
 export async function setupAllEvents(): Promise<ActionRegistry> {
-
     const actionRegistry: ActionRegistry = {};
 
     for (const group of menuBar.groups) {
@@ -96,5 +90,4 @@ export async function setupAllEvents(): Promise<ActionRegistry> {
     }
 
     return actionRegistry;
-
 }
