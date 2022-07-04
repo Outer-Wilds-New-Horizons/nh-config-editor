@@ -13,7 +13,8 @@
         "lint": "eslint src/**/*.ts src/**/*.tsx",
         "lint-fix": "eslint src/**/*.ts src/**/*.tsx --fix",
         "prettify": "prettier --write .",
-        "lint-prettify": "pnpm lint && pnpm prettify"
+        "lint-prettify": "pnpm lint && pnpm prettify",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.5",
@@ -41,9 +42,15 @@
         "eslint": "^8.18.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-react": "^7.30.1",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
         "prettier": "^2.7.1",
         "ts-json-schema-generator": "^1.0.0",
         "typescript": "^4.6.3",
         "vite": "^2.9.9"
+    },
+    "lint-staged": {
+        "*.{js,ts,jsx,tsx}": "eslint --cache --fix",
+        "*.{js,ts,jsx,tsx,css,md,yml,yaml,json,toml}": "prettier --write"
     }
 }
