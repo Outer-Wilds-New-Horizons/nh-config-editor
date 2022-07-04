@@ -1,0 +1,58 @@
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+
+$white: rgb(255, 255, 255);
+$orange: #ffab8a;
+$body-bg: $gray-900;
+$body-color: $gray-200;
+$primary: rgb(46, 118, 150);
+$secondary: $gray-600;
+$green: rgb(71, 185, 97);
+$cyan: rgb(27, 117, 131);
+$yellow: rgb(255, 216, 101);
+$red: #a84643;
+$input-bg: $gray-800;
+$input-color: $gray-100;
+$input-border-color: $gray-900;
+$input-disabled-bg: $gray-600;
+$input-group-addon-bg: $input-disabled-bg;
+$popover-bg: $gray-800;
+$list-group-bg: $gray-900;
+$list-group-border-color: $gray-800;
+$text-muted: $gray-500;
+$list-group-color: $gray-200;
+$list-group-hover-bg: $gray-800;
+$list-group-action-hover-color: $gray-200;
+$list-group-action-active-color: $text-muted;
+$list-group-action-active-bg: $gray-600;
+$nav-tabs-border-color: $gray-600;
+$nav-tabs-link-active-bg: $gray-800;
+$nav-tabs-link-active-color: $gray-200;
+$nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-color $nav-tabs-link-active-bg $nav-tabs-border-color;
+$nav-tabs-link-hover-border-color: $gray-700 $gray-700 $nav-tabs-border-color;
+$headings-color: $gray-100;
+$dropdown-border-color: $gray-700;
+$dropdown-link-color: $body-color;
+$dropdown-link-hover-bg: $gray-700;
+$dropdown-header-color: $body-color;
+$dropdown-divider-bg: $gray-700;
+$dropdown-bg: $body-bg;
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+.menubar-item {
+  background-color: $body-bg !important;
+  color: $body-color !important;
+}
+
+.recent-projects-border {
+  border-color: $gray-700 !important;
+}

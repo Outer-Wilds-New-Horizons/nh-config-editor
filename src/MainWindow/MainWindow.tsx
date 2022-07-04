@@ -1,5 +1,5 @@
 import {process} from "@tauri-apps/api";
-import {message} from "@tauri-apps/api/dialog";
+import {ask, message} from "@tauri-apps/api/dialog";
 import {sep} from "@tauri-apps/api/path";
 import {invoke} from "@tauri-apps/api/tauri";
 import {getCurrent, WebviewWindow} from "@tauri-apps/api/window";
@@ -8,11 +8,13 @@ import {MutableRefObject, useRef, useState} from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import CenteredSpinner from "../Common/CenteredSpinner";
 import {Project} from "../Common/Project";
-import {MenuBar, setupAllEvents} from "./Actions";
+import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
+import {openSettingsWindow} from "../SettingsWindow/SettingsWindow";
 
 import "./main_window.css";
+import {setupAllEvents} from "./MenuBar/Actions";
+import MenuBar from "./MenuBar/MenuBar";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import {ProjectFile, ProjectFileType} from "./Panels/ProjectView/ProjectFile";
 import ProjectView from "./Panels/ProjectView/ProjectView";
@@ -103,9 +105,7 @@ function MainWindow() {
     };
 
     actionRegistry["make_manifest"].callback = () => {
-        findOrMakeAddonManifest().then(() => {
-            currentlyRegisteredFiles[`${project!.path}${sep}addon-manifest.json`].open(commonProps);
-        });
+        findOrMakeAddonManifest();
     };
 
     actionRegistry["save"].callback = () => {
@@ -120,8 +120,22 @@ function MainWindow() {
     };
 
     actionRegistry["close_all"].callback = () => {
-        for (const file of openFiles) {
-            file.close(commonProps);
+        if (openFiles.filter(f => f.changed).length === 0) {
+            for (const file of openFiles) {
+                file.forceClose(commonProps);
+            }
+        } else {
+            ask("There are unsaved changes. Are you sure you want to close all files?", {
+                type: "warning",
+                title: "Close All Files",
+            }).then(result => {
+                if (result) {
+                    for (const file of openFiles) {
+                        file.data = null;
+                    }
+                    setOpenFiles([]);
+                }
+            });
         }
     };
 
@@ -155,11 +169,34 @@ function MainWindow() {
         invoke("show_in_explorer", {path: project!.path});
     };
 
+    const buildProject = async () => {
+        for (const file of openFiles) {
+            await file.save(commonProps);
+        }
+        await invoke("zip_project", {path: project!.path, outputZipName: `${project!.uniqueName}.zip`});
+        invalidateFileSystem.current();
+        await invoke("show_in_explorer", {path: `${project!.path}${sep}build`});
+    };
+
     actionRegistry["build"].callback = () => {
-        invoke("zip_project", {path: project!.path, outputZipName: `${project!.uniqueName}.zip`}).then(() => {
-            invalidateFileSystem.current();
-            invoke("show_in_explorer", {path: `${project!.path}\\build`});
-        });
+        buildProject();
+    };
+
+    actionRegistry["settings"].callback = openSettingsWindow;
+
+    actionRegistry["soft_reset"].callback = () => {
+        if (openFiles.filter(f => f.changed).length === 0) {
+            window.location.reload();
+        } else {
+            ask("There are unsaved changes. Are you sure you want to reload?", {
+                type: "warning",
+                title: "Reload",
+            }).then(result => {
+                if (result) {
+                    window.location.reload();
+                }
+            });
+        }
     };
 
     actionRegistry["quit"].callback = () => process.exit(0);

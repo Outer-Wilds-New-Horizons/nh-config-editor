@@ -2,7 +2,7 @@ import {ArrayFieldTemplateProps} from "@rjsf/core";
 import {cloneElement, useState} from "react";
 import {Button, Collapse} from "react-bootstrap";
 import {CaretRightFill} from "react-bootstrap-icons";
-import {camelToTitleCase} from "../../../../../../Utils";
+import {camelToTitleCase} from "../../../../../../Common/Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 

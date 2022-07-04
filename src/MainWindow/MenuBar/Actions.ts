@@ -1,12 +1,11 @@
 import {isRegistered, register} from "@tauri-apps/api/globalShortcut";
-import {Dropdown} from "react-bootstrap";
 
 
 export type ActionRegistry = {
     [key: string]: Action;
 }
 
-class Action {
+export class Action {
 
     id: string;
     name: string;
@@ -34,33 +33,35 @@ class Action {
 
 }
 
-type ActionGroupItem = Action | "separator";
+export type ActionGroupItem = Action | "separator";
 
-type ActionGroup = {
+export type ActionGroup = {
     title: string;
     actions: ActionGroupItem[];
 }
 
-type ActionBar = {
+export type ActionBar = {
     groups: ActionGroup[];
 }
 
-const menuBar: ActionBar = {
+export const menuBar: ActionBar = {
     groups: [
         {
             title: "File",
             actions: [
                 new Action("new_planet", "New Planet", "CommandOrControl+Shift+P"),
                 new Action("new_system", "New Star System", "CommandOrControl+Shift+S"),
-                new Action("new_translation", "New Translation", undefined),
+                new Action("new_translation", "New Translation", "CommandOrControl+Shift+L"),
                 new Action("make_manifest", "Create Addon Manifest", "CommandOrControl+Shift+A"),
                 "separator",
                 new Action("save", "Save", "CommandOrControl+S"),
                 new Action("save_all", "Save All", "CommandOrControl+Alt+S"),
-                new Action("close_all", "Close All Files", "CommandOrControl+W"),
                 new Action("reload", "Reload From Disk", "CommandOrControl+R"),
-                new Action("close_project", "Close Project", "CommandOrControl+Alt+W"),
+                new Action("close_all", "Close All Files", "CommandOrControl+W"),
                 "separator",
+                new Action("settings", "Settings", "CommandOrControl+I"),
+                "separator",
+                new Action("close_project", "Close Project", "CommandOrControl+Alt+W"),
                 new Action("quit", "Quit", "CommandOrControl+Q"),
             ]
         },
@@ -74,9 +75,9 @@ const menuBar: ActionBar = {
         {
             title: "About",
             actions: [
-                new Action("about", "About", "CommandOrControl+A"),
-                new Action("help", "Help", "CommandOrControl+H"),
-                new Action("report_issue", "Report Issue", "CommandOrControl+I")
+                new Action("help", "Help", "F1"),
+                new Action("about", "About", "F2"),
+                new Action("soft_reset", "Reload", "CommandOrControl+Alt+R")
             ]
         }
     ]
@@ -97,33 +98,3 @@ export async function setupAllEvents(): Promise<ActionRegistry> {
     return actionRegistry;
 
 }
-
-function MenuGroupItem(props: { item: ActionGroupItem }) {
-    if (props.item !== "separator") {
-        return <Dropdown.Item onClick={() => (props.item as Action).callback()}>
-            {props.item.name}
-        </Dropdown.Item>;
-    } else {
-        return <Dropdown.Divider/>;
-    }
-}
-
-function MenuBarItem(props: { group: ActionGroup }) {
-    return <Dropdown>
-        <Dropdown.Toggle className="user-select-none py-0 me-3 menubar-item border-0"
-                         variant="light">{props.group.title}</Dropdown.Toggle>
-        <Dropdown.Menu>
-            {props.group.actions.map((item, index) => {
-                    return <MenuGroupItem key={index} item={item}/>;
-                }
-            )}
-        </Dropdown.Menu>
-    </Dropdown>;
-}
-
-export function MenuBar() {
-    return <div className="d-flex">
-        {menuBar.groups.map((group, index) => <MenuBarItem group={group} key={index}/>)}
-    </div>;
-}
-

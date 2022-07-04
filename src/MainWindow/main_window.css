@@ -1,8 +1,3 @@
-.interactable {
-    cursor: pointer;
-    user-select: none;
-}
-
 .object-caret {
     transition: transform 100ms;
 }
@@ -27,10 +22,10 @@
     overflow-x: hidden;
 }
 
-.menubar-item {
-    background-color: white !important;
+.menubar-item::after {
+    display: none !important;
 }
 
-.menubar-item::after {
-    display: none;
+.menubar-item:focus {
+    box-shadow: none !important;
 }

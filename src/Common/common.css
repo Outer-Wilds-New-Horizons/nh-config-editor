@@ -10,3 +10,8 @@ html, body, div#root {
 .overflow-y-auto {
     overflow-y: auto;
 }
+
+.interactable {
+    cursor: pointer;
+    user-select: none;
+}

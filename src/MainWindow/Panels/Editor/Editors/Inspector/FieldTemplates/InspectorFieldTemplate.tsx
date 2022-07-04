@@ -2,7 +2,7 @@ import {FieldTemplateProps} from "@rjsf/core";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
-import {camelToTitleCase} from "../../../../../../Utils";
+import {camelToTitleCase} from "../../../../../../Common/Utils";
 import InspectorColor from "../Fields/InspectorColor";
 import InspectorVector2 from "../Fields/InspectorVector2";
 import InspectorVector3 from "../Fields/InspectorVector3";
@@ -31,10 +31,6 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
         elem = <InspectorVector3 formData={props.formData} onChange={props.onChange} {...props.children.props}/>;
     } else if (color) {
         elem = <InspectorColor formData={props.formData} onChange={props.onChange} {...props.children.props}/>;
-    }
-
-    if (props.label === "") {
-        console.log("EPIC LABEL!!!!");
     }
 
     return <Form.Group as={Row} className={`${props.classNames} my-2 align-items-center`}>

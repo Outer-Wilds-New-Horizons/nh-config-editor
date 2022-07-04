@@ -1,0 +1,49 @@
+{
+    "$ref": "#/definitions/Settings",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Settings": {
+            "$comment": "ATTENTION: This file is auto-updated on every build, you don't need to edit it manually.",
+            "additionalProperties": false,
+            "properties": {
+                "defaultAuthor": {
+                    "description": "The default author of new projects.",
+                    "type": "string"
+                },
+                "defaultProjectName": {
+                    "description": "The default name of new projects.",
+                    "type": "string"
+                },
+                "manualColor": {
+                    "description": "Whether to allow for manual editing of RGB values opposed to the color picker",
+                    "type": "boolean"
+                },
+                "minify": {
+                    "description": "Whether to minify all json files when building the project",
+                    "type": "boolean"
+                },
+                "theme": {
+                    "$comment": "The theme to use.",
+                    "$ref": "#/definitions/Theme",
+                    "default": "Follow System"
+                }
+            },
+            "required": [
+                "theme",
+                "defaultProjectName",
+                "defaultAuthor",
+                "manualColor",
+                "minify"
+            ],
+            "type": "object"
+        },
+        "Theme": {
+            "enum": [
+                "Follow System",
+                "Default Light",
+                "Default Dark"
+            ],
+            "type": "string"
+        }
+    }
+}

@@ -15,7 +15,7 @@ import {
     Globe,
     Translate
 } from "react-bootstrap-icons";
-import {deleteDefaultValues, deleteEmptyObjects} from "../../../Utils";
+import {deleteDefaultValues, deleteEmptyObjects} from "../../../Common/Utils";
 import {CommonProps} from "../../MainWindow";
 import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
 import bodySchema from "../../Schemas/body_schema.json";

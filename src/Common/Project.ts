@@ -13,7 +13,7 @@ export class Project {
         this.name = name;
         this.uniqueName = uniqueName;
         this.path = path;
-        this.valid = true;
+        this.valid = uniqueName !== "";
     }
 
     static async load(path: string): Promise<Project | null> {
@@ -45,12 +45,6 @@ export class Project {
         } else {
             return null;
         }
-
-    }
-
-    async validate(): Promise<boolean> {
-
-        return await Project.load(this.path) !== null;
 
     }
 

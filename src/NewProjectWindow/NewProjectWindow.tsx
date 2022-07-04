@@ -1,15 +1,17 @@
-import {open} from "@tauri-apps/api/dialog";
+import {message, open} from "@tauri-apps/api/dialog";
 import {documentDir, resolveResource, sep} from "@tauri-apps/api/path";
 import {invoke} from "@tauri-apps/api/tauri";
 import {FormEvent, useState} from "react";
 import {Form, InputGroup} from "react-bootstrap";
+import {Folder2Open} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import {AppData} from "../Common/AppData";
+import RecentProjects from "../Common/AppData/RecentProjects";
 import {Project} from "../Common/Project";
+import {useSettings} from "../Wrapper";
 
-const docsFolder = await documentDir();
+const docsFolder = (await documentDir()).slice(0, -1);
 
 const templateContents = [
     ".gitattributes",
@@ -21,12 +23,14 @@ const templateContents = [
 
 function NewProjectWindow() {
 
-    const [projectName, setProjectName] = useState("");
-    const [authorName, setAuthorName] = useState("");
+    const settings = useSettings();
+
+    const [projectName, setProjectName] = useState(settings.defaultProjectName);
+    const [authorName, setAuthorName] = useState(settings.defaultAuthor);
     const [parentPath, setParentPath] = useState(docsFolder);
 
     const uniqueName = `${authorName}.${projectName.replace(" ", "")}`;
-    const projectPath = `${parentPath}${uniqueName}`;
+    const projectPath = `${parentPath}${sep}${uniqueName}`;
 
     const browseClicked = () => {
 
@@ -70,21 +74,30 @@ function NewProjectWindow() {
         await invoke("mk_dir", {path: `${projectPath}${sep}translations`});
 
         const newProject = new Project(projectName, uniqueName, projectPath);
-        const data = await AppData.get();
-        data.recentProjects.unshift(newProject);
-        await data.save();
+        const data = await RecentProjects.get();
+        data.unshift(newProject);
+        await RecentProjects.save(data);
 
         await newProject.openInMain();
     };
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        makeProject();
+        invoke("file_exists", {path: projectPath}).then(exists => {
+            if (exists) {
+                message("This project already exists", {
+                    type: "error",
+                    title: "Error",
+                });
+            } else {
+                makeProject();
+            }
+        });
     };
 
     return <Container className="mb-2 mt-4">
         <Row>
-            <h1 className="text-center text-decoration-underline">New Project</h1>
+            <h1 className="text-center">New Project</h1>
         </Row>
         <Form onSubmit={(e) => onSubmit(e)} className="d-flex flex-column">
             <Form.Label htmlFor="projectName">Project Name</Form.Label>
@@ -96,14 +109,14 @@ function NewProjectWindow() {
             <Form.Label className="mt-3" htmlFor="uniqueName">Unique Name</Form.Label>
             <Form.Control id="uniqueName" required value={uniqueName} type="text" disabled/>
             <Form.Label className="mt-3" htmlFor="projectFolder">Folder</Form.Label>
-            <InputGroup>
-                <Button onClick={() => browseClicked()} variant="outline-primary" type="button">Browse</Button>
-                <Form.Control onChange={(e) => setParentPath(e.target.value + projectName.replace(" ", ""))}
+            <InputGroup className="mb-2">
+                <Button className="d-flex align-items-center" onClick={() => browseClicked()} variant="outline-primary"
+                        aria-lable="Browse" type="button"><Folder2Open/></Button>
+                <Form.Control onChange={(e) => setParentPath(e.target.value)}
                               id="projectFolder" value={parentPath} required type="text"/>
                 <InputGroup.Text>{uniqueName}</InputGroup.Text>
             </InputGroup>
-            <p className="text-muted small">Select the folder you wish for the project folder to be placed in</p>
-            <Button variant="primary" type="submit">Create Project</Button>
+            <Button className="mt-5" variant="primary" type="submit">Create Project</Button>
         </Form>
     </Container>;
 

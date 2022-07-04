@@ -4,7 +4,7 @@ import {Collapse,} from "react-bootstrap";
 import {CaretRightFill,} from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 
-import {camelToTitleCase,} from "../../../../../../Utils";
+import {camelToTitleCase,} from "../../../../../../Common/Utils";
 import DescriptionPopover from "./DescriptionPopover";
 
 

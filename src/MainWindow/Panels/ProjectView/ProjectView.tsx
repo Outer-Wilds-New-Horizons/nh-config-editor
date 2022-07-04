@@ -2,7 +2,7 @@ import {invoke,} from "@tauri-apps/api/tauri";
 import {useState,} from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import CenteredSpinner from "../../../Common/CenteredSpinner";
+import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
 import {CommonProps,} from "../../MainWindow";
 import {ProjectFile, ProjectFileType,} from "./ProjectFile";
 import ProjectItem from "./ProjectItem";

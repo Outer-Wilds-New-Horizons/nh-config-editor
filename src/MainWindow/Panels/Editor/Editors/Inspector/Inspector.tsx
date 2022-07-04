@@ -2,7 +2,7 @@ import Form, {UiSchema, utils} from "@rjsf/core";
 import {invoke} from "@tauri-apps/api/tauri";
 import {JSONSchema7} from "json-schema";
 import {useState} from "react";
-import CenteredSpinner from "../../../../../Common/CenteredSpinner";
+import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
 import {ProjectFile} from "../../../ProjectView/ProjectFile";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";

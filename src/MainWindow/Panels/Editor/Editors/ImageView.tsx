@@ -1,7 +1,7 @@
 import {invoke} from "@tauri-apps/api/tauri";
 import {useState} from "react";
 import Image from "react-bootstrap/Image";
-import CenteredSpinner from "../../../../Common/CenteredSpinner";
+import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import {EditorProps} from "../Editor";
 
 function ImageView(props: EditorProps) {
