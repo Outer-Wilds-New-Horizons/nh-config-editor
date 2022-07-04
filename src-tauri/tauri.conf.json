@@ -12,6 +12,9 @@
     },
     "tauri": {
         "allowlist": {
+            "os": {
+                "all": true
+            },
             "globalShortcut": {
                 "all": true
             },
@@ -29,7 +32,11 @@
                 "all": true
             },
             "process": {
-                "exit": true
+                "exit": true,
+                "relaunch": true
+            },
+            "shell": {
+                "open": true
             },
             "window": {
                 "all": true

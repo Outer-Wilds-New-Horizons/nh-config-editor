@@ -109,3 +109,8 @@ pub fn copy_file(src: String, dest: String) {
 pub fn mk_dir(path: String) {
     fs::create_dir_all(path).expect("Couldn't Create Directory");
 }
+
+#[tauri::command]
+pub fn delete_dir(path: String) {
+    fs::remove_dir_all(path).expect("Couldn't Delete Directory");
+}

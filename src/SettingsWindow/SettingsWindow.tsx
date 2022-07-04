@@ -23,7 +23,7 @@ export const openSettingsWindow = () => {
 
     const webview = new WebviewWindow("settings", {
         title: "Settings",
-        width: 800,
+        width: 700,
         height: 600,
         resizable: false,
         url: "index.html#SETTINGS"
@@ -71,6 +71,18 @@ function SettingsWindow() {
         }
     };
 
+    const onReset = async () => {
+        const result = await ask("Are you sure you want to reset all settings to their default values? (Any unsaved changes will be lost!)", {
+            title: "Reset Settings"
+        });
+        if (result) {
+            await SettingsManager.reset();
+            setSettings(await SettingsManager.get());
+            close();
+            await emit("nh://reload");
+        }
+    };
+
     return <Container className="d-flex flex-column vh-100 mt-0">
         <Row className="flex-grow-1">
             <Col className="position-relative">
@@ -87,7 +99,10 @@ function SettingsWindow() {
                 <Button onClick={() => onSave().then(close)} className="w-100">Save</Button>
             </Col>
             <Col>
-                <Button onClick={close} className="w-100" variant="secondary">Discard</Button>
+                <Button onClick={onReset} className="w-100" variant="danger">Reset</Button>
+            </Col>
+            <Col>
+                <Button onClick={close} className="w-100" variant="secondary">Cancel</Button>
             </Col>
         </Row>
     </Container>;

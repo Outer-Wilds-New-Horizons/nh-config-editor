@@ -25,7 +25,7 @@ function RecentProject(props: RecentProjectProps) {
 
     return <ListGroup.Item as="li" onMouseEnter={() => setDeleteVisible(true)}
                            onMouseLeave={() => setDeleteVisible(false)} onClick={props.onClick} action
-                           className="interactable recent-projects-border border-bottom text-nowrap">
+                           className="interactable lt-border border-bottom text-nowrap">
         <Button onClick={(e) => onDeleteClick(e)}
                 className={`position-absolute end-0 top-0 py-1 mt-1 me-1${deleteVisible ? " d-flex align-items-center" : " d-none"}`}
                 variant="outline-danger" size="sm"><Trash3/></Button>

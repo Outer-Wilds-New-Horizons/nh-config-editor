@@ -34,7 +34,7 @@ export type Settings = {
 }
 
 export const defaultSettings: Settings = {
-    theme: "Default Light",
+    theme: "Follow System",
     defaultProjectName: "New Project",
     defaultAuthor: "Slate",
     manualColor: false,

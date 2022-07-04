@@ -8,6 +8,7 @@ import {MutableRefObject, useRef, useState} from "react";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import {openAboutWindow} from "../AboutWindow/AboutWindow";
 import {Project} from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import {openSettingsWindow} from "../SettingsWindow/SettingsWindow";
@@ -184,6 +185,8 @@ function MainWindow() {
 
     actionRegistry["settings"].callback = openSettingsWindow;
 
+    actionRegistry["about"].callback = openAboutWindow;
+
     actionRegistry["soft_reset"].callback = () => {
         if (openFiles.filter(f => f.changed).length === 0) {
             window.location.reload();
@@ -207,8 +210,8 @@ function MainWindow() {
             <Row className="py-0">
                 <MenuBar/>
             </Row>
-            <Row className="flex-grow-1 border-top overflow-hidden">
-                <Col className="d-flex flex-column border-end">
+            <Row className="flex-grow-1 border-top lt-border overflow-hidden">
+                <Col className="d-flex flex-column border-end lt-border">
                     <ProjectView {...commonProps}/>
                 </Col>
                 <Col className="p-0 h-100 d-flex flex-column" xs={8}>

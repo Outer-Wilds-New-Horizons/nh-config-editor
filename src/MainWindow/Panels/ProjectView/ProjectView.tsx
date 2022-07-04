@@ -108,7 +108,7 @@ function ProjectView(props: CommonProps) {
         return <CenteredSpinner/>;
     } else {
         return <div className="d-flex flex-grow-1 flex-column">
-            <Row className="border-bottom">
+            <Row className="border-bottom lt-border">
                 <Col className="pe-0 py-1 pb-2">
                     <h3 className="my-2 d-inline user-select-none">{props.project.name}</h3>
                 </Col>

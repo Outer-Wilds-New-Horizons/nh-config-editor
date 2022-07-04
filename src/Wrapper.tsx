@@ -9,6 +9,7 @@ const MainWindow = React.lazy(() => import("./MainWindow/MainWindow"));
 const StartWindow = React.lazy(() => import("./StartWindow/StartWindow"));
 const SettingsWindow = React.lazy(() => import("./SettingsWindow/SettingsWindow"));
 const NewProjectWindow = React.lazy(() => import("./NewProjectWindow/NewProjectWindow"));
+const AboutWindow = React.lazy(() => import("./AboutWindow/AboutWindow"));
 
 const loadedSettings = await SettingsManager.get();
 const SettingsContext = React.createContext(loadedSettings);
@@ -33,6 +34,9 @@ function Wrapper() {
             break;
         case "#SETTINGS":
             page = <SettingsWindow/>;
+            break;
+        case "#ABOUT":
+            page = <AboutWindow/>;
             break;
         case "#NEWPROJECT":
             page = <NewProjectWindow/>;

@@ -3,12 +3,13 @@ import {documentDir} from "@tauri-apps/api/path";
 import {exit} from "@tauri-apps/api/process";
 import {WebviewWindow} from "@tauri-apps/api/window";
 import {useEffect, useState} from "react";
-import {DoorOpen, Folder2Open, GearWide, PlusCircleDotted} from "react-bootstrap-icons";
+import {DoorOpen, Folder2Open, GearWide, PlusCircleDotted, QuestionCircle} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
+import {openAboutWindow} from "../AboutWindow/AboutWindow";
 import RecentProjects from "../Common/AppData/RecentProjects";
 import {Project} from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
@@ -102,6 +103,10 @@ function StartWindow() {
                     <Button onClick={openSettingsWindow} className="d-flex align-items-center me-2 py-1 rounded-pill"
                             size="sm"
                             variant="outline-info"><GearWide className="me-2"/>Settings</Button>
+                    <Button onClick={openAboutWindow}
+                            className="d-flex align-items-center py-1 me-2 rounded-pill"
+                            size="sm"
+                            variant="outline-secondary"><QuestionCircle className="me-2"/>About</Button>
                     <Button onClick={() => exit(0)} className="d-flex align-items-center py-1 rounded-pill" size="sm"
                             variant="outline-danger"><DoorOpen className="me-2"/>Quit</Button>
                 </Col>
@@ -109,7 +114,7 @@ function StartWindow() {
             <Row className="d-flex flex-grow-1">
                 <Col className="d-flex flex-column" xs={8}>
                     <h6>Recent Projects:</h6>
-                    <div className="position-relative border recent-projects-border rounded border-1 h-75 p-5">
+                    <div className="position-relative border lt-border rounded border-1 h-75 p-5">
                         {recentProjects.length === 0 &&
                             <div className="d-flex h-100 w-100 align-items-center justify-content-center">
                                 <h6 className="text-muted small">When you create or open projects, they&apos;ll show up

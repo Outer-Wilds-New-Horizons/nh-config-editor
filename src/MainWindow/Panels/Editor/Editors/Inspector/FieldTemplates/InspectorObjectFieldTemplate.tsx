@@ -14,7 +14,7 @@ function InspectorObjectFieldTemplate({title, description, properties, registry,
 
     const [open, setOpen,] = useState(!shouldRenderLabel,);
 
-    return <Form.Group className={shouldRenderLabel ? (`border rounded${open ? " pb-4" : ""}`) : ""}>
+    return <Form.Group className={shouldRenderLabel ? (`border lt-border rounded${open ? " pb-4" : ""}`) : ""}>
         {shouldRenderLabel &&
             <h3 onClick={() => setOpen(!open,)} className={"interactable h2 align-middle my-0 p-2"}>
                 <CaretRightFill className={`pb-2 pe-1 object-caret ${open ? "open" : ""}`}/>
