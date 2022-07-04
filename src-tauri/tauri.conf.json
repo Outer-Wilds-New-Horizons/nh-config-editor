@@ -7,7 +7,7 @@
         "distDir": "../dist"
     },
     "package": {
-        "productName": "nh-config-editor",
+        "productName": "New Horizons Config Editor",
         "version": "0.1.0"
     },
     "tauri": {
