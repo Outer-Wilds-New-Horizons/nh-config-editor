@@ -1,0 +1,32 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  lint_and_prettify:
+    name: Lint And Prettify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node
+        uses: actions/setup-node@v3.3.0
+    
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 6.11.0
+          run_install: true
+          
+      - name: Run ESLint
+        run: pnpm lint
+      
+      - name: Prettify
+        uses: creyD/prettier_action@v4.2
+        with:
+          prettier_options: "--write ."
+          only_changed: true
+    
+    
