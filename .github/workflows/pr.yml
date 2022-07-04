@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Pull Request
 
 on:
@@ -8,7 +6,7 @@ on:
 
 jobs:
     lint_and_prettify:
-        name: Lint And Prettify
+        name: ESLint And Prettier
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -26,8 +24,5 @@ jobs:
             - name: Run ESLint
               run: pnpm lint
 
-            - name: Prettify
-              uses: creyD/prettier_action@v4.2
-              with:
-                  prettier_options: "--write ."
-                  only_changed: true
+            - name: Run Prettier
+              run: pnpx prettier --check .
