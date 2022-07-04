@@ -24,7 +24,7 @@ jobs:
                     toolchain: stable
 
             -   name: Cache Rust Dependencies
-                uses: actions-rs/cache-rust-dependencies@v1
+                uses: Swatinem/rust-cache@v1
                 with:
                     key: ${{ matrix.platform }}
                     working-directory: ./src-tauri
