@@ -13,6 +13,8 @@ import Container from "react-bootstrap/Container";
 import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 
+import aboutImage from "../Common/Images/nh_logo.png";
+
 const version = await getVersion();
 const platformName = await platform();
 const tauriVersion = await getTauriVersion();
@@ -48,7 +50,7 @@ function AboutWindow() {
     return <Container className="vh-100 d-flex flex-column align-items-center justify-content-center">
         <Row className="mb-2">
             <Col>
-                <Image className="rounded lt-border border" alt="New Horizons Logo" src="src/nh_logo.png"/>
+                <Image className="rounded lt-border border" alt="New Horizons Logo" src={aboutImage}/>
             </Col>
         </Row>
         <Row>
