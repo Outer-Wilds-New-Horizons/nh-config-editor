@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useRef } from "react";
 import { OverlayTrigger } from "react-bootstrap";
 import { InfoCircle } from "react-bootstrap-icons";
 
@@ -15,7 +16,7 @@ function InfoIconTrigger(props: InfoIconTriggerProps) {
             placement={"right"}
             overlay={props.popover}
         >
-            <InfoCircle className={"ms-2 fs-6"} aria-label={"Info"} />
+            <InfoCircle className="ms-2 fs-6 text-secondary" aria-label="Info" />
         </OverlayTrigger>
     );
 }

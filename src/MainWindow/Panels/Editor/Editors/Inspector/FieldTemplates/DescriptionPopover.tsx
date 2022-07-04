@@ -9,7 +9,7 @@ export type DescriptionPopoverProps = {
 
 function DescriptionPopover(props: DescriptionPopoverProps) {
     const popover = (
-        <Popover id={`${props.id}-popover`}>
+        <Popover className="position-absolute" id={`${props.id}-popover`}>
             <PopoverHeader>{props.title}</PopoverHeader>
             <PopoverBody>{props.description}</PopoverBody>
         </Popover>
