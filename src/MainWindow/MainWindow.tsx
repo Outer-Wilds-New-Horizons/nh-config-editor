@@ -127,8 +127,9 @@ function MainWindow() {
     actionRegistry["close_all"].callback = () => {
         if (!filesHaveChanged()) {
             for (const file of openFiles) {
-                file.forceClose(commonProps);
+                file.data = null;
             }
+            setOpenFiles([]);
         } else {
             ask("There are unsaved changes. Are you sure you want to close all files?", {
                 type: "warning",
