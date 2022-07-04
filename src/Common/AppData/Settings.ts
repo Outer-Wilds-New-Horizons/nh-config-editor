@@ -7,7 +7,7 @@ import AppData from "./AppData";
  */
 export type Settings = {
     /**
-     * @comment The theme to use.
+     * @description The theme to use.
      * @default "Follow System"
      */
     theme: Theme;

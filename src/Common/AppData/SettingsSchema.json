@@ -23,9 +23,9 @@
                     "type": "boolean"
                 },
                 "theme": {
-                    "$comment": "The theme to use.",
                     "$ref": "#/definitions/Theme",
-                    "default": "Follow System"
+                    "default": "Follow System",
+                    "description": "The theme to use."
                 }
             },
             "required": [

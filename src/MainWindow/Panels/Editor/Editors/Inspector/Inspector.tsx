@@ -59,11 +59,17 @@ function Inspector(props: InspectorProps) {
         props.file.data = newData;
     };
 
+    const formContext = {
+        docsSchemaLink:
+            props.file.fileType === "mod_manifest" ? null : props.file.getDocsSchemaLink()
+    };
+
     return (
         <Form
             onChange={(newData) => onChange(newData.formData)}
             className={"mx-3 inspector-form"}
             formData={props.file.data}
+            formContext={formContext}
             schema={props.schema}
             uiSchema={uiSchema}
             fields={customFields}

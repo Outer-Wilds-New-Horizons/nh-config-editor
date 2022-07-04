@@ -7,6 +7,7 @@ import InspectorColor from "../Fields/InspectorColor";
 import InspectorVector2 from "../Fields/InspectorVector2";
 import InspectorVector3 from "../Fields/InspectorVector3";
 import DescriptionPopover from "./DescriptionPopover";
+import DocsLink from "./DocsLink";
 
 function InspectorFieldTemplate(props: FieldTemplateProps) {
     if (props.label !== undefined && props.label.startsWith("$")) return <></>;
@@ -54,11 +55,11 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
     }
 
     return (
-        <Form.Group as={Row} className={`${props.classNames} my-2 align-items-center`}>
+        <Row className={`${props.classNames} my-2`}>
             {shouldDisplayLabel && (
                 <>
-                    <Col>
-                        <Form.Label className={"mb-0 h-100 user-select-none"} htmlFor={props.id}>
+                    <Col className="d-flex align-items-center">
+                        <Form.Label className="mb-0 user-select-none" htmlFor={props.id}>
                             {camelToTitleCase(props.label)}
                         </Form.Label>
                         {props.rawDescription === undefined ||
@@ -69,12 +70,15 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
                                     description={props.rawDescription}
                                 />
                             ))}
+                        {props.formContext?.docsSchemaLink && (
+                            <DocsLink id={props.id} docsSchema={props.formContext.docsSchemaLink} />
+                        )}
                     </Col>
                     <Col>{elem}</Col>
                 </>
             )}
             {!shouldDisplayLabel && <Col className={colClass}>{props.children}</Col>}
-        </Form.Group>
+        </Row>
     );
 }
 

@@ -151,21 +151,29 @@ export class ProjectFile {
         }
     }
 
-    getSchemaLink(): string {
+    getSchemaName(): string {
         switch (this.fileType) {
             case "planet":
-                return "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/body_schema.json";
+                return "body";
             case "system":
-                return "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/star_system_schema.json";
+                return "star_system";
             case "translation":
-                return "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/translation_schema.json";
+                return "translation";
             case "addon_manifest":
-                return "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/addon_manifest_schema.json";
+                return "addon_manifest";
             case "mod_manifest":
-                return "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/manifest_schema.json";
+                return "manifest";
             default:
                 return "";
         }
+    }
+
+    getSchemaLink(): string {
+        return `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/${this.getSchemaName()}_schema.json`;
+    }
+
+    getDocsSchemaLink(): string {
+        return `https://nh.outerwildsmods.com/Schemas/${this.getSchemaName()}_schema.html`;
     }
 
     getContentToSave(minify: boolean): string {
