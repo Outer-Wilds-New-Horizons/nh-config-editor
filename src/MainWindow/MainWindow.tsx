@@ -1,6 +1,7 @@
 import { process } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
+import { exit } from "@tauri-apps/api/process";
 import { invoke } from "@tauri-apps/api/tauri";
 import { getCurrent, WebviewWindow } from "@tauri-apps/api/window";
 
@@ -218,9 +219,7 @@ function MainWindow() {
     actionRegistry["about"].callback = openAboutWindow;
 
     actionRegistry["soft_reset"].callback = () => {
-        if (!filesHaveChanged()) {
-            window.location.reload();
-        } else {
+        if (filesHaveChanged()) {
             ask("There are unsaved changes. Are you sure you want to reload?", {
                 type: "warning",
                 title: "Reload"
@@ -229,10 +228,25 @@ function MainWindow() {
                     window.location.reload();
                 }
             });
+        } else {
+            window.location.reload();
         }
     };
 
-    actionRegistry["quit"].callback = () => process.exit(0);
+    actionRegistry["quit"].callback = () => {
+        if (filesHaveChanged()) {
+            ask("There are unsaved changes. Are you sure you want to quit?", {
+                type: "warning",
+                title: "Quit"
+            }).then((result) => {
+                if (result) {
+                    exit(0);
+                }
+            });
+        } else {
+            exit(0);
+        }
+    };
 
     return (
         <Container fluid className="vh-100 flex-column d-flex">
