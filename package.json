@@ -5,7 +5,7 @@
     "version": "0.3.0",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "schema": "ts-json-schema-generator -f \"tsconfig.json\" -p \"src/Common/AppData/Settings.ts\" -t \"Settings\" -o \"src/Common/AppData/SettingsSchema.json\"",
+        "schema": "ts-json-schema-generator -f tsconfig.json -p src/Common/AppData/Settings.ts -t Settings -o src/Common/AppData/SettingsSchema.json && prettier --write ./src/Common/AppData/SettingsSchema.json",
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
