@@ -1,5 +1,4 @@
 import { open } from "@tauri-apps/api/shell";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 
 function DocsLink(props: { id: string; docsSchema: string }) {
