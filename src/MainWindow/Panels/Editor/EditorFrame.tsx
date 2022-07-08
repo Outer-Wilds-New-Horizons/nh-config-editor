@@ -19,11 +19,13 @@ function EditorFrame(props: CommonProps) {
                         <EditorTab key={file.path} file={file} {...props} />
                     ))}
                 </Row>
-                <Row className="flex-grow-1 overflow-y-auto">
+                <Row className="flex-grow-1 w-100 position-relative">
                     {props.openFiles.map((file) => (
                         <Col
                             key={file.path}
-                            className={`h-100 ${props.selectedFile === file ? "" : " d-none"}`}
+                            className={`px-3 ms-2 position-absolute top-0 end-0 start-0 bottom-0 overflow-y-auto${
+                                props.selectedFile === file ? "" : " d-none"
+                            }`}
                         >
                             <Editor file={file} {...props} />
                         </Col>

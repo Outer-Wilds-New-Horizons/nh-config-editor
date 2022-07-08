@@ -1,3 +1,5 @@
+@import "./common";
+
 $info: rgb(0, 106, 108);
 
 @import "node_modules/bootstrap/scss/bootstrap";
@@ -9,4 +11,8 @@ $info: rgb(0, 106, 108);
 
 .lt-border {
     border-color: $gray-200 !important;
+}
+
+* {
+    @include scrollbars(0.5em, $gray-300, $gray-100, $gray-400, $gray-500);
 }
