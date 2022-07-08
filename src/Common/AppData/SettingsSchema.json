@@ -6,6 +6,10 @@
             "$comment": "ATTENTION: This file is auto-updated on every build, you don't need to edit it manually.",
             "additionalProperties": false,
             "properties": {
+                "alwaysUseTextEditor": {
+                    "description": "Always use a text editor for files instead of the inspector",
+                    "type": "boolean"
+                },
                 "defaultAuthor": {
                     "description": "The default author of new projects.",
                     "type": "string"
@@ -33,7 +37,8 @@
                 "defaultProjectName",
                 "defaultAuthor",
                 "defaultProjectFolder",
-                "minify"
+                "minify",
+                "alwaysUseTextEditor"
             ],
             "type": "object"
         },

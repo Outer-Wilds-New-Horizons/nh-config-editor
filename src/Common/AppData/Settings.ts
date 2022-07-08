@@ -31,6 +31,11 @@ export type Settings = {
      * @description Whether to minify all json files when building the project
      */
     minify: boolean;
+
+    /**
+     * @description Always use a text editor for files instead of the inspector
+     */
+    alwaysUseTextEditor: boolean;
 };
 
 export const defaultSettings: Settings = {
@@ -38,7 +43,8 @@ export const defaultSettings: Settings = {
     defaultProjectName: "New Project",
     defaultAuthor: "Slate",
     defaultProjectFolder: (await documentDir()).slice(0, -1),
-    minify: true
+    minify: true,
+    alwaysUseTextEditor: false
 };
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);

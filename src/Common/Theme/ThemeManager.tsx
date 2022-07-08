@@ -8,12 +8,19 @@ const NewHorizonsDark = React.lazy(() => import("./Themes/NewHorizonsDark"));
 // Add your theme name here
 export type Theme = "Follow System" | "Default Light" | "Default Dark";
 
-// Finally, map your theme name to the component
+// Map your theme name to the component
 const ThemeMap: { [key in Theme]: JSX.Element } = {
     "Follow System":
         (await getCurrent().theme()) === "dark" ? <NewHorizonsDark /> : <NewHorizonsLight />,
     "Default Light": <NewHorizonsLight />,
     "Default Dark": <NewHorizonsDark />
+};
+
+// Also set the editor theme
+export const ThemeMonacoMap: { [key in Theme]: string } = {
+    "Follow System": (await getCurrent().theme()) === "dark" ? "vs-dark" : "vs",
+    "Default Light": "vs",
+    "Default Dark": "vs-dark"
 };
 
 function ThemeManager(props: { theme: Theme }) {

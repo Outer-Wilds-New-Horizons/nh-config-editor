@@ -5,14 +5,17 @@ import { JSONSchema7 } from "json-schema";
 import { ReactElement } from "react";
 import {
     Box2Fill,
+    BracesAsterisk,
     Bullseye,
     FileEarmarkBinaryFill,
     FileEarmarkCodeFill,
     FileEarmarkFill,
     FileEarmarkImageFill,
     FileEarmarkMusicFill,
+    FileEarmarkZipFill,
     FileMedicalFill,
     Globe,
+    MarkdownFill,
     Translate
 } from "react-bootstrap-icons";
 import { deleteDefaultValues, deleteEmptyObjects } from "../../../Common/Utils";
@@ -46,18 +49,21 @@ export class ProjectFile {
     name: string;
     path: string;
     fileType: ProjectFileType;
-    data: object | null = null;
+    extension: string;
+    data: object | string | null = null;
     changed = false;
 
     constructor(
         isFolder: boolean,
         children: ProjectFile[],
+        extension: string,
         name: string,
         path: string,
         fileType: ProjectFileType
     ) {
         this.isFolder = isFolder;
         this.children = children;
+        this.extension = extension;
         this.name = name;
         this.path = path;
         this.fileType = fileType;
@@ -66,9 +72,10 @@ export class ProjectFile {
     static async createNew(
         props: CommonProps,
         name: string,
-        fileType: ProjectFileType
+        fileType: ProjectFileType,
+        extension: string
     ): Promise<void> {
-        const newFile = new ProjectFile(false, [], name, "", fileType);
+        const newFile = new ProjectFile(false, [], extension, name, "", fileType);
         newFile.path = `@@void@@/${newFile.getRootDirName()}/${name}`;
         newFile.setChanged(true);
         newFile.data = {};
@@ -94,8 +101,6 @@ export class ProjectFile {
                 return <FileMedicalFill />;
             case "asset_bundle":
                 return <Box2Fill />;
-            case "xml":
-                return <FileEarmarkCodeFill />;
             case "image":
                 return <FileEarmarkImageFill />;
             case "sound":
@@ -103,12 +108,23 @@ export class ProjectFile {
             case "binary":
                 return <FileEarmarkBinaryFill />;
             default:
-                return <FileEarmarkFill />;
+                switch (this.extension) {
+                    case "zip":
+                        return <FileEarmarkZipFill />;
+                    case "md":
+                        return <MarkdownFill />;
+                    case "xml":
+                        return <FileEarmarkCodeFill />;
+                    case "json":
+                        return <BracesAsterisk />;
+                    default:
+                        return <FileEarmarkFill />;
+                }
         }
     }
 
     canSave(): boolean {
-        return this.isJson() && this.data !== null;
+        return this.data !== null;
     }
 
     isJson(): boolean {
@@ -148,6 +164,14 @@ export class ProjectFile {
                 return modManifestSchema as JSONSchema7;
             default:
                 return { type: "null" };
+        }
+    }
+
+    getMonacoLanguage(): string {
+        if (this.extension === "md") {
+            return "markdown";
+        } else {
+            return this.extension;
         }
     }
 
@@ -192,7 +216,7 @@ export class ProjectFile {
                 return JSON.stringify(dataToSave, null, 4);
             }
         } else {
-            return "";
+            return (this.data as string | null) ?? "";
         }
     }
 

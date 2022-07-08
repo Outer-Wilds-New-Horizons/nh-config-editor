@@ -17,6 +17,7 @@
         "prepare": "husky install"
     },
     "dependencies": {
+        "@monaco-editor/react": "^4.4.5",
         "@popperjs/core": "^2.11.5",
         "@rjsf/core": "^4.2.0",
         "@tauri-apps/api": "^1.0.1",
@@ -24,6 +25,7 @@
         "@types/react-bootstrap": "^0.32.30",
         "bootstrap": "^5.2.0-beta1",
         "konva": "^8.3.10",
+        "monaco-editor": "^0.33.0",
         "react": "^18.2.0",
         "react-bootstrap": "^2.4.0",
         "react-bootstrap-icons": "^1.8.4",

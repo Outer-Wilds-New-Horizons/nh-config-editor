@@ -87,7 +87,7 @@ function MainWindow() {
         invalidateFileSystem
     };
 
-    const createNewFile = (fileType: ProjectFileType) => {
+    const createNewFile = (fileType: ProjectFileType, ext: string) => {
         let currentNumber = 1;
 
         while (
@@ -96,12 +96,12 @@ function MainWindow() {
         )
             currentNumber++;
 
-        ProjectFile.createNew(commonProps, `new_${fileType}_${currentNumber}.json`, fileType);
+        ProjectFile.createNew(commonProps, `new_${fileType}_${currentNumber}.json`, fileType, ext);
     };
 
-    actionRegistry["new_planet"].callback = () => createNewFile("planet");
-    actionRegistry["new_system"].callback = () => createNewFile("system");
-    actionRegistry["new_translation"].callback = () => createNewFile("translation");
+    actionRegistry["new_planet"].callback = () => createNewFile("planet", "json");
+    actionRegistry["new_system"].callback = () => createNewFile("system", "json");
+    actionRegistry["new_translation"].callback = () => createNewFile("translation", "json");
 
     const findOrMakeAddonManifest = async () => {
         const filePath = `${project!.path}${sep}addon-manifest.json`;
@@ -109,6 +109,7 @@ function MainWindow() {
             const newFile = new ProjectFile(
                 false,
                 [],
+                "json",
                 "addon-manifest.json",
                 filePath,
                 "addon_manifest"
