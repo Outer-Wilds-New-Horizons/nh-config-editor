@@ -48,7 +48,7 @@ function InspectorArrayFieldTemplate({
                         size="sm"
                         aria-label="Add Item"
                         onClick={onAddClick}
-                        variant={"outline-success"}
+                        variant="outline-success"
                     >
                         Add Item
                     </Button>

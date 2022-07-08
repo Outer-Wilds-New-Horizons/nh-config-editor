@@ -66,7 +66,7 @@ function Inspector(props: InspectorProps) {
 
     return (
         <Form
-            onChange={(newData) => onChange(newData.formData)}
+            onChange={(newData) => onChange(newData.formData as object)}
             className={"mx-3 inspector-form"}
             formData={props.file.data}
             formContext={formContext}

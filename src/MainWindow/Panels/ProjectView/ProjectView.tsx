@@ -59,6 +59,7 @@ async function recursiveBuild(path: string, props: CommonProps): Promise<Project
         props.currentlyRegisteredFiles[path] = new ProjectFile(
             isDir,
             children,
+            extension,
             fileName,
             path,
             fileType

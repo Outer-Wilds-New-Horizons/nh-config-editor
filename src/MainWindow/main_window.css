@@ -29,3 +29,7 @@
 .menubar-item:focus {
     box-shadow: none !important;
 }
+
+.w-40 {
+    width: 40%;
+}
