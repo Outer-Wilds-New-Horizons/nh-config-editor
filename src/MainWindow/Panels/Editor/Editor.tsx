@@ -28,7 +28,9 @@ function Editor(props: EditorProps) {
         case "binary":
             return <CenteredMessage message="Can't Read Binary Files" />;
         default:
-            if (["json", "xml", "txt", "md"].includes(props.file.extension)) {
+            if (
+                ["json", "jsonc", "xml", "txt", "md", "yml", "yaml"].includes(props.file.extension)
+            ) {
                 return <TextEditor file={props.file} />;
             } else {
                 return <CenteredMessage message="Unknown File Type" />;

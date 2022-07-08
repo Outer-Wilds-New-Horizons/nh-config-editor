@@ -168,10 +168,13 @@ export class ProjectFile {
     }
 
     getMonacoLanguage(): string {
-        if (this.extension === "md") {
-            return "markdown";
-        } else {
-            return this.extension;
+        switch (this.extension) {
+            case "md":
+                return "markdown";
+            case "yml":
+                return "yaml";
+            default:
+                return this.extension;
         }
     }
 
