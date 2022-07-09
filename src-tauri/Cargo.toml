@@ -1,6 +1,6 @@
 [package]
 name = "nh-editor"
-version = "0.4.1"
+version = "0.4.2"
 description = "An editor for New Horizons planets, systems, and more"
 authors = ["Bwc9876"]
 license = "MIT"
