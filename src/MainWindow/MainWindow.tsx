@@ -283,19 +283,32 @@ function MainWindow() {
         }
     };
 
+    const trySelectFirst = (newOpen: ProjectFile[]) => {
+        if (!newOpen.includes(selectedFile as ProjectFile)) {
+            if (newOpen.length > 0) {
+                setSelectedFile(newOpen[0]);
+            } else {
+                setSelectedFile(null);
+            }
+        }
+    };
+
     ContextActionRegistry["close_right"] = (index: unknown) => {
         const newOpen = openFiles.filter((o, i) => o.changed || i <= (index as number));
         setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
     };
 
     ContextActionRegistry["close_left"] = (index: unknown) => {
         const newOpen = openFiles.filter((o, i) => o.changed || i >= (index as number));
         setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
     };
 
     ContextActionRegistry["close_other_tabs"] = (index: unknown) => {
         const newOpen = openFiles.filter((o, i) => o.changed || i === index);
         setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
     };
 
     return (
