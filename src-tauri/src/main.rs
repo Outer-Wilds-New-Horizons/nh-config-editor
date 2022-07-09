@@ -25,7 +25,8 @@ fn main() {
             commands::zip_project,
             commands::copy_file,
             commands::mk_dir,
-            commands::delete_dir])
+            commands::delete_dir,
+            commands::delete_file])
         .on_menu_event(|event| {
             match event.menu_item_id() {
                 "quit" => {

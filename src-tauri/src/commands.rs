@@ -114,3 +114,8 @@ pub fn mk_dir(path: String) {
 pub fn delete_dir(path: String) {
     fs::remove_dir_all(path).expect("Couldn't Delete Directory");
 }
+
+#[tauri::command]
+pub fn delete_file(path: String) {
+    fs::remove_file(path).expect("Couldn't Delete File");
+}

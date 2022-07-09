@@ -12,8 +12,8 @@ function EditorFrame(props: CommonProps) {
         return (
             <>
                 <Row className="border-bottom lt-border m-0">
-                    {props.openFiles.map((file) => (
-                        <EditorTab key={file.path} file={file} {...props} />
+                    {props.openFiles.map((file, index) => (
+                        <EditorTab index={index} key={file.path} file={file} {...props} />
                     ))}
                 </Row>
                 <Row className="flex-grow-1 ms-0 w-100 position-relative">

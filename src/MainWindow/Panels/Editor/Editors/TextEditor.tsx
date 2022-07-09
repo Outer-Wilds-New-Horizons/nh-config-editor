@@ -16,9 +16,13 @@ function TextEditor(props: { file: ProjectFile }) {
 
     if (!loadStarted) {
         setLoadStarted(true);
-        invoke("read_file_as_string", { path: props.file.path }).then((data) => {
-            setFileText(data as string);
-        });
+        if (props.file.path.startsWith("@@void@@")) {
+            setFileText(`{\n\t"$schema": "${props.file.getSchemaLink()}"\n}`);
+        } else {
+            invoke("read_file_as_string", { path: props.file.path }).then((data) => {
+                setFileText(data as string);
+            });
+        }
     }
 
     if (fileText === null) {

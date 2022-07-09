@@ -4,7 +4,7 @@ import Wrapper from "./Wrapper";
 
 const root = document.getElementById("root");
 
-document.oncontextmenu = () => false;
+document.oncontextmenu = (e) => e.preventDefault();
 
 if (root === null) {
     console.error("Catastrophic Failure");

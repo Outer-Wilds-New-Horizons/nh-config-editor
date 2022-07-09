@@ -8,10 +8,13 @@
     },
     "package": {
         "productName": "New Horizons Config Editor",
-        "version": "0.4.1"
+        "version": "../package.json"
     },
     "tauri": {
         "allowlist": {
+            "clipboard": {
+                "writeText": true
+            },
             "os": {
                 "all": true
             },

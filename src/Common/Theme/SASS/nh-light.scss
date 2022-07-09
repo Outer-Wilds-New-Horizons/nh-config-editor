@@ -13,6 +13,10 @@ $info: rgb(0, 106, 108);
     border-color: $gray-200 !important;
 }
 
+.editor-tab:hover {
+    background-color: $gray-300;
+}
+
 * {
     @include scrollbars(0.5em, $gray-300, $gray-100, $gray-400, $gray-500);
 }

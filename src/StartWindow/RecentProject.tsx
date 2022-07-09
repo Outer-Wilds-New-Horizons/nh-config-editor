@@ -8,6 +8,7 @@ export type RecentProjectProps = {
     project: Project;
     onClick?: () => void;
     onDeleteClick?: () => void;
+    onContextMenu?: (e: React.MouseEvent) => void;
 };
 
 function RecentProject(props: RecentProjectProps) {
@@ -26,6 +27,7 @@ function RecentProject(props: RecentProjectProps) {
             onMouseEnter={() => setDeleteVisible(true)}
             onMouseLeave={() => setDeleteVisible(false)}
             onClick={props.onClick}
+            onContextMenu={props.onContextMenu}
             action
             className="interactable lt-border border-bottom text-nowrap"
         >

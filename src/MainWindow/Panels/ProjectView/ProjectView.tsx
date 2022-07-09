@@ -6,6 +6,7 @@ import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
 import { CommonProps } from "../../MainWindow";
 import { ProjectFile, ProjectFileType } from "./ProjectFile";
 import ProjectItem from "./ProjectItem";
+import ProjectViewHeader from "./ProjectViewHeader";
 
 async function recursiveBuild(path: string, props: CommonProps): Promise<ProjectFile> {
     const isDir: boolean = await invoke("is_dir", { path });
@@ -113,8 +114,8 @@ function ProjectView(props: CommonProps) {
         return (
             <div className="d-flex flex-grow-1 flex-column">
                 <Row className="border-bottom lt-border">
-                    <Col className="pe-0 py-1 pb-2">
-                        <h3 className="my-2 d-inline user-select-none">{props.project.name}</h3>
+                    <Col className="d-flex align-items-center justify-content-center my-1 p-0">
+                        <ProjectViewHeader project={props.project} />
                     </Col>
                 </Row>
                 <Row className="flex-grow-1">
