@@ -3,7 +3,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "Settings": {
-            "$comment": "ATTENTION: This file is auto-updated on every build, you don't need to edit it manually.",
+            "$comment": "ATTENTION: This schema file is auto-updated on every build, you don't need to edit it manually.",
             "additionalProperties": false,
             "properties": {
                 "alwaysUseTextEditor": {
