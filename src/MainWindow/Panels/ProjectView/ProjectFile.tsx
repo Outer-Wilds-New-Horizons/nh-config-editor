@@ -204,7 +204,10 @@ export class ProjectFile {
     }
 
     getContentToSave(minify: boolean): string {
-        if (this.isJson()) {
+        if (typeof this.data === "string") {
+            console.log(this.data);
+            return (this.data as string | null) ?? "";
+        } else {
             let dataToSave: JSONObject = new Object(this.data) as JSONObject;
             deleteDefaultValues(
                 dataToSave as { [key: string]: object },
@@ -218,8 +221,6 @@ export class ProjectFile {
             } else {
                 return JSON.stringify(dataToSave, null, 4);
             }
-        } else {
-            return (this.data as string | null) ?? "";
         }
     }
 

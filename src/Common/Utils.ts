@@ -26,7 +26,7 @@ export function deleteDefaultValues(
 
     if (schema.type === "object" && schema.properties !== undefined) {
         for (const key in obj) {
-            if (obj[key] === (schema.properties[key] as JSONSchema7).default) {
+            if (obj[key] === ((schema.properties[key] as JSONSchema7) ?? {}).default) {
                 delete obj[key];
             }
         }

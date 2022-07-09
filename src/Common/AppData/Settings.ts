@@ -1,9 +1,10 @@
+import { utils } from "@rjsf/core";
 import { documentDir } from "@tauri-apps/api/path";
 import { Theme } from "../Theme/ThemeManager";
 import AppData from "./AppData";
 
 /**
- * @comment ATTENTION: This file is auto-updated on every build, you don't need to edit it manually.
+ * @comment ATTENTION: This schema file is auto-updated on every build, you don't need to edit it manually.
  */
 export type Settings = {
     /**
@@ -48,3 +49,7 @@ export const defaultSettings: Settings = {
 };
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);
+
+await SettingsManager.save(
+    utils.mergeObjects(await SettingsManager.get(), defaultSettings) as Settings
+);
