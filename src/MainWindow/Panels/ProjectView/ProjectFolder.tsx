@@ -25,7 +25,8 @@ function ProjectFolder(props: ProjectFolderProps) {
         selectedFile: props.selectedFile,
         setCurrentlyRegisteredFiles: props.setCurrentlyRegisteredFiles,
         setOpenFiles: props.setOpenFiles,
-        setSelectedFile: props.setSelectedFile
+        setSelectedFile: props.setSelectedFile,
+        openContextMenu: props.openContextMenu
     };
 
     return (

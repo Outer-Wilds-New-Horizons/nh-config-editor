@@ -51,5 +51,5 @@ export const defaultSettings: Settings = {
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);
 
 await SettingsManager.save(
-    utils.mergeObjects(await SettingsManager.get(), defaultSettings) as Settings
+    utils.mergeObjects(defaultSettings, await SettingsManager.get()) as Settings
 );

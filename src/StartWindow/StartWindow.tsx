@@ -1,8 +1,9 @@
 import { ask, message, open } from "@tauri-apps/api/dialog";
 import { documentDir } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
+import { invoke } from "@tauri-apps/api/tauri";
 import { WebviewWindow } from "@tauri-apps/api/window";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     DoorOpen,
     Folder2Open,
@@ -17,6 +18,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
 import RecentProjects from "../Common/AppData/RecentProjects";
+import ContextMenu, { ContextActionRegistry, OpenMenu } from "../Common/ContextMenu";
 import { Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
@@ -24,6 +26,12 @@ import RecentProject from "./RecentProject";
 
 function StartWindow() {
     const [recentProjects, setRecentProjects] = useState<Project[] | null>([]);
+    const openContextMenu: OpenMenu = useRef(() => {
+        return;
+    });
+    const closeContextMenu = useRef(() => {
+        return;
+    });
 
     useEffect(() => {
         RecentProjects.get().then(setRecentProjects);
@@ -96,8 +104,25 @@ function StartWindow() {
         }
     };
 
+    ContextActionRegistry["reload_project"] = async (oldProject: unknown) => {
+        const project = oldProject as Project;
+        const index = recentProjects.indexOf(project);
+        const newProject =
+            (await Project.load(project.path)) ??
+            new Project("Error Loading Project", "", project.path);
+        const newRecentProjects = recentProjects.slice(0);
+        newRecentProjects[index] = newProject;
+        await RecentProjects.save(newRecentProjects);
+        setRecentProjects(newRecentProjects);
+    };
+
+    ContextActionRegistry["open_in_explorer"] = async (project: unknown) => {
+        await invoke("show_in_explorer", { path: (project as Project).path });
+    };
+
     return (
-        <div className="d-flex vh-100">
+        <div onClick={() => closeContextMenu.current()} className="d-flex vh-100">
+            <ContextMenu openMenu={openContextMenu} closeMenu={closeContextMenu} />
             <Container className="d-flex flex-column mh-100 vh-100 my-auto">
                 <Row className="border-bottom border-secondary border-2 my-3">
                     <Col xs={6}>
@@ -151,6 +176,15 @@ function StartWindow() {
                                             key={project.path}
                                             onDeleteClick={() => removeProject(project)}
                                             onClick={() => openProject(project)}
+                                            onContextMenu={(e) =>
+                                                openContextMenu.current(
+                                                    "recentProject",
+                                                    e.clientX,
+                                                    e.clientY,
+                                                    project.name,
+                                                    project
+                                                )
+                                            }
                                             project={project}
                                         />
                                     ))}

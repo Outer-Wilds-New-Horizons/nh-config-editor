@@ -1,4 +1,4 @@
-import { process } from "@tauri-apps/api";
+import { clipboard, process } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
@@ -10,6 +10,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
+import ContextMenu, { OpenMenu, ContextActionRegistry } from "../Common/ContextMenu";
 import { Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
@@ -33,6 +34,7 @@ export type CommonProps = {
     currentlyRegisteredFiles: PathToFile;
     setCurrentlyRegisteredFiles: CallableFunction;
     invalidateFileSystem: MutableRefObject<CallableFunction>;
+    openContextMenu: OpenMenu;
 };
 
 const actionRegistry = await setupAllEvents();
@@ -65,6 +67,12 @@ function MainWindow() {
     const invalidateFileSystem = useRef(() => {
         return;
     });
+    const openContextMenu = useRef(() => {
+        return;
+    });
+    const closeContextMenu = useRef(() => {
+        return;
+    });
 
     const settings = useSettings();
 
@@ -84,7 +92,8 @@ function MainWindow() {
         currentlyRegisteredFiles,
         setCurrentlyRegisteredFiles,
         project: project,
-        invalidateFileSystem
+        invalidateFileSystem,
+        openContextMenu
     };
 
     const createNewFile = (fileType: ProjectFileType, ext: string) => {
@@ -249,20 +258,80 @@ function MainWindow() {
         }
     };
 
+    ContextActionRegistry["open_in_default"] = (file: unknown) => {
+        if (file instanceof ProjectFile) {
+            invoke("show_in_explorer", { path: file.path });
+        }
+    };
+
+    ContextActionRegistry["copy_path"] = (file: unknown) => {
+        if (file instanceof ProjectFile) {
+            clipboard.writeText(file.path);
+        }
+    };
+
+    ContextActionRegistry["delete_file"] = (file: unknown) => {
+        if (file instanceof ProjectFile) {
+            ask(`Are you sure you want to delete this ${file.isFolder ? "folder" : "file"}?`, {
+                type: "warning",
+                title: file.name
+            }).then((result) => {
+                if (result) {
+                    file.delete(commonProps);
+                }
+            });
+        }
+    };
+
+    const trySelectFirst = (newOpen: ProjectFile[]) => {
+        if (!newOpen.includes(selectedFile as ProjectFile)) {
+            if (newOpen.length > 0) {
+                setSelectedFile(newOpen[0]);
+            } else {
+                setSelectedFile(null);
+            }
+        }
+    };
+
+    ContextActionRegistry["close_right"] = (index: unknown) => {
+        const newOpen = openFiles.filter((o, i) => o.changed || i <= (index as number));
+        setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
+    };
+
+    ContextActionRegistry["close_left"] = (index: unknown) => {
+        const newOpen = openFiles.filter((o, i) => o.changed || i >= (index as number));
+        setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
+    };
+
+    ContextActionRegistry["close_other_tabs"] = (index: unknown) => {
+        const newOpen = openFiles.filter((o, i) => o.changed || i === index);
+        setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
+    };
+
     return (
-        <Container fluid className="vh-100 flex-column d-flex">
-            <Row className="py-0">
-                <MenuBar />
-            </Row>
-            <Row className="flex-grow-1 border-top lt-border overflow-hidden">
-                <Col className="d-flex flex-column border-end lt-border">
-                    <ProjectView {...commonProps} />
-                </Col>
-                <Col className="p-0 h-100 d-flex flex-column" xs={8}>
-                    <EditorFrame {...commonProps} />
-                </Col>
-            </Row>
-        </Container>
+        <>
+            <ContextMenu openMenu={openContextMenu} closeMenu={closeContextMenu} />
+            <Container
+                onClick={() => closeContextMenu.current()}
+                fluid
+                className="vh-100 flex-column d-flex"
+            >
+                <Row className="py-0">
+                    <MenuBar />
+                </Row>
+                <Row className="flex-grow-1 border-top lt-border overflow-hidden">
+                    <Col className="d-flex flex-column border-end lt-border">
+                        <ProjectView {...commonProps} />
+                    </Col>
+                    <Col className="p-0 h-100 d-flex flex-column" xs={8}>
+                        <EditorFrame {...commonProps} />
+                    </Col>
+                </Row>
+            </Container>
+        </>
     );
 }
 

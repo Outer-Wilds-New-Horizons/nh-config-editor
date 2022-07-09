@@ -127,16 +127,6 @@ export class ProjectFile {
         return this.data !== null;
     }
 
-    isJson(): boolean {
-        return (
-            this.fileType === "planet" ||
-            this.fileType === "system" ||
-            this.fileType === "translation" ||
-            this.fileType === "addon_manifest" ||
-            this.fileType === "mod_manifest"
-        );
-    }
-
     getRootDirName(): string {
         switch (this.fileType) {
             case "planet":
@@ -205,7 +195,6 @@ export class ProjectFile {
 
     getContentToSave(minify: boolean): string {
         if (typeof this.data === "string") {
-            console.log(this.data);
             return (this.data as string | null) ?? "";
         } else {
             let dataToSave: JSONObject = new Object(this.data) as JSONObject;
@@ -282,5 +271,14 @@ export class ProjectFile {
             });
             this.setChanged(false);
         }
+    }
+
+    async delete(props: CommonProps): Promise<void> {
+        if (this.path.startsWith("@@void@@/")) {
+            return;
+        }
+        await invoke(this.isFolder ? "delete_dir" : "delete_file", { path: this.path });
+        this.forceClose(props);
+        props.invalidateFileSystem.current();
     }
 }

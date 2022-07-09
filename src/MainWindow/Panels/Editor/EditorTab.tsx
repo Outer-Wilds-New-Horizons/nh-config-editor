@@ -4,13 +4,13 @@ import Col from "react-bootstrap/Col";
 import { CommonProps } from "../../MainWindow";
 import { EditorProps } from "./Editor";
 
-export type EditorTabProps = EditorProps & CommonProps;
+export type EditorTabProps = { index: number } & EditorProps & CommonProps;
 
 function EditorTab(props: EditorTabProps) {
     let classes =
-        "border-bottom lt-border interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
+        "border-bottom editor-tab lt-border interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
 
-    const [changed, setChanged] = useState(false);
+    const [changed, setChanged] = useState(props.file.path.startsWith("@@void@@"));
 
     props.file.setChanged = setChanged;
     props.file.changed = changed;
@@ -20,7 +20,19 @@ function EditorTab(props: EditorTabProps) {
     }
 
     return (
-        <Col xs="auto" className={classes}>
+        <Col
+            onContextMenu={(e) =>
+                props.openContextMenu.current(
+                    "editorTab",
+                    e.clientX,
+                    e.clientY,
+                    props.file.name,
+                    props.index
+                )
+            }
+            xs="auto"
+            className={classes}
+        >
             <span
                 className="d-flex align-items-center justify-content-center"
                 onClick={() => props.setSelectedFile(props.file)}
