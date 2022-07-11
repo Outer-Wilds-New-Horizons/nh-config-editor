@@ -1,0 +1,23 @@
+name: Create/Update Release
+
+on:
+    pull_request:
+        branches:
+            - dev
+        types:
+            - ready_for_review
+            - edited
+            - labeled
+
+jobs:
+    prepare_release:
+        name: Prepare Release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Create/Update Draft Release
+              if: ${{ github.event.pull_request.draft != true && github.event.pull_request.labels[0].name == "version-pr" }}
+              uses: softprops/action-gh-release@v1
+              with:
+                  name: ${{ github.event.pull_request.title }}
+                  body: ${{ github.event.pull_request.body }}
+                  draft: true
