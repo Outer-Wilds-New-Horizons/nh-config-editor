@@ -3,7 +3,7 @@ import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
 import { invoke } from "@tauri-apps/api/tauri";
-import { getCurrent, WebviewWindow } from "@tauri-apps/api/window";
+import { appWindow, CloseRequestedEvent, getCurrent, WebviewWindow } from "@tauri-apps/api/window";
 
 import { useEffect, useState } from "react";
 import {
@@ -81,7 +81,11 @@ const keyboardShortcuts: KeyboardShortcutMapping = {
 };
 
 // Manages menubar buttons and keyboard shortcuts
-const actionRegistry: { [key: string]: () => void } = {};
+const actionRegistry: { [key: string]: (p?: unknown) => void } = {};
+
+appWindow.onCloseRequested(async (e) => {
+    await actionRegistry["onCloseRequested"](e);
+});
 
 // Manages context menu items
 const contextMenuRegistry: ContextMenuActionRegistry = {
@@ -348,6 +352,18 @@ function MainWindow() {
             });
         } else {
             exit(0);
+        }
+    };
+
+    actionRegistry["onCloseRequested"] = async (e: unknown) => {
+        if (filesHaveChanged()) {
+            const result = await ask("There are unsaved changes. Are you sure you want to close?", {
+                type: "warning",
+                title: "Close"
+            });
+            if (!result) {
+                (e as CloseRequestedEvent).preventDefault();
+            }
         }
     };
 
