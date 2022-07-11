@@ -11,7 +11,7 @@ on:
 
 jobs:
     prepare_release:
-        name: Prepare Release
+        name: Create/Update Release
         runs-on: ubuntu-latest
         steps:
             - name: Create/Update Draft Release
