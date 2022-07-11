@@ -26,6 +26,7 @@ jobs:
                   allowUpdates: true
                   name: Version ${{ github.event.pull_request.title }}
                   tag: v${{ github.event.pull_request.title }}
+                  commit: main
                   body: |
                       ${{ github.event.pull_request.body }} 
 
