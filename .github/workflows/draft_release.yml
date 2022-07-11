@@ -21,10 +21,11 @@ jobs:
 
             - name: Create/Update Draft Release
               if: contains(github.event.pull_request.labels.*.name, 'version-pr')
-              uses: softprops/action-gh-release@v1
+              uses: ncipollo/release-action@v1
               with:
+                  allowUpdates: true
                   name: Version ${{ github.event.pull_request.title }}
-                  tag_name: v${{ github.event.pull_request.title }}
+                  tag: v${{ github.event.pull_request.title }}
                   body: |
                       ${{ github.event.pull_request.body }} 
                       Generated From: ${{ github.event.pull_request.html_url }}
