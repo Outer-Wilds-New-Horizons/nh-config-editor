@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
 import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
-import { ProjectFile } from "../../../ProjectView/ProjectFile";
+import { EditorProps } from "../../Editor";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "./FieldTemplates/InspectorFieldTemplate";
@@ -11,8 +11,7 @@ import InspectorObjectFieldTemplate from "./FieldTemplates/InspectorObjectFieldT
 
 export type InspectorProps = {
     schema: JSONSchema7;
-    file: ProjectFile;
-};
+} & EditorProps;
 
 function Inspector(props: InspectorProps) {
     const [loadStarted, setLoadStarted] = useState(false);
@@ -24,7 +23,7 @@ function Inspector(props: InspectorProps) {
 
     if (!loadStarted) {
         setLoadStarted(true);
-        if (props.file.path.startsWith("@@void@@/")) {
+        if (props.file.path.startsWith("@@void@@")) {
             setLoadDone(true);
         } else {
             loadFile().then((data) => {
@@ -55,7 +54,7 @@ function Inspector(props: InspectorProps) {
     };
 
     const onChange = (newData: object) => {
-        props.file.setChanged(true);
+        props.onChange?.();
         props.file.data = newData;
     };
 

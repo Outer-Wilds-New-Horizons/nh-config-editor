@@ -1,4 +1,4 @@
-import { ask, save } from "@tauri-apps/api/dialog";
+import { save } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
 import { JSONSchema7 } from "json-schema";
@@ -19,7 +19,6 @@ import {
     Translate
 } from "react-bootstrap-icons";
 import { deleteDefaultValues, deleteEmptyObjects } from "../../../Common/Utils";
-import { CommonProps } from "../../MainWindow";
 import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
 import bodySchema from "../../Schemas/body_schema.json";
 import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
@@ -69,26 +68,20 @@ export class ProjectFile {
         this.fileType = fileType;
     }
 
-    static async createNew(
-        props: CommonProps,
+    static async createVoid(
         name: string,
         fileType: ProjectFileType,
         extension: string
-    ): Promise<void> {
+    ): Promise<ProjectFile> {
         const newFile = new ProjectFile(false, [], extension, name, "", fileType);
-        newFile.path = `@@void@@/${newFile.getRootDirName()}/${name}`;
-        newFile.setChanged(true);
+        newFile.path = `@@void@@${sep}${newFile.getRootDirName()}${sep}${name}`;
+        newFile.changed = true;
         newFile.data = {};
-        props.setOpenFiles([...props.openFiles, newFile]);
-        props.setSelectedFile(newFile);
+        return newFile;
     }
 
-    setChanged: CallableFunction = () => {
-        return;
-    };
-
-    getIcon(): ReactElement {
-        switch (this.fileType) {
+    static getIconForFileTypeAndExtension(fileType: ProjectFileType, ext = ""): ReactElement {
+        switch (fileType) {
             case "planet":
                 return <Globe />;
             case "system":
@@ -108,7 +101,7 @@ export class ProjectFile {
             case "binary":
                 return <FileEarmarkBinaryFill />;
             default:
-                switch (this.extension) {
+                switch (ext) {
                     case "zip":
                         return <FileEarmarkZipFill />;
                     case "md":
@@ -121,6 +114,10 @@ export class ProjectFile {
                         return <FileEarmarkFill />;
                 }
         }
+    }
+
+    getIcon(): ReactElement {
+        return ProjectFile.getIconForFileTypeAndExtension(this.fileType, this.extension);
     }
 
     canSave(): boolean {
@@ -213,72 +210,36 @@ export class ProjectFile {
         }
     }
 
-    open(props: CommonProps): void {
-        const check = props.openFiles.filter((f) => f.path === this.path);
-        if (check.length === 0) {
-            props.setOpenFiles(props.openFiles.concat([this]));
-        }
-        props.setSelectedFile(this);
-    }
-
-    close(props: CommonProps): void {
-        if (this.changed) {
-            ask("Are you sure you want to close this file without saving?", this.name).then(
-                (result) => {
-                    if (result) {
-                        this.forceClose(props);
-                    }
-                }
-            );
-        } else {
-            this.forceClose(props);
-        }
-    }
-
-    forceClose(props: CommonProps): void {
-        const newFiles = props.openFiles.filter((file) => file !== this);
-        if (newFiles.length === 0) {
-            props.setSelectedFile(null);
-        } else if (props.selectedFile === this) {
-            props.setSelectedFile(newFiles[0]);
-        }
-        props.setOpenFiles(newFiles);
-    }
-
-    async saveAs(props: CommonProps) {
+    async saveAs(projectPath: string): Promise<string | null> {
         const path: string | null = await save({
             title: "Save as",
             filters: [{ name: "JSON file", extensions: ["json"] }],
-            defaultPath: `${props.project.path}${sep}${this.getRootDirName()}${sep}${this.name}`
+            defaultPath: `${projectPath}${sep}${this.getRootDirName()}${sep}${this.name}`
         });
 
         if (path !== null) {
             this.path = path;
             this.name = ((await invoke("get_metadata", { path: this.path })) as string[])[0];
-            await this.save(props);
-            props.currentlyRegisteredFiles[path] = this;
-            props.invalidateFileSystem.current();
+            await this.save();
         }
+
+        return path;
     }
 
-    async save(props: CommonProps): Promise<void> {
-        if (this.path.startsWith("@@void@@/")) {
-            await this.saveAs(props);
-        } else if (this.canSave()) {
+    async save(): Promise<void> {
+        if (this.canSave()) {
             await invoke("write_string_to_file", {
                 path: this.path,
                 content: this.getContentToSave(false)
             });
-            this.setChanged(false);
+            this.changed = false;
         }
     }
 
-    async delete(props: CommonProps): Promise<void> {
+    async delete(): Promise<void> {
         if (this.path.startsWith("@@void@@/")) {
             return;
         }
         await invoke(this.isFolder ? "delete_dir" : "delete_file", { path: this.path });
-        this.forceClose(props);
-        props.invalidateFileSystem.current();
     }
 }

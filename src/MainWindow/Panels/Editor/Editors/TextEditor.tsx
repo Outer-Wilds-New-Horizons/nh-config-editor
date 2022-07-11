@@ -5,10 +5,10 @@ import { useState } from "react";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { useSettings } from "../../../../Wrapper";
-import { ProjectFile } from "../../ProjectView/ProjectFile";
+import { EditorProps } from "../Editor";
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
-function TextEditor(props: { file: ProjectFile }) {
+function TextEditor(props: EditorProps) {
     const { theme } = useSettings();
 
     const [loadStarted, setLoadStarted] = useState(false);
@@ -39,7 +39,7 @@ function TextEditor(props: { file: ProjectFile }) {
     return (
         <Editor
             onChange={(value) => {
-                props.file.setChanged(true);
+                props.onChange?.();
                 props.file.data = value ?? "";
             }}
             loading={<CenteredSpinner />}
