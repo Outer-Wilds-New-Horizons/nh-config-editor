@@ -24,3 +24,4 @@ jobs:
                       ${{ github.event.pull_request.body }} 
                       Generated From: ${{ github.event.pull_request.html_url }}
                   draft: true
+                  prerelease: false
