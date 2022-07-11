@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Create/Update Draft Release
-              if: ${{ github.event.pull_request.draft != true && github.event.pull_request.labels[0].name == "version-pr" }}
+              if: ${{ github.event.pull_request.draft != true && contains(github.event.pull_request.labels.*.name, 'version-pr') }}
               uses: softprops/action-gh-release@v1
               with:
                   name: ${{ github.event.pull_request.title }}
