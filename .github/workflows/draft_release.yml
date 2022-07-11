@@ -3,7 +3,7 @@ name: Create/Update Release
 on:
     pull_request:
         branches:
-            - main
+            - dev
         types:
             - ready_for_review
             - edited
