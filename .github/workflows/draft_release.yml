@@ -18,7 +18,7 @@ jobs:
               if: ${{ github.event.pull_request.draft != true && contains(github.event.pull_request.labels.*.name, 'version-pr') }}
               uses: softprops/action-gh-release@v1
               with:
-                  name: ${{ github.event.pull_request.title }}
-                  tag: v${{ github.event.pull_request.title }}
+                  name: Version ${{ github.event.pull_request.title }}
+                  tag_name: v${{ github.event.pull_request.title }}
                   body: ${{ github.event.pull_request.body }}
                   draft: true
