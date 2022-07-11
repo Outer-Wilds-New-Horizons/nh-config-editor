@@ -19,5 +19,6 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   name: ${{ github.event.pull_request.title }}
+                  tag: v${{ github.event.pull_request.title }}
                   body: ${{ github.event.pull_request.body }}
                   draft: true
