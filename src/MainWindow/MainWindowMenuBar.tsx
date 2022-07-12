@@ -26,17 +26,17 @@ function MainWindowMenuBar(props: MenuBarProps) {
                 <IconDropDownItem
                     id="newPlanet"
                     label="New Planet"
-                    icon={ProjectFile.getIconForFileTypeAndExtension("planet")}
+                    icon={ProjectFile.getIconFromType("planet") ?? <></>}
                 />
                 <IconDropDownItem
                     id="newSystem"
                     label="New System"
-                    icon={ProjectFile.getIconForFileTypeAndExtension("system")}
+                    icon={ProjectFile.getIconFromType("system") ?? <></>}
                 />
                 <IconDropDownItem
                     id="newTranslation"
                     label="New Translation"
-                    icon={ProjectFile.getIconForFileTypeAndExtension("translation")}
+                    icon={ProjectFile.getIconFromType("translation") ?? <></>}
                 />
                 <IconDropDownItem
                     id="makeManifest"

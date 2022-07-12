@@ -439,6 +439,7 @@ function MainWindow() {
                 if (result) {
                     file.delete().then(() => {
                         forceCloseFile(file);
+                        invalidateFileSystem();
                     });
                 }
             });

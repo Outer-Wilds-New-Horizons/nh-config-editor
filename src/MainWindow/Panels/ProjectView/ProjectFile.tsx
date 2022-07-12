@@ -6,16 +6,29 @@ import {
     Box2Fill,
     BracesAsterisk,
     Bullseye,
+    ChatLeftQuoteFill,
+    CollectionFill,
+    EggFill,
     FileEarmarkBinaryFill,
     FileEarmarkCodeFill,
     FileEarmarkFill,
     FileEarmarkImageFill,
     FileEarmarkMusicFill,
+    FileEarmarkTextFill,
     FileEarmarkZipFill,
-    FileMedicalFill,
+    FilePostFill,
+    FolderFill,
+    GearFill,
+    Git,
+    Github,
     Globe,
+    Images,
     MarkdownFill,
-    Translate
+    SlashCircleFill,
+    StickiesFill,
+    Tools,
+    Translate,
+    TrophyFill
 } from "react-bootstrap-icons";
 import SchemaStoreManager from "../../../Common/AppData/SchemaStore";
 import { SettingsManager } from "../../../Common/AppData/Settings";
@@ -76,7 +89,7 @@ export class ProjectFile {
         return newFile;
     }
 
-    static getIconForFileTypeAndExtension(fileType: ProjectFileType, ext = ""): ReactElement {
+    static getIconFromType(fileType: ProjectFileType): ReactElement | null {
         switch (fileType) {
             case "planet":
                 return <Globe />;
@@ -85,11 +98,8 @@ export class ProjectFile {
             case "translation":
                 return <Translate />;
             case "addon_manifest":
-                return <FileMedicalFill />;
             case "mod_manifest":
-                return <FileMedicalFill />;
-            case "asset_bundle":
-                return <Box2Fill />;
+                return <FileEarmarkTextFill />;
             case "image":
                 return <FileEarmarkImageFill />;
             case "sound":
@@ -97,23 +107,75 @@ export class ProjectFile {
             case "binary":
                 return <FileEarmarkBinaryFill />;
             default:
-                switch (ext) {
-                    case "zip":
-                        return <FileEarmarkZipFill />;
-                    case "md":
-                        return <MarkdownFill />;
-                    case "xml":
-                        return <FileEarmarkCodeFill />;
-                    case "json":
-                        return <BracesAsterisk />;
-                    default:
-                        return <FileEarmarkFill />;
-                }
+                return null;
+        }
+    }
+
+    static getIconStatic(
+        fileName: string,
+        fileType: ProjectFileType,
+        ext = "",
+        isFolder?: boolean
+    ): ReactElement {
+        const icon = ProjectFile.getIconFromType(fileType);
+        if (icon === null) {
+            switch (fileName.toLowerCase()) {
+                case ".github":
+                    return <Github />;
+                case ".git":
+                    return <Git />;
+                case ".gitignore":
+                    return <SlashCircleFill />;
+                case "config.json":
+                case "default-config.json":
+                    return <GearFill />;
+                case "build":
+                    return <Tools />;
+                case "chert":
+                    return <EggFill />;
+                case "shiplog":
+                case "icons":
+                    return <TrophyFill />;
+                case "shiplogs":
+                    return <FilePostFill />;
+                case "bundles":
+                case "bundle":
+                    return <Box2Fill />;
+                case "sprites":
+                    return <Images />;
+                case "dialogue":
+                case "dialog":
+                    return <ChatLeftQuoteFill />;
+                case "assets":
+                    return <StickiesFill />;
+                case "slides":
+                    return <CollectionFill />;
+                case "planets":
+                    return ProjectFile.getIconFromType("planet") ?? <></>;
+                case "systems":
+                    return ProjectFile.getIconFromType("system") ?? <></>;
+                case "translations":
+                    return ProjectFile.getIconFromType("translation") ?? <></>;
+            }
+            switch (ext.toLowerCase()) {
+                case "zip":
+                    return <FileEarmarkZipFill />;
+                case "md":
+                    return <MarkdownFill />;
+                case "xml":
+                    return <FileEarmarkCodeFill />;
+                case "json":
+                    return <BracesAsterisk />;
+                default:
+                    return isFolder ? <FolderFill /> : <FileEarmarkFill />;
+            }
+        } else {
+            return icon;
         }
     }
 
     getIcon(): ReactElement {
-        return ProjectFile.getIconForFileTypeAndExtension(this.fileType, this.extension);
+        return ProjectFile.getIconStatic(this.name, this.fileType, this.extension, this.isFolder);
     }
 
     canSave(): boolean {

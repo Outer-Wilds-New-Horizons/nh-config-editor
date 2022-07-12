@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { cloneElement, useState } from "react";
 import { Collapse } from "react-bootstrap";
-import { CaretRightFill, FolderFill } from "react-bootstrap-icons";
+import { CaretRightFill } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { ProjectFile } from "./ProjectFile";
@@ -27,7 +27,7 @@ function ProjectFolder(props: ProjectFolderProps) {
             >
                 <span className="d-flex align-items-center pe-0 me-0">
                     <CaretRightFill className={`fs-6 my-auto folder-caret ${open ? "open" : ""}`} />
-                    <FolderFill className="ms-1 my-auto" />
+                    {cloneElement(props.folder.getIcon(), { className: "ms-1 my-auto" })}
                     <span className="fs-5 ms-2">{props.folder.name}</span>
                 </span>
             </Col>
