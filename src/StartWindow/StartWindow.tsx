@@ -1,7 +1,7 @@
 import { ask, message, open } from "@tauri-apps/api/dialog";
+import { shell } from "@tauri-apps/api";
 import { documentDir } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
-import { invoke } from "@tauri-apps/api/tauri";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import {
@@ -125,7 +125,7 @@ function StartWindow() {
     };
 
     contextMenuRegistry["recentProject"]["openExplorer"] = (project: unknown) => {
-        invoke("show_in_explorer", { path: (project as Project).path });
+        shell.open((project as Project).path);
     };
 
     contextMenuRegistry["recentProject"]["reloadProject"] = async (oldProject: unknown) => {

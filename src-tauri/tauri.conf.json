@@ -43,7 +43,7 @@
                 "relaunch": true
             },
             "shell": {
-                "open": true
+                "open": ".*?"
             },
             "window": {
                 "all": true

@@ -20,13 +20,14 @@ fn main() {
             commands::write_string_to_file,
             commands::file_exists,
             commands::canonicalize,
-            commands::show_in_explorer,
             commands::get_env,
             commands::zip_project,
             commands::copy_file,
+            commands::copy_dir,
             commands::mk_dir,
             commands::delete_dir,
-            commands::delete_file])
+            commands::delete_file,
+            commands::run_game,])
         .on_menu_event(|event| {
             match event.menu_item_id() {
                 "quit" => {

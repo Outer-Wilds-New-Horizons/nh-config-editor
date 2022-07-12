@@ -1,4 +1,4 @@
-import { clipboard, process } from "@tauri-apps/api";
+import { clipboard, process, shell } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
@@ -28,12 +28,14 @@ import ContextMenuRoot, {
     ContextMenuState
 } from "../Common/ContextMenu/ContextMenuRoot";
 import IconDropDownItem from "../Common/IconDropDownItem";
+import setupKeyboardShortcuts, { KeyboardShortcutMapping } from "../Common/KeyboardManager";
+import { getModManagerSettings } from "../Common/ModManager";
 import { Project } from "../Common/Project";
+import { openRunWindow } from "../RunWindow/RunWindow";
 import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
 import { useSettings } from "../Wrapper";
 
 import "./main_window.css";
-import setupKeyboardShortcuts, { KeyboardShortcutMapping } from "../Common/KeyboardManager";
 import MainWindowMenuBar from "./MainWindowMenuBar";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import { ProjectFile, ProjectFileType } from "./Panels/ProjectView/ProjectFile";
@@ -51,15 +53,14 @@ if (projectPath === null) {
     });
     await exit(1);
 } else {
-    const newProject = await Project.load(decodeURIComponent(projectPath));
-    if (newProject === null) {
-        await message("Project could not be loaded", {
+    try {
+        project = await Project.load(decodeURIComponent(projectPath));
+    } catch (e) {
+        await message(`${e}`, {
             type: "error",
             title: "Error"
         });
         await exit(1);
-    } else {
-        project = newProject;
     }
 }
 
@@ -76,7 +77,9 @@ const keyboardShortcuts: KeyboardShortcutMapping = {
     closeProject: "CommandOrControl+Alt+W",
     quit: "CommandOrControl+Q",
     openExplorer: "CommandOrControl+Q",
-    build: "CommandOrControl+B",
+    run: "F4",
+    output: "F6",
+    build: "F7",
     help: "F1",
     about: "F2",
     reloadSchemas: "CommandOrControl+Alt+I",
@@ -249,7 +252,7 @@ function MainWindow() {
             minify: settings.minify
         });
         invalidateFileSystem();
-        await invoke("show_in_explorer", { path: `${project!.path}${sep}build` });
+        await shell.open(`${project!.path}${sep}build`);
         console.debug("Project built");
     };
     // #endregion
@@ -342,6 +345,7 @@ function MainWindow() {
         });
 
         await webview.once("tauri://created", () => {
+            WebviewWindow.getByLabel("run-game")?.close();
             getCurrent().close();
         });
     };
@@ -378,7 +382,24 @@ function MainWindow() {
     // #region Project Actions
 
     actionRegistry["openExplorer"] = () => {
-        invoke("show_in_explorer", { path: project!.path });
+        shell.open(project!.path);
+    };
+
+    actionRegistry["run"] = () => {
+        openRunWindow(project!.path);
+    };
+
+    actionRegistry["output"] = async () => {
+        try {
+            const modManagerSettings = await getModManagerSettings();
+            const outputPath = `${modManagerSettings.owmlPath}${sep}Mods`;
+            await project?.copyToModsFolder(outputPath);
+        } catch (e) {
+            await message(`${e}`.toString(), {
+                type: "error",
+                title: "Error"
+            });
+        }
     };
 
     actionRegistry["build"] = buildProject;
@@ -420,7 +441,7 @@ function MainWindow() {
 
     contextMenuRegistry["file"]["openInDefault"] = (file: unknown) => {
         if (file instanceof ProjectFile) {
-            invoke("show_in_explorer", { path: file.path });
+            shell.open(file.path);
         }
     };
 
@@ -451,7 +472,7 @@ function MainWindow() {
     // #region EditorTab Context Actions
 
     contextMenuRegistry["editorTab"]["externalEditor"] = (index: unknown) => {
-        invoke("show_in_explorer", { path: openFiles[index as number].path });
+        shell.open(openFiles[index as number].path);
     };
 
     contextMenuRegistry["editorTab"]["save"] = (index: unknown) => {

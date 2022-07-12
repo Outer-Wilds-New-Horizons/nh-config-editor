@@ -1,4 +1,4 @@
-import { save } from "@tauri-apps/api/dialog";
+import { message, save } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
 import { ReactElement } from "react";
@@ -133,11 +133,13 @@ export class ProjectFile {
                     return <Tools />;
                 case "chert":
                     return <EggFill />;
-                case "shiplog":
                 case "icons":
                     return <TrophyFill />;
+                case "shiplog":
                 case "shiplogs":
                     return <FilePostFill />;
+                case "assetbundle":
+                case "assetbundles":
                 case "bundles":
                 case "bundle":
                     return <Box2Fill />;
@@ -283,11 +285,18 @@ export class ProjectFile {
 
     async save(): Promise<void> {
         if (this.canSave()) {
-            await invoke("write_string_to_file", {
-                path: this.path,
-                content: await this.getContentToSave(false)
-            });
-            this.changed = false;
+            try {
+                await invoke("write_string_to_file", {
+                    path: this.path,
+                    content: await this.getContentToSave(false)
+                });
+                this.changed = false;
+            } catch (e) {
+                await message(`Couldn't save file: ${e}`, {
+                    type: "error",
+                    title: "Error While Saving"
+                });
+            }
         }
     }
 

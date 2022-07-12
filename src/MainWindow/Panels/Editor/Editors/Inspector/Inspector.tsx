@@ -1,7 +1,9 @@
 import Form, { UiSchema, utils } from "@rjsf/core";
+import { shell } from "@tauri-apps/api";
 import { invoke } from "@tauri-apps/api/tauri";
 import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
 import { EditorProps } from "../../Editor";
@@ -21,14 +23,9 @@ function Inspector(props: InspectorProps) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const loadFile = async (): Promise<string> => {
-        const contents: string | null = await invoke("read_file_as_string", {
+        return await invoke("read_file_as_string", {
             path: props.file.path
         });
-        if (contents) {
-            return contents;
-        } else {
-            throw new Error("Couldn't Read File, Unknown Error");
-        }
     };
 
     if (!loadStarted) {
@@ -57,10 +54,11 @@ function Inspector(props: InspectorProps) {
                     message={`Failed to load file: ${errorMessage}`}
                     after={
                         <Button
-                            className="mt-2"
-                            onClick={() => invoke("show_in_explorer", { path: props.file.path })}
+                            className="mt-2 mx-auto d-flex align-items-center"
+                            onClick={() => shell.open(props.file.path)}
                             variant="outline-info"
                         >
+                            <BoxArrowUpRight className="me-1" />
                             Fix In External Editor
                         </Button>
                     }

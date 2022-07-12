@@ -26,6 +26,10 @@
                     "description": "Whether to minify all json files when building the project",
                     "type": "boolean"
                 },
+                "modManagerPath": {
+                    "description": "The path to the Outer Wilds Mod Manager config directory (the folder with settings.json in it), used to launch the game and output the mod.",
+                    "type": "string"
+                },
                 "schemaBranch": {
                     "description": "The branch to use for schemas, set to `main` for stable builds, and `dev` for nightly builds. Check the GitHub repo for other names. (Reload Required)",
                     "type": "string"
@@ -43,7 +47,8 @@
                 "defaultProjectFolder",
                 "minify",
                 "alwaysUseTextEditor",
-                "schemaBranch"
+                "schemaBranch",
+                "modManagerPath"
             ],
             "type": "object"
         },

@@ -36,13 +36,7 @@ function Editor(props: EditorProps & { schemaStore: SchemaStore }) {
         case "binary":
             return <CenteredMessage message="Can't Read Binary Files" />;
         default:
-            if (
-                ["json", "jsonc", "xml", "txt", "md", "yml", "yaml"].includes(props.file.extension)
-            ) {
-                return <TextEditor onChange={props.onChange} file={props.file} />;
-            } else {
-                return <CenteredMessage message="Unknown File Type" />;
-            }
+            return <TextEditor onChange={props.onChange} file={props.file} />;
     }
 }
 

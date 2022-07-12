@@ -1,5 +1,6 @@
 import {
     ArrowRepeat,
+    CaretRight,
     DoorOpen,
     FileCheck,
     FileEarmarkArrowDown,
@@ -12,6 +13,7 @@ import {
     InfoCircle,
     QuestionCircle,
     Save2,
+    Tools,
     Wrench
 } from "react-bootstrap-icons";
 import MenuBar, { MenuBarProps } from "./MenuBar/MenuBar";
@@ -60,7 +62,9 @@ function MainWindowMenuBar(props: MenuBarProps) {
                     label="Show in Explorer"
                     icon={<Folder2Open />}
                 />
-                <IconDropDownItem id="build" label="Build Project" icon={<Wrench />} />
+                <IconDropDownItem id="run" label="Run" icon={<CaretRight />} />
+                <IconDropDownItem id="output" label="Build Project (Debug)" icon={<Wrench />} />
+                <IconDropDownItem id="build" label="Build Project (Release)" icon={<Tools />} />
             </MenuBarGroup>
             <MenuBarGroup name="About">
                 <IconDropDownItem id="help" label="Help" icon={<QuestionCircle />} />

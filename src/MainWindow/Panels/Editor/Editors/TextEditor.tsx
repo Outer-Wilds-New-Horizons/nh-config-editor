@@ -1,7 +1,10 @@
 import Editor, { Monaco } from "@monaco-editor/react";
+import { shell } from "@tauri-apps/api";
 import { invoke } from "@tauri-apps/api/tauri";
 import { editor } from "monaco-editor";
 import { useState } from "react";
+import { BoxArrowUpRight } from "react-bootstrap-icons";
+import Button from "react-bootstrap/Button";
 import { getMonacoJsonDiagnostics } from "../../../../Common/AppData/SchemaStore";
 import { SettingsManager } from "../../../../Common/AppData/Settings";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
@@ -19,14 +22,9 @@ function TextEditor(props: EditorProps) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const loadFile = async (): Promise<string> => {
-        const contents: string | null = await invoke("read_file_as_string", {
+        return await invoke("read_file_as_string", {
             path: props.file.path
         });
-        if (contents) {
-            return contents;
-        } else {
-            throw new Error("Couldn't Read File, Unknown Error");
-        }
     };
 
     if (!loadStarted) {
@@ -48,7 +46,17 @@ function TextEditor(props: EditorProps) {
                 <CenteredMessage
                     variant="danger"
                     className="text-danger"
-                    message={`Failed to load file: ${errorMessage}`}
+                    message={`This doesn't seem to be a text file (${errorMessage})`}
+                    after={
+                        <Button
+                            onClick={() => shell.open(props.file.path)}
+                            variant="outline-info"
+                            className="mt-2 mx-auto d-flex align-items-center"
+                        >
+                            <BoxArrowUpRight className="me-1" />
+                            Open In Default Editor
+                        </Button>
+                    }
                 />
             );
         } else {
