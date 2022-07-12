@@ -11,13 +11,20 @@ on:
 
 jobs:
     prepare_release:
-        name: Prepare Release
+        name: Create/Update Release
         runs-on: ubuntu-latest
         steps:
             - name: Create/Update Draft Release
-              if: ${{ github.event.pull_request.draft != true && contains(github.event.pull_request.labels.*.name, 'version-pr') }}
-              uses: softprops/action-gh-release@v1
+              if: contains(github.event.pull_request.labels.*.name, 'version-pr')
+              uses: ncipollo/release-action@v1
               with:
-                  name: ${{ github.event.pull_request.title }}
-                  body: ${{ github.event.pull_request.body }}
+                  allowUpdates: true
+                  name: Version ${{ github.event.pull_request.title }}
+                  tag: v${{ github.event.pull_request.title }}
+                  commit: main
+                  body: |
+                      ${{ github.event.pull_request.body }} 
+
+                      **Generated From PR: ${{ github.event.pull_request.html_url }}**
                   draft: true
+                  prerelease: false

@@ -15,12 +15,15 @@ export class Project {
         this.valid = uniqueName !== "";
     }
 
-    static async load(path: string): Promise<Project | null> {
+    static async load(path: string): Promise<Project> {
         if (!(await invoke("file_exists", { path: path }))) {
-            return null;
+            throw new Error(`Project at ${path} does not exist`);
+        }
+        if (!(await invoke("is_dir", { path: path }))) {
+            throw new Error(`Project at ${path} is not a directory`);
         }
         if (!(await invoke("file_exists", { path: `${path}${sep}manifest.json` }))) {
-            return null;
+            throw new Error(`Project at ${path} does not have a manifest`);
         }
 
         const rawData: string = await invoke("read_file_as_string", {
@@ -32,19 +35,11 @@ export class Project {
         try {
             data = JSON.parse(rawData);
         } catch (e) {
-            if (e as SyntaxError) {
-                return null;
-            } else {
-                console.error(e);
-            }
+            throw new Error(`Project at ${path} has invalid manifest (${e})`);
         }
 
-        if (data !== null) {
-            const rawProject = data as Project;
-            return new Project(rawProject.name, rawProject.uniqueName, path);
-        } else {
-            return null;
-        }
+        const rawProject = data as Project;
+        return new Project(rawProject.name, rawProject.uniqueName, path);
     }
 
     async openInMain() {
@@ -65,5 +60,20 @@ export class Project {
                 .filter((w) => w.label !== "mainApp")
                 .forEach((window) => window.close());
         });
+    }
+
+    async copyToModsFolder(modsFolder: string) {
+        const outputPath = `${modsFolder}${sep}${this.uniqueName}`;
+        try {
+            if (await invoke("file_exists", { path: outputPath })) {
+                await invoke("delete_dir", { path: outputPath });
+            }
+            await invoke("copy_dir", {
+                src: this.path,
+                dest: outputPath
+            });
+        } catch (e) {
+            throw new Error(`Could not copy project to mods folder (${e})`);
+        }
     }
 }

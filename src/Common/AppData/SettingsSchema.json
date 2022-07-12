@@ -7,7 +7,7 @@
             "additionalProperties": false,
             "properties": {
                 "alwaysUseTextEditor": {
-                    "description": "Always use a text editor for files instead of the inspector",
+                    "description": "Always use a text editor for files instead of the inspector. (Reload Required)",
                     "type": "boolean"
                 },
                 "defaultAuthor": {
@@ -26,10 +26,18 @@
                     "description": "Whether to minify all json files when building the project",
                     "type": "boolean"
                 },
+                "modManagerPath": {
+                    "description": "The path to the Outer Wilds Mod Manager config directory (the folder with settings.json in it), used to launch the game and output the mod.",
+                    "type": "string"
+                },
+                "schemaBranch": {
+                    "description": "The branch to use for schemas, set to `main` for stable builds, and `dev` for nightly builds. Check the GitHub repo for other names. (Reload Required)",
+                    "type": "string"
+                },
                 "theme": {
                     "$ref": "#/definitions/Theme",
                     "default": "Follow System",
-                    "description": "The theme to use."
+                    "description": "The theme to use. (Reload Required)"
                 }
             },
             "required": [
@@ -38,7 +46,9 @@
                 "defaultAuthor",
                 "defaultProjectFolder",
                 "minify",
-                "alwaysUseTextEditor"
+                "alwaysUseTextEditor",
+                "schemaBranch",
+                "modManagerPath"
             ],
             "type": "object"
         },

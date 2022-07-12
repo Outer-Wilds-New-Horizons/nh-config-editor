@@ -21,6 +21,13 @@
             "globalShortcut": {
                 "all": true
             },
+            "http": {
+                "request": true,
+                "scope": [
+                    "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/*.json",
+                    "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/*/NewHorizons/Schemas/*.json"
+                ]
+            },
             "dialog": {
                 "all": true
             },
@@ -36,7 +43,7 @@
                 "relaunch": true
             },
             "shell": {
-                "open": true
+                "open": ".*?"
             },
             "window": {
                 "all": true

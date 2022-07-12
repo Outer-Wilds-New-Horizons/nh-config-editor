@@ -27,7 +27,7 @@ rules:
           allowTemplateLiterals: false
     no-duplicate-imports: error
     no-unreachable: error
-    camelcase: error
+    camelcase: off
     eqeqeq: error
     no-eval: error
     no-invalid-this: error

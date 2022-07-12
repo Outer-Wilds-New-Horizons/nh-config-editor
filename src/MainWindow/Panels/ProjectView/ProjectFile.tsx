@@ -1,30 +1,38 @@
-import { ask, save } from "@tauri-apps/api/dialog";
+import { message, save } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
-import { JSONSchema7 } from "json-schema";
 import { ReactElement } from "react";
 import {
     Box2Fill,
     BracesAsterisk,
     Bullseye,
+    ChatLeftQuoteFill,
+    CollectionFill,
+    EggFill,
     FileEarmarkBinaryFill,
     FileEarmarkCodeFill,
     FileEarmarkFill,
     FileEarmarkImageFill,
     FileEarmarkMusicFill,
+    FileEarmarkTextFill,
     FileEarmarkZipFill,
-    FileMedicalFill,
+    FilePostFill,
+    FolderFill,
+    GearFill,
+    Git,
+    Github,
     Globe,
+    Images,
     MarkdownFill,
-    Translate
+    SlashCircleFill,
+    StickiesFill,
+    Tools,
+    Translate,
+    TrophyFill
 } from "react-bootstrap-icons";
+import SchemaStoreManager from "../../../Common/AppData/SchemaStore";
+import { SettingsManager } from "../../../Common/AppData/Settings";
 import { deleteDefaultValues, deleteEmptyObjects } from "../../../Common/Utils";
-import { CommonProps } from "../../MainWindow";
-import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
-import bodySchema from "../../Schemas/body_schema.json";
-import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
-import starSystemSchema from "../../Schemas/star_system_schema.json";
-import translationSchema from "../../Schemas/translation_schema.json";
 
 type JSONObject = {
     [key: string]: string | boolean | number | JSONObject;
@@ -69,26 +77,20 @@ export class ProjectFile {
         this.fileType = fileType;
     }
 
-    static async createNew(
-        props: CommonProps,
+    static async createVoid(
         name: string,
         fileType: ProjectFileType,
         extension: string
-    ): Promise<void> {
+    ): Promise<ProjectFile> {
         const newFile = new ProjectFile(false, [], extension, name, "", fileType);
-        newFile.path = `@@void@@/${newFile.getRootDirName()}/${name}`;
-        newFile.setChanged(true);
+        newFile.path = `@@void@@${sep}${newFile.getRootDirName()}${sep}${name}`;
+        newFile.changed = true;
         newFile.data = {};
-        props.setOpenFiles([...props.openFiles, newFile]);
-        props.setSelectedFile(newFile);
+        return newFile;
     }
 
-    setChanged: CallableFunction = () => {
-        return;
-    };
-
-    getIcon(): ReactElement {
-        switch (this.fileType) {
+    static getIconFromType(fileType: ProjectFileType): ReactElement | null {
+        switch (fileType) {
             case "planet":
                 return <Globe />;
             case "system":
@@ -96,11 +98,8 @@ export class ProjectFile {
             case "translation":
                 return <Translate />;
             case "addon_manifest":
-                return <FileMedicalFill />;
             case "mod_manifest":
-                return <FileMedicalFill />;
-            case "asset_bundle":
-                return <Box2Fill />;
+                return <FileEarmarkTextFill />;
             case "image":
                 return <FileEarmarkImageFill />;
             case "sound":
@@ -108,19 +107,77 @@ export class ProjectFile {
             case "binary":
                 return <FileEarmarkBinaryFill />;
             default:
-                switch (this.extension) {
-                    case "zip":
-                        return <FileEarmarkZipFill />;
-                    case "md":
-                        return <MarkdownFill />;
-                    case "xml":
-                        return <FileEarmarkCodeFill />;
-                    case "json":
-                        return <BracesAsterisk />;
-                    default:
-                        return <FileEarmarkFill />;
-                }
+                return null;
         }
+    }
+
+    static getIconStatic(
+        fileName: string,
+        fileType: ProjectFileType,
+        ext = "",
+        isFolder?: boolean
+    ): ReactElement {
+        const icon = ProjectFile.getIconFromType(fileType);
+        if (icon === null) {
+            switch (fileName.toLowerCase()) {
+                case ".github":
+                    return <Github />;
+                case ".git":
+                    return <Git />;
+                case ".gitignore":
+                    return <SlashCircleFill />;
+                case "config.json":
+                case "default-config.json":
+                    return <GearFill />;
+                case "build":
+                    return <Tools />;
+                case "chert":
+                    return <EggFill />;
+                case "icons":
+                    return <TrophyFill />;
+                case "shiplog":
+                case "shiplogs":
+                    return <FilePostFill />;
+                case "assetbundle":
+                case "assetbundles":
+                case "bundles":
+                case "bundle":
+                    return <Box2Fill />;
+                case "sprites":
+                    return <Images />;
+                case "dialogue":
+                case "dialog":
+                    return <ChatLeftQuoteFill />;
+                case "assets":
+                    return <StickiesFill />;
+                case "slides":
+                    return <CollectionFill />;
+                case "planets":
+                    return ProjectFile.getIconFromType("planet") ?? <></>;
+                case "systems":
+                    return ProjectFile.getIconFromType("system") ?? <></>;
+                case "translations":
+                    return ProjectFile.getIconFromType("translation") ?? <></>;
+            }
+            switch (ext.toLowerCase()) {
+                case "zip":
+                    return <FileEarmarkZipFill />;
+                case "md":
+                    return <MarkdownFill />;
+                case "xml":
+                    return <FileEarmarkCodeFill />;
+                case "json":
+                    return <BracesAsterisk />;
+                default:
+                    return isFolder ? <FolderFill /> : <FileEarmarkFill />;
+            }
+        } else {
+            return icon;
+        }
+    }
+
+    getIcon(): ReactElement {
+        return ProjectFile.getIconStatic(this.name, this.fileType, this.extension, this.isFolder);
     }
 
     canSave(): boolean {
@@ -140,23 +197,6 @@ export class ProjectFile {
         }
     }
 
-    getSchema(): JSONSchema7 {
-        switch (this.fileType) {
-            case "planet":
-                return bodySchema as JSONSchema7;
-            case "system":
-                return starSystemSchema as JSONSchema7;
-            case "translation":
-                return translationSchema as JSONSchema7;
-            case "addon_manifest":
-                return addonManifestSchema as JSONSchema7;
-            case "mod_manifest":
-                return modManifestSchema as JSONSchema7;
-            default:
-                return { type: "null" };
-        }
-    }
-
     getMonacoLanguage(): string {
         switch (this.extension) {
             case "md":
@@ -168,8 +208,8 @@ export class ProjectFile {
         }
     }
 
-    getSchemaName(): string {
-        switch (this.fileType) {
+    static getSchemaNameFromType(fileType: ProjectFileType): string {
+        switch (fileType) {
             case "planet":
                 return "body";
             case "system":
@@ -185,26 +225,40 @@ export class ProjectFile {
         }
     }
 
-    getSchemaLink(): string {
-        return `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/${this.getSchemaName()}_schema.json`;
+    static getSchemaLinkFromType(fileType: ProjectFileType, branch = "main"): string {
+        if (fileType === "mod_manifest") {
+            return "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/manifest_schema.json";
+        } else {
+            return `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/${branch}/NewHorizons/Schemas/${ProjectFile.getSchemaNameFromType(
+                fileType
+            )}_schema.json`;
+        }
+    }
+
+    getSchemaName(): string {
+        return ProjectFile.getSchemaNameFromType(this.fileType);
+    }
+
+    getSchemaLink(branch = "main"): string {
+        return ProjectFile.getSchemaLinkFromType(this.fileType, branch);
     }
 
     getDocsSchemaLink(): string {
         return `https://nh.outerwildsmods.com/Schemas/${this.getSchemaName()}_schema.html`;
     }
 
-    getContentToSave(minify: boolean): string {
+    async getContentToSave(minify: boolean): Promise<string> {
         if (typeof this.data === "string") {
             return (this.data as string | null) ?? "";
         } else {
             let dataToSave: JSONObject = new Object(this.data) as JSONObject;
-            deleteDefaultValues(
-                dataToSave as { [key: string]: object },
-                this.getSchema(),
-                this.getSchema()
-            );
+            const schema = (await SchemaStoreManager.get()).schemas[this.fileType];
+            deleteDefaultValues(dataToSave as { [key: string]: object }, schema, schema);
             dataToSave = deleteEmptyObjects(dataToSave) as JSONObject;
-            if (!minify) dataToSave["$schema"] = this.getSchemaLink();
+            if (!minify)
+                dataToSave["$schema"] = this.getSchemaLink(
+                    (await SettingsManager.get()).schemaBranch
+                );
             if (minify) {
                 return JSON.stringify(dataToSave);
             } else {
@@ -213,72 +267,43 @@ export class ProjectFile {
         }
     }
 
-    open(props: CommonProps): void {
-        const check = props.openFiles.filter((f) => f.path === this.path);
-        if (check.length === 0) {
-            props.setOpenFiles(props.openFiles.concat([this]));
-        }
-        props.setSelectedFile(this);
-    }
-
-    close(props: CommonProps): void {
-        if (this.changed) {
-            ask("Are you sure you want to close this file without saving?", this.name).then(
-                (result) => {
-                    if (result) {
-                        this.forceClose(props);
-                    }
-                }
-            );
-        } else {
-            this.forceClose(props);
-        }
-    }
-
-    forceClose(props: CommonProps): void {
-        const newFiles = props.openFiles.filter((file) => file !== this);
-        if (newFiles.length === 0) {
-            props.setSelectedFile(null);
-        } else if (props.selectedFile === this) {
-            props.setSelectedFile(newFiles[0]);
-        }
-        props.setOpenFiles(newFiles);
-    }
-
-    async saveAs(props: CommonProps) {
+    async saveAs(projectPath: string): Promise<string | null> {
         const path: string | null = await save({
             title: "Save as",
             filters: [{ name: "JSON file", extensions: ["json"] }],
-            defaultPath: `${props.project.path}${sep}${this.getRootDirName()}${sep}${this.name}`
+            defaultPath: `${projectPath}${sep}${this.getRootDirName()}${sep}${this.name}`
         });
 
         if (path !== null) {
             this.path = path;
             this.name = ((await invoke("get_metadata", { path: this.path })) as string[])[0];
-            await this.save(props);
-            props.currentlyRegisteredFiles[path] = this;
-            props.invalidateFileSystem.current();
+            await this.save();
+        }
+
+        return path;
+    }
+
+    async save(): Promise<void> {
+        if (this.canSave()) {
+            try {
+                await invoke("write_string_to_file", {
+                    path: this.path,
+                    content: await this.getContentToSave(false)
+                });
+                this.changed = false;
+            } catch (e) {
+                await message(`Couldn't save file: ${e}`, {
+                    type: "error",
+                    title: "Error While Saving"
+                });
+            }
         }
     }
 
-    async save(props: CommonProps): Promise<void> {
-        if (this.path.startsWith("@@void@@/")) {
-            await this.saveAs(props);
-        } else if (this.canSave()) {
-            await invoke("write_string_to_file", {
-                path: this.path,
-                content: this.getContentToSave(false)
-            });
-            this.setChanged(false);
-        }
-    }
-
-    async delete(props: CommonProps): Promise<void> {
+    async delete(): Promise<void> {
         if (this.path.startsWith("@@void@@/")) {
             return;
         }
         await invoke(this.isFolder ? "delete_dir" : "delete_file", { path: this.path });
-        this.forceClose(props);
-        props.invalidateFileSystem.current();
     }
 }

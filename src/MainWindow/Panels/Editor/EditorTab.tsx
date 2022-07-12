@@ -1,46 +1,34 @@
-import { useState } from "react";
 import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
-import { CommonProps } from "../../MainWindow";
-import { EditorProps } from "./Editor";
+import { ProjectFile } from "../ProjectView/ProjectFile";
 
-export type EditorTabProps = { index: number } & EditorProps & CommonProps;
+export type EditorTabProps = {
+    file: ProjectFile;
+    active: boolean;
+    onSelect?: () => void;
+    onContextMenu?: (position: [number, number]) => void;
+    onClose?: () => void;
+};
 
 function EditorTab(props: EditorTabProps) {
     let classes =
         "border-bottom editor-tab lt-border interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
 
-    const [changed, setChanged] = useState(props.file.path.startsWith("@@void@@"));
-
-    props.file.setChanged = setChanged;
-    props.file.changed = changed;
-
-    if (props.selectedFile === props.file) {
+    if (props.active) {
         classes += " bg-primary text-white";
     }
 
     return (
-        <Col
-            onContextMenu={(e) =>
-                props.openContextMenu.current(
-                    "editorTab",
-                    e.clientX,
-                    e.clientY,
-                    props.file.name,
-                    props.index
-                )
-            }
-            xs="auto"
-            className={classes}
-        >
+        <Col xs="auto" className={classes}>
             <span
                 className="d-flex align-items-center justify-content-center"
-                onClick={() => props.setSelectedFile(props.file)}
+                onClick={props.onSelect}
+                onContextMenu={(e) => props.onContextMenu?.([e.clientX, e.clientY])}
             >
                 {props.file.getIcon()}
-                <span className="ms-1">{props.file.name + (changed ? "*" : "")}</span>
+                <span className="ms-1">{props.file.name + (props.file.changed ? "*" : "")}</span>
             </span>
-            <X onClick={() => props.file.close(props)} className="small ms-1" />
+            <X onClick={props.onClose} className="small ms-1" />
         </Col>
     );
 }

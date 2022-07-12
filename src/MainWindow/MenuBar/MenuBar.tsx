@@ -1,11 +1,23 @@
-import { menuBar } from "./Actions";
-import MenuBarGroup from "./MenuBarGroup";
+import { ReactElement } from "react";
+import { KeyboardShortcutMapping } from "../../Common/KeyboardManager";
+import MenuBarGroup, { MenuBarGroupProps } from "./MenuBarGroup";
 
-function MenuBar() {
+export type MenuBarProps = {
+    keyboardShortcuts?: KeyboardShortcutMapping;
+    children?: ReactElement<MenuBarGroupProps>[];
+    onItemClicked?: (actionId: string) => void;
+};
+
+function MenuBar(props: MenuBarProps) {
     return (
         <div className="d-flex">
-            {menuBar.groups.map((group, index) => (
-                <MenuBarGroup group={group} key={index} />
+            {props.children?.map((group, index) => (
+                <MenuBarGroup
+                    keyBoardShortcuts={props.keyboardShortcuts}
+                    key={index}
+                    {...group.props}
+                    onItemClicked={props.onItemClicked}
+                />
             ))}
         </div>
     );

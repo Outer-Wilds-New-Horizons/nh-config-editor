@@ -1,5 +1,5 @@
 import { utils } from "@rjsf/core";
-import { documentDir } from "@tauri-apps/api/path";
+import { dataDir, documentDir } from "@tauri-apps/api/path";
 import { Theme } from "../Theme/ThemeManager";
 import AppData from "./AppData";
 
@@ -8,7 +8,7 @@ import AppData from "./AppData";
  */
 export type Settings = {
     /**
-     * @description The theme to use.
+     * @description The theme to use. (Reload Required)
      * @default "Follow System"
      */
     theme: Theme;
@@ -34,10 +34,22 @@ export type Settings = {
     minify: boolean;
 
     /**
-     * @description Always use a text editor for files instead of the inspector
+     * @description Always use a text editor for files instead of the inspector. (Reload Required)
      */
     alwaysUseTextEditor: boolean;
+
+    /**
+     * @description The branch to use for schemas, set to `main` for stable builds, and `dev` for nightly builds. Check the GitHub repo for other names. (Reload Required)
+     */
+    schemaBranch: string;
+
+    /**
+     * @description The path to the Outer Wilds Mod Manager config directory (the folder with settings.json in it), used to launch the game and output the mod.
+     */
+    modManagerPath: string;
 };
+
+const MANAGER_FOLDER_NAME = "OuterWildsModManager";
 
 export const defaultSettings: Settings = {
     theme: "Follow System",
@@ -45,7 +57,9 @@ export const defaultSettings: Settings = {
     defaultAuthor: "Slate",
     defaultProjectFolder: (await documentDir()).slice(0, -1),
     minify: true,
-    alwaysUseTextEditor: false
+    alwaysUseTextEditor: false,
+    schemaBranch: "main",
+    modManagerPath: `${await dataDir()}${MANAGER_FOLDER_NAME}`
 };
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);

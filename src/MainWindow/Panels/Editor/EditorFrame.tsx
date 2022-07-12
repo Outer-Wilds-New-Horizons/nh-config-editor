@@ -1,11 +1,22 @@
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { CommonProps } from "../../MainWindow";
+import { SchemaStore } from "../../../Common/AppData/SchemaStore";
+import { ProjectFile } from "../ProjectView/ProjectFile";
 import Editor from "./Editor";
 import CenteredMessage from "./Editors/CenteredMessage";
 import EditorTab from "./EditorTab";
 
-function EditorFrame(props: CommonProps) {
+type EditorFrameProps = {
+    openFiles: ProjectFile[];
+    selectedFile: ProjectFile | null;
+    schemaStore: SchemaStore;
+    onSelectFile?: (file: ProjectFile) => void;
+    onCloseFile?: (file: ProjectFile) => void;
+    onFileChanged?: (file: ProjectFile) => void;
+    onFileContextMenu?: (index: number, position: [number, number]) => void;
+};
+
+function EditorFrame(props: EditorFrameProps) {
     if (props.selectedFile === null) {
         return <CenteredMessage message="Select a file on the left to edit it" />;
     } else {
@@ -13,7 +24,14 @@ function EditorFrame(props: CommonProps) {
             <>
                 <Row className="border-bottom lt-border m-0">
                     {props.openFiles.map((file, index) => (
-                        <EditorTab index={index} key={file.path} file={file} {...props} />
+                        <EditorTab
+                            active={props.selectedFile === file}
+                            onSelect={() => props.onSelectFile?.(file)}
+                            onClose={() => props.onCloseFile?.(file)}
+                            onContextMenu={(position) => props.onFileContextMenu?.(index, position)}
+                            key={file.path}
+                            file={file}
+                        />
                     ))}
                 </Row>
                 <Row className="flex-grow-1 ms-0 w-100 position-relative">
@@ -24,7 +42,11 @@ function EditorFrame(props: CommonProps) {
                                 props.selectedFile === file ? "" : " d-none"
                             }`}
                         >
-                            <Editor file={file} {...props} />
+                            <Editor
+                                onChange={() => props.onFileChanged?.(file)}
+                                schemaStore={props.schemaStore}
+                                file={file}
+                            />
                         </Col>
                     ))}
                 </Row>
