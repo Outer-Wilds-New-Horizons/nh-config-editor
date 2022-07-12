@@ -8,6 +8,7 @@ import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { useSettings } from "../../../../Wrapper";
 import { EditorProps } from "../Editor";
+import CenteredMessage from "./CenteredMessage";
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
 function TextEditor(props: EditorProps) {
@@ -15,6 +16,18 @@ function TextEditor(props: EditorProps) {
 
     const [loadStarted, setLoadStarted] = useState(false);
     const [fileText, setFileText] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const loadFile = async (): Promise<string> => {
+        const contents: string | null = await invoke("read_file_as_string", {
+            path: props.file.path
+        });
+        if (contents) {
+            return contents;
+        } else {
+            throw new Error("Couldn't Read File, Unknown Error");
+        }
+    };
 
     if (!loadStarted) {
         setLoadStarted(true);
@@ -25,14 +38,22 @@ function TextEditor(props: EditorProps) {
                 );
             });
         } else {
-            invoke("read_file_as_string", { path: props.file.path }).then((data) => {
-                setFileText(data as string);
-            });
+            loadFile().then(setFileText).catch(setErrorMessage);
         }
     }
 
-    if (fileText === null) {
-        return <CenteredSpinner />;
+    if (fileText === null || !loadStarted) {
+        if (errorMessage) {
+            return (
+                <CenteredMessage
+                    variant="danger"
+                    className="text-danger"
+                    message={`Failed to load file: ${errorMessage}`}
+                />
+            );
+        } else {
+            return <CenteredSpinner />;
+        }
     }
 
     const handleComponentDidMount = async (codeEditor: IStandaloneCodeEditor, monaco: Monaco) => {

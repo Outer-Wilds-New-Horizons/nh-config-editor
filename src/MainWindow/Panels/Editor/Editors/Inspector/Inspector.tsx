@@ -2,8 +2,10 @@ import Form, { UiSchema, utils } from "@rjsf/core";
 import { invoke } from "@tauri-apps/api/tauri";
 import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
 import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
 import { EditorProps } from "../../Editor";
+import CenteredMessage from "../CenteredMessage";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "./FieldTemplates/InspectorFieldTemplate";
@@ -16,9 +18,17 @@ export type InspectorProps = {
 function Inspector(props: InspectorProps) {
     const [loadStarted, setLoadStarted] = useState(false);
     const [loadDone, setLoadDone] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const loadFile = async (): Promise<string> => {
-        return await invoke("read_file_as_string", { path: props.file.path });
+        const contents: string | null = await invoke("read_file_as_string", {
+            path: props.file.path
+        });
+        if (contents) {
+            return contents;
+        } else {
+            throw new Error("Couldn't Read File, Unknown Error");
+        }
     };
 
     if (!loadStarted) {
@@ -26,19 +36,39 @@ function Inspector(props: InspectorProps) {
         if (props.file.path.startsWith("@@void@@")) {
             setLoadDone(true);
         } else {
-            loadFile().then((data) => {
-                props.file.data = utils.getDefaultFormState(
-                    props.schema,
-                    JSON.parse(data),
-                    props.schema
-                );
-                setLoadDone(true);
-            });
+            loadFile()
+                .then((data) => {
+                    props.file.data = utils.getDefaultFormState(
+                        props.schema,
+                        JSON.parse(data),
+                        props.schema
+                    );
+                    setLoadDone(true);
+                })
+                .catch(setErrorMessage);
         }
     }
 
     if (props.file.data === null || !loadDone) {
-        return <CenteredSpinner />;
+        if (errorMessage) {
+            return (
+                <CenteredMessage
+                    variant="danger"
+                    message={`Failed to load file: ${errorMessage}`}
+                    after={
+                        <Button
+                            className="mt-2"
+                            onClick={() => invoke("show_in_explorer", { path: props.file.path })}
+                            variant="outline-info"
+                        >
+                            Fix In External Editor
+                        </Button>
+                    }
+                />
+            );
+        } else {
+            return <CenteredSpinner />;
+        }
     }
 
     const customFields = {

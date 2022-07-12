@@ -206,6 +206,7 @@ function MainWindow() {
 
     const forceCloseFile = (file: ProjectFile) => {
         const newOpenFiles = openFiles.filter((f) => f !== file);
+        file.data = null;
         setOpenFiles(newOpenFiles);
         trySelectFirst(newOpenFiles);
     };

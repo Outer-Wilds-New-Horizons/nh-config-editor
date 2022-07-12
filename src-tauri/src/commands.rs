@@ -2,6 +2,8 @@ use std::fs;
 use std::fs::create_dir;
 use std::path::Path;
 
+use std::io::Read;
+
 use super::build_project;
 
 #[tauri::command]
@@ -70,8 +72,18 @@ pub fn load_image_as_base_64(img_path: String) -> String {
 }
 
 #[tauri::command]
-pub fn read_file_as_string(path: String) -> String {
-    fs::read_to_string(path).expect("Couldn't Read File")
+pub fn read_file_as_string(path: String) -> Option<String> {
+    // Read the file as a string
+    // If we can't read the file, return null
+    let mut file = match fs::File::open(path) {
+        Ok(file) => file,
+        Err(_) => return None,
+    };
+    let mut contents = String::new();
+    return match file.read_to_string(&mut contents) {
+        Ok(_) => Some(contents),
+        Err(_) => None,
+    }
 }
 
 #[tauri::command]
