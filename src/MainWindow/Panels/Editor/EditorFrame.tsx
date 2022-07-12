@@ -1,5 +1,6 @@
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import { SchemaStore } from "../../../Common/AppData/SchemaStore";
 import { ProjectFile } from "../ProjectView/ProjectFile";
 import Editor from "./Editor";
 import CenteredMessage from "./Editors/CenteredMessage";
@@ -8,6 +9,7 @@ import EditorTab from "./EditorTab";
 type EditorFrameProps = {
     openFiles: ProjectFile[];
     selectedFile: ProjectFile | null;
+    schemaStore: SchemaStore;
     onSelectFile?: (file: ProjectFile) => void;
     onCloseFile?: (file: ProjectFile) => void;
     onFileChanged?: (file: ProjectFile) => void;
@@ -42,8 +44,8 @@ function EditorFrame(props: EditorFrameProps) {
                         >
                             <Editor
                                 onChange={() => props.onFileChanged?.(file)}
+                                schemaStore={props.schemaStore}
                                 file={file}
-                                {...props}
                             />
                         </Col>
                     ))}

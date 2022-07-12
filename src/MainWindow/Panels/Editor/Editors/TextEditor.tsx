@@ -2,6 +2,8 @@ import Editor, { Monaco } from "@monaco-editor/react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { editor } from "monaco-editor";
 import { useState } from "react";
+import { getMonacoJsonDiagnostics } from "../../../../Common/AppData/SchemaStore";
+import { SettingsManager } from "../../../../Common/AppData/Settings";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { useSettings } from "../../../../Wrapper";
@@ -17,7 +19,11 @@ function TextEditor(props: EditorProps) {
     if (!loadStarted) {
         setLoadStarted(true);
         if (props.file.path.startsWith("@@void@@")) {
-            setFileText(`{\n\t"$schema": "${props.file.getSchemaLink()}"\n}`);
+            SettingsManager.get().then(({ schemaBranch }) => {
+                setFileText(
+                    JSON.stringify({ $schema: props.file.getSchemaLink(schemaBranch) }, null, 4)
+                );
+            });
         } else {
             invoke("read_file_as_string", { path: props.file.path }).then((data) => {
                 setFileText(data as string);
@@ -29,11 +35,10 @@ function TextEditor(props: EditorProps) {
         return <CenteredSpinner />;
     }
 
-    const handleComponentDidMount = (codeEditor: IStandaloneCodeEditor, monaco: Monaco) => {
+    const handleComponentDidMount = async (codeEditor: IStandaloneCodeEditor, monaco: Monaco) => {
         monaco.editor.setTheme(ThemeMonacoMap[theme]);
-        if (props.file.extension === "json") {
-            monaco.languages.json.jsonDefaults.setDiagnosticsOptions({ enableSchemaRequest: true });
-        }
+        const jsonDiagnostics = await getMonacoJsonDiagnostics();
+        monaco.languages.json.jsonDefaults.setDiagnosticsOptions(jsonDiagnostics);
     };
 
     return (

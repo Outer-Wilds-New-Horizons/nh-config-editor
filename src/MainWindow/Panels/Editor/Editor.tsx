@@ -1,3 +1,4 @@
+import { SchemaStore } from "../../../Common/AppData/SchemaStore";
 import { useSettings } from "../../../Wrapper";
 import { ProjectFile } from "../ProjectView/ProjectFile";
 import CenteredMessage from "./Editors/CenteredMessage";
@@ -10,7 +11,7 @@ export type EditorProps = {
     onChange?: () => void;
 };
 
-function Editor(props: EditorProps) {
+function Editor(props: EditorProps & { schemaStore: SchemaStore }) {
     const { alwaysUseTextEditor } = useSettings();
 
     switch (props.file.fileType) {
@@ -25,7 +26,7 @@ function Editor(props: EditorProps) {
                 return (
                     <Inspector
                         onChange={props.onChange}
-                        schema={props.file.getSchema()}
+                        schema={props.schemaStore.schemas[props.file.fileType]}
                         file={props.file}
                     />
                 );

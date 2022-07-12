@@ -10,6 +10,7 @@ import {
     ArrowLeft,
     ArrowLeftRight,
     ArrowRight,
+    Asterisk,
     BoxArrowUpRight,
     Clipboard,
     Save2,
@@ -20,6 +21,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
+import SchemaStoreManager from "../Common/AppData/SchemaStore";
 import ContextMenu from "../Common/ContextMenu/ContextMenu";
 import ContextMenuRoot, {
     ContextMenuActionRegistry,
@@ -77,6 +79,7 @@ const keyboardShortcuts: KeyboardShortcutMapping = {
     build: "CommandOrControl+B",
     help: "F1",
     about: "F2",
+    reloadSchemas: "CommandOrControl+Alt+I",
     softReset: "CommandOrControl+Alt+R"
 };
 
@@ -97,6 +100,8 @@ await setupKeyboardShortcuts(keyboardShortcuts, (id) => {
     console.debug(`Keyboard shortcut "${id}" triggered`);
     actionRegistry[id]?.();
 });
+
+const schemaStore = await SchemaStoreManager.get();
 
 function MainWindow() {
     // #region States
@@ -185,7 +190,7 @@ function MainWindow() {
         buildProjectFiles(fileMap ?? {}, project!.path).then((newFileTree) => {
             setFileTree(newFileTree);
             setFileMap({ ...fileMap });
-            console.debug("File System reloaded");
+            console.debug("File System Reloaded");
         });
         setFileTree(null);
     };
@@ -385,19 +390,27 @@ function MainWindow() {
 
     actionRegistry["about"] = openAboutWindow;
 
-    actionRegistry["softReset"] = () => {
+    const confirmReload = async () =>
+        ask("There are unsaved changes. Are you sure you want to reload?", {
+            type: "warning",
+            title: "Reload"
+        });
+
+    actionRegistry["reloadSchemas"] = async () => {
         if (filesHaveChanged()) {
-            ask("There are unsaved changes. Are you sure you want to reload?", {
-                type: "warning",
-                title: "Reload"
-            }).then((result) => {
-                if (result) {
-                    window.location.reload();
-                }
-            });
-        } else {
-            window.location.reload();
+            const result = await confirmReload();
+            if (!result) return;
         }
+        await SchemaStoreManager.reset();
+        window.location.reload();
+    };
+
+    actionRegistry["softReset"] = async () => {
+        if (filesHaveChanged()) {
+            const result = await confirmReload();
+            if (!result) return;
+        }
+        window.location.reload();
     };
 
     // #endregion
@@ -435,6 +448,10 @@ function MainWindow() {
 
     // #region EditorTab Context Actions
 
+    contextMenuRegistry["editorTab"]["externalEditor"] = (index: unknown) => {
+        invoke("show_in_explorer", { path: openFiles[index as number].path });
+    };
+
     contextMenuRegistry["editorTab"]["save"] = (index: unknown) => {
         saveFile(openFiles[index as number]);
     };
@@ -457,6 +474,12 @@ function MainWindow() {
 
     contextMenuRegistry["editorTab"]["closeOtherTabs"] = (index: unknown) => {
         const newOpen = openFiles.filter((o, i) => o.changed || i === index);
+        setOpenFiles(newOpen);
+        trySelectFirst(newOpen);
+    };
+
+    contextMenuRegistry["editorTab"]["closeAllUnchanged"] = () => {
+        const newOpen = openFiles.filter((o) => o.changed);
         setOpenFiles(newOpen);
         trySelectFirst(newOpen);
     };
@@ -486,6 +509,11 @@ function MainWindow() {
                     <IconDropDownItem id="deleteFile" label="Delete File" icon={<Trash />} />
                 </ContextMenu>
                 <ContextMenu id="editorTab">
+                    <IconDropDownItem
+                        id="externalEditor"
+                        label="Open in External Editor"
+                        icon={<BoxArrowUpRight />}
+                    />
                     <IconDropDownItem id="save" label="Save" icon={<Save2 />} />
                     <IconDropDownItem id="separator" />
                     <IconDropDownItem id="close" label="Close" icon={<XCircle />} />
@@ -495,6 +523,11 @@ function MainWindow() {
                         id="closeOtherTabs"
                         label="Close Other Tabs"
                         icon={<ArrowLeftRight />}
+                    />
+                    <IconDropDownItem
+                        id="closeAllUnchanged"
+                        label="Close All Unchanged"
+                        icon={<Asterisk />}
                     />
                 </ContextMenu>
             </ContextMenuRoot>
@@ -540,6 +573,7 @@ function MainWindow() {
                             }
                             selectedFile={selectedFile}
                             openFiles={openFiles}
+                            schemaStore={schemaStore}
                         />
                     </Col>
                 </Row>

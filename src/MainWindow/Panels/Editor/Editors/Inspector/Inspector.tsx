@@ -28,9 +28,9 @@ function Inspector(props: InspectorProps) {
         } else {
             loadFile().then((data) => {
                 props.file.data = utils.getDefaultFormState(
-                    props.file.getSchema(),
+                    props.schema,
                     JSON.parse(data),
-                    props.file.getSchema()
+                    props.schema
                 );
                 setLoadDone(true);
             });

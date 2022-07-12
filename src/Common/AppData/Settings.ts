@@ -8,7 +8,7 @@ import AppData from "./AppData";
  */
 export type Settings = {
     /**
-     * @description The theme to use.
+     * @description The theme to use. (Reload Required)
      * @default "Follow System"
      */
     theme: Theme;
@@ -34,9 +34,14 @@ export type Settings = {
     minify: boolean;
 
     /**
-     * @description Always use a text editor for files instead of the inspector
+     * @description Always use a text editor for files instead of the inspector. (Reload Required)
      */
     alwaysUseTextEditor: boolean;
+
+    /**
+     * @description The branch to use for schemas, set to `main` for stable builds, and `dev` for nightly builds. Check the GitHub repo for other names. (Reload Required)
+     */
+    schemaBranch: string;
 };
 
 export const defaultSettings: Settings = {
@@ -45,7 +50,8 @@ export const defaultSettings: Settings = {
     defaultAuthor: "Slate",
     defaultProjectFolder: (await documentDir()).slice(0, -1),
     minify: true,
-    alwaysUseTextEditor: false
+    alwaysUseTextEditor: false,
+    schemaBranch: "main"
 };
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);

@@ -2,6 +2,7 @@ import {
     ArrowRepeat,
     DoorOpen,
     FileCheck,
+    FileEarmarkArrowDown,
     FileMedical,
     FileX,
     Folder2Open,
@@ -64,6 +65,12 @@ function MainWindowMenuBar(props: MenuBarProps) {
             <MenuBarGroup name="About">
                 <IconDropDownItem id="help" label="Help" icon={<QuestionCircle />} />
                 <IconDropDownItem id="about" label="About" icon={<InfoCircle />} />
+                <IconDropDownItem id="separator" />
+                <IconDropDownItem
+                    id="reloadSchemas"
+                    label="Reload Schemas"
+                    icon={<FileEarmarkArrowDown />}
+                />
                 <IconDropDownItem id="softReset" label="Reload" icon={<ArrowRepeat />} />
             </MenuBarGroup>
         </MenuBar>

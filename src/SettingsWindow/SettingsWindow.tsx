@@ -71,9 +71,14 @@ function SettingsWindow() {
         await SettingsManager.save(settings);
         await emit("nh://settings-changed", settings);
 
-        if (settings.theme !== initialSettings.theme) {
+        const themeChanged = settings.theme !== initialSettings.theme;
+        const alwaysUseTextEditorChanged =
+            settings.alwaysUseTextEditor !== initialSettings.alwaysUseTextEditor;
+        const schemaBranchChanged = settings.schemaBranch !== initialSettings.schemaBranch;
+
+        if ([themeChanged, alwaysUseTextEditorChanged, schemaBranchChanged].includes(true)) {
             const result = await ask(
-                "You have changed the theme. You need to reload the app to apply the changes. Do you want to reload now? (Any unsaved changes will be lost!)",
+                "You need to reload the app to apply these changes. Do you want to reload now? (Any unsaved changes will be lost!)",
                 {
                     title: "Restart Required"
                 }

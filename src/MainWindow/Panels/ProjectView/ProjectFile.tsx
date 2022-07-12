@@ -1,7 +1,6 @@
 import { save } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { invoke } from "@tauri-apps/api/tauri";
-import { JSONSchema7 } from "json-schema";
 import { ReactElement } from "react";
 import {
     Box2Fill,
@@ -18,12 +17,9 @@ import {
     MarkdownFill,
     Translate
 } from "react-bootstrap-icons";
+import SchemaStoreManager from "../../../Common/AppData/SchemaStore";
+import { SettingsManager } from "../../../Common/AppData/Settings";
 import { deleteDefaultValues, deleteEmptyObjects } from "../../../Common/Utils";
-import addonManifestSchema from "../../Schemas/addon_manifest_schema.json";
-import bodySchema from "../../Schemas/body_schema.json";
-import modManifestSchema from "../../Schemas/mod_manifest_schema.json";
-import starSystemSchema from "../../Schemas/star_system_schema.json";
-import translationSchema from "../../Schemas/translation_schema.json";
 
 type JSONObject = {
     [key: string]: string | boolean | number | JSONObject;
@@ -137,23 +133,6 @@ export class ProjectFile {
         }
     }
 
-    getSchema(): JSONSchema7 {
-        switch (this.fileType) {
-            case "planet":
-                return bodySchema as JSONSchema7;
-            case "system":
-                return starSystemSchema as JSONSchema7;
-            case "translation":
-                return translationSchema as JSONSchema7;
-            case "addon_manifest":
-                return addonManifestSchema as JSONSchema7;
-            case "mod_manifest":
-                return modManifestSchema as JSONSchema7;
-            default:
-                return { type: "null" };
-        }
-    }
-
     getMonacoLanguage(): string {
         switch (this.extension) {
             case "md":
@@ -165,8 +144,8 @@ export class ProjectFile {
         }
     }
 
-    getSchemaName(): string {
-        switch (this.fileType) {
+    static getSchemaNameFromType(fileType: ProjectFileType): string {
+        switch (fileType) {
             case "planet":
                 return "body";
             case "system":
@@ -182,26 +161,40 @@ export class ProjectFile {
         }
     }
 
-    getSchemaLink(): string {
-        return `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/${this.getSchemaName()}_schema.json`;
+    static getSchemaLinkFromType(fileType: ProjectFileType, branch = "main"): string {
+        if (fileType === "mod_manifest") {
+            return "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/manifest_schema.json";
+        } else {
+            return `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/${branch}/NewHorizons/Schemas/${ProjectFile.getSchemaNameFromType(
+                fileType
+            )}_schema.json`;
+        }
+    }
+
+    getSchemaName(): string {
+        return ProjectFile.getSchemaNameFromType(this.fileType);
+    }
+
+    getSchemaLink(branch = "main"): string {
+        return ProjectFile.getSchemaLinkFromType(this.fileType, branch);
     }
 
     getDocsSchemaLink(): string {
         return `https://nh.outerwildsmods.com/Schemas/${this.getSchemaName()}_schema.html`;
     }
 
-    getContentToSave(minify: boolean): string {
+    async getContentToSave(minify: boolean): Promise<string> {
         if (typeof this.data === "string") {
             return (this.data as string | null) ?? "";
         } else {
             let dataToSave: JSONObject = new Object(this.data) as JSONObject;
-            deleteDefaultValues(
-                dataToSave as { [key: string]: object },
-                this.getSchema(),
-                this.getSchema()
-            );
+            const schema = (await SchemaStoreManager.get()).schemas[this.fileType];
+            deleteDefaultValues(dataToSave as { [key: string]: object }, schema, schema);
             dataToSave = deleteEmptyObjects(dataToSave) as JSONObject;
-            if (!minify) dataToSave["$schema"] = this.getSchemaLink();
+            if (!minify)
+                dataToSave["$schema"] = this.getSchemaLink(
+                    (await SettingsManager.get()).schemaBranch
+                );
             if (minify) {
                 return JSON.stringify(dataToSave);
             } else {
@@ -230,7 +223,7 @@ export class ProjectFile {
         if (this.canSave()) {
             await invoke("write_string_to_file", {
                 path: this.path,
-                content: this.getContentToSave(false)
+                content: await this.getContentToSave(false)
             });
             this.changed = false;
         }
