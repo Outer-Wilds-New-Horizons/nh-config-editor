@@ -96,3 +96,7 @@ export function deleteEmptyObjects(t: object) {
             return nonEmpty(t) ? t : empty; // <-
     }
 }
+
+export function prettyErrorMessage(message: string) {
+    return message.replaceAll(">=", "≥").replaceAll("<=", "≤");
+}

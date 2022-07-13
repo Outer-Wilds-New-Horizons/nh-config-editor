@@ -1,4 +1,3 @@
-import { invoke } from "@tauri-apps/api";
 import { getTauriVersion, getVersion } from "@tauri-apps/api/app";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { arch, platform } from "@tauri-apps/api/os";
@@ -14,6 +13,7 @@ import Image from "react-bootstrap/Image";
 import Row from "react-bootstrap/Row";
 
 import aboutImage from "../Common/Images/nh_logo.png";
+import { tauriCommands } from "../Common/TauriCommands";
 
 const version = await getVersion();
 const platformName = await platform();
@@ -38,7 +38,7 @@ function AboutWindow() {
             type: "warning"
         });
         if (result) {
-            await invoke("delete_dir", { path: await appDir() });
+            await tauriCommands.deleteDirectory(await appDir());
             await message("Data reset. The app will now restart.", {
                 title: "Data reset"
             });

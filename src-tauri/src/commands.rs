@@ -9,12 +9,6 @@ use fs_extra::dir;
 use super::build_project;
 
 #[tauri::command]
-pub fn get_env(key: String) -> String {
-    let env_var = std::env::var(key).unwrap_or("0".to_string());
-    return env_var;
-}
-
-#[tauri::command]
 pub fn zip_project(path: String, output_zip_name: String, minify: bool) {
     let project_path = Path::new(&path);
     let build_path = project_path.join("build");
@@ -74,11 +68,6 @@ pub fn root_dir(path: String, root_path: String) -> Result<String, String> {
         }
     }
 
-}
-
-#[tauri::command]
-pub fn canonicalize(path: String) -> String {
-    return Path::new(&path).canonicalize().unwrap().to_str().unwrap().to_string();
 }
 
 #[tauri::command]

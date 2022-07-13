@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import { tauriCommands } from "../Common/TauriCommands";
 import { ProjectFile, ProjectFileType } from "./Panels/ProjectView/ProjectFile";
 
 export type FileMap = { [key: string]: ProjectFile };
@@ -8,15 +8,15 @@ async function recursiveBuild(
     projectPath: string,
     fileList: FileMap
 ): Promise<ProjectFile> {
-    const isDir: boolean = await invoke("is_dir", { path });
+    const isDir: boolean = await tauriCommands.isDirectory(path);
 
-    const childPaths: string[] = isDir ? await invoke("list_dir", { path }) : [];
+    const childPaths: string[] = isDir ? await tauriCommands.listDirectory(path) : [];
 
-    const [fileName, extension] = await invoke("get_metadata", { path });
+    const [fileName, extension] = await tauriCommands.getFileMetadata(path);
 
     const rootDir: string | null = isDir
         ? null
-        : await invoke("root_dir", { path, rootPath: projectPath });
+        : await tauriCommands.rootDirectory(path, projectPath);
 
     let fileType: ProjectFileType = "other";
 
@@ -66,9 +66,7 @@ export default async function buildProjectFiles(
     currentFiles: FileMap,
     projectPath: string
 ): Promise<ProjectFile[]> {
-    const rootFilePaths: string[] = await invoke("list_dir", {
-        path: projectPath
-    });
+    const rootFilePaths: string[] = await tauriCommands.listDirectory(projectPath);
     const rootFiles: ProjectFile[] = [];
 
     for (const rootFilePath of rootFilePaths) {

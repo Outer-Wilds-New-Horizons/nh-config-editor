@@ -12,6 +12,7 @@ import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "./FieldTemplates/InspectorFieldTemplate";
 import InspectorObjectFieldTemplate from "./FieldTemplates/InspectorObjectFieldTemplate";
+import baseValidate, { customFormats, transformErrors } from "./Validator";
 
 export type InspectorProps = {
     schema: JSONSchema7;
@@ -100,6 +101,10 @@ function Inspector(props: InspectorProps) {
             schema={{ ...props.schema, $schema: "http://json-schema.org/draft-07/schema" }}
             uiSchema={uiSchema}
             fields={customFields}
+            transformErrors={transformErrors}
+            validate={baseValidate}
+            customFormats={customFormats}
+            liveValidate={true}
             ArrayFieldTemplate={InspectorArrayFieldTemplate}
             ObjectFieldTemplate={InspectorObjectFieldTemplate}
             FieldTemplate={InspectorFieldTemplate}

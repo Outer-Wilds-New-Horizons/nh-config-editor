@@ -19,8 +19,6 @@ fn main() {
             commands::read_file_as_string,
             commands::write_string_to_file,
             commands::file_exists,
-            commands::canonicalize,
-            commands::get_env,
             commands::zip_project,
             commands::copy_file,
             commands::copy_dir,

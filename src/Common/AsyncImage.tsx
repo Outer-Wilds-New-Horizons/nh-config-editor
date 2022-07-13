@@ -1,7 +1,7 @@
-import { invoke } from "@tauri-apps/api/tauri";
 import { useState } from "react";
 import { ImageProps, Image } from "react-bootstrap";
 import CenteredSpinner from "./Spinner/CenteredSpinner";
+import { tauriCommands } from "./TauriCommands";
 
 export type AsyncImageProps = {
     path: string;
@@ -14,9 +14,7 @@ function AsyncImage(props: AsyncImageProps) {
 
     if (!loadStarted) {
         setLoadStarted(true);
-        invoke("load_image_as_base_64", { imgPath: props.path })
-            .then((newData) => setData(newData as string))
-            .catch(setErrorMessage);
+        tauriCommands.loadBase64Image(props.path).then(setData).catch(setErrorMessage);
     }
 
     if (data === null) {

@@ -1,6 +1,5 @@
 import Editor, { Monaco } from "@monaco-editor/react";
 import { shell } from "@tauri-apps/api";
-import { invoke } from "@tauri-apps/api/tauri";
 import { editor } from "monaco-editor";
 import { useState } from "react";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
@@ -8,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import { getMonacoJsonDiagnostics } from "../../../../Common/AppData/SchemaStore";
 import { SettingsManager } from "../../../../Common/AppData/Settings";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
+import { tauriCommands } from "../../../../Common/TauriCommands";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { useSettings } from "../../../../Wrapper";
 import { IEditorProps } from "../Editor";
@@ -22,9 +22,7 @@ function TextEditor(props: IEditorProps) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const loadFile = async (): Promise<string> => {
-        return await invoke("read_file_as_string", {
-            path: props.file.path
-        });
+        return await tauriCommands.readFileText(props.file.path);
     };
 
     if (!loadStarted) {

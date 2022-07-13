@@ -2,7 +2,6 @@ import { clipboard, process, shell } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
-import { invoke } from "@tauri-apps/api/tauri";
 import { appWindow, CloseRequestedEvent, getCurrent, WebviewWindow } from "@tauri-apps/api/window";
 
 import { useEffect, useState } from "react";
@@ -31,6 +30,7 @@ import IconDropDownItem from "../Common/IconDropDownItem";
 import setupKeyboardShortcuts, { KeyboardShortcutMapping } from "../Common/KeyboardManager";
 import { getModManagerSettings } from "../Common/ModManager";
 import { Project } from "../Common/Project";
+import { tauriCommands } from "../Common/TauriCommands";
 import { openRunWindow } from "../RunWindow/RunWindow";
 import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
 import { useSettings } from "../Wrapper";
@@ -148,7 +148,7 @@ function MainWindow() {
     const checkFile = async (file: ProjectFile, autoRefresh = true): Promise<boolean> => {
         if (file.path.startsWith("@@void@@")) return true;
 
-        const exists: boolean = await invoke("file_exists", { path: file.path });
+        const exists: boolean = await tauriCommands.fileExists(file.path);
         if (!exists && autoRefresh) {
             await message(`File ${file.path} does not exist`, {
                 type: "error",
@@ -248,11 +248,11 @@ function MainWindow() {
             await file.save();
         }
         setOpenFiles([...openFiles]);
-        await invoke("zip_project", {
-            path: project!.path,
-            outputZipName: `${project!.uniqueName}.zip`,
-            minify: settings.minify
-        });
+        await tauriCommands.buildProject(
+            project!.path,
+            `${project!.uniqueName}.zip`,
+            settings.minify
+        );
         invalidateFileSystem();
         await shell.open(`${project!.path}${sep}build`);
         console.debug("Project built");
@@ -269,7 +269,7 @@ function MainWindow() {
 
     actionRegistry["makeManifest"] = async () => {
         const filePath = `${project!.path}${sep}addon-manifest.json`;
-        if (!(await invoke("file_exists", { path: filePath }))) {
+        if (!(await tauriCommands.fileExists(filePath))) {
             const newFile = new ProjectFile(
                 false,
                 [],
