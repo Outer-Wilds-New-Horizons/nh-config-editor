@@ -6,7 +6,7 @@ import { WebviewWindow } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import {
     ArrowRepeat,
-    BoxArrowUpRight,
+    ArrowUpRightCircleFill,
     DoorOpen,
     Folder2Open,
     GearWide,
@@ -154,7 +154,7 @@ function StartWindow() {
                     <IconDropDownItem
                         id="openExplorer"
                         label="Open in Explorer"
-                        icon={<BoxArrowUpRight />}
+                        icon={<ArrowUpRightCircleFill />}
                     />
                     <IconDropDownItem id="reloadProject" label="Reload" icon={<ArrowRepeat />} />
                 </ContextMenu>

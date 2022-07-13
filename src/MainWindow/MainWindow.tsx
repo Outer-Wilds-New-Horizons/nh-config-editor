@@ -10,12 +10,12 @@ import {
     ArrowLeft,
     ArrowLeftRight,
     ArrowRight,
+    ArrowUpRightCircleFill,
     Asterisk,
-    BoxArrowUpRight,
-    Clipboard,
-    Save2,
-    Trash,
-    XCircle
+    ClipboardFill,
+    Save2Fill,
+    TrashFill,
+    XCircleFill
 } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
@@ -528,20 +528,20 @@ function MainWindow() {
                     <IconDropDownItem
                         id="openInDefault"
                         label="Open in External Editor"
-                        icon={<BoxArrowUpRight />}
+                        icon={<ArrowUpRightCircleFill />}
                     />
-                    <IconDropDownItem id="copyPath" label="Copy Path" icon={<Clipboard />} />
-                    <IconDropDownItem id="deleteFile" label="Delete File" icon={<Trash />} />
+                    <IconDropDownItem id="copyPath" label="Copy Path" icon={<ClipboardFill />} />
+                    <IconDropDownItem id="deleteFile" label="Delete File" icon={<TrashFill />} />
                 </ContextMenu>
                 <ContextMenu id="editorTab">
                     <IconDropDownItem
                         id="externalEditor"
                         label="Open in External Editor"
-                        icon={<BoxArrowUpRight />}
+                        icon={<ArrowUpRightCircleFill />}
                     />
-                    <IconDropDownItem id="save" label="Save" icon={<Save2 />} />
+                    <IconDropDownItem id="save" label="Save" icon={<Save2Fill />} />
                     <IconDropDownItem id="separator" />
-                    <IconDropDownItem id="close" label="Close" icon={<XCircle />} />
+                    <IconDropDownItem id="close" label="Close" icon={<XCircleFill />} />
                     <IconDropDownItem id="closeLeft" label="Close Left" icon={<ArrowLeft />} />
                     <IconDropDownItem id="closeRight" label="Close Right" icon={<ArrowRight />} />
                     <IconDropDownItem

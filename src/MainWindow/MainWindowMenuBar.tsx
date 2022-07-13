@@ -1,18 +1,17 @@
 import {
     ArrowRepeat,
-    CaretRight,
-    DoorOpen,
-    FileCheck,
-    FileEarmarkArrowDown,
-    FileMedical,
-    FileX,
-    Folder2Open,
-    FolderMinus,
+    CaretRightFill,
+    DashCircleFill,
+    DoorOpenFill,
+    FileCheckFill,
+    FileEarmarkArrowDownFill,
+    FileXFill,
+    FolderFill,
     GearWide,
-    Hdd,
-    InfoCircle,
-    QuestionCircle,
-    Save2,
+    HddFill,
+    InfoCircleFill,
+    QuestionCircleFill,
+    Save2Fill,
     Tools,
     Wrench
 } from "react-bootstrap-icons";
@@ -43,37 +42,41 @@ function MainWindowMenuBar(props: MenuBarProps) {
                 <IconDropDownItem
                     id="makeManifest"
                     label="Create Addon Manifest"
-                    icon={<FileMedical />}
+                    icon={ProjectFile.getIconFromType("addon_manifest") ?? <></>}
                 />
                 <IconDropDownItem id="separator" />
-                <IconDropDownItem id="save" label="Save" icon={<Save2 />} />
-                <IconDropDownItem id="saveAll" label="Save All" icon={<FileCheck />} />
-                <IconDropDownItem id="reloadFromDisk" label="Reload From Disk" icon={<Hdd />} />
-                <IconDropDownItem id="closeAll" label="Close All" icon={<FileX />} />
+                <IconDropDownItem id="save" label="Save" icon={<Save2Fill />} />
+                <IconDropDownItem id="saveAll" label="Save All" icon={<FileCheckFill />} />
+                <IconDropDownItem id="reloadFromDisk" label="Reload From Disk" icon={<HddFill />} />
+                <IconDropDownItem id="closeAll" label="Close All" icon={<FileXFill />} />
                 <IconDropDownItem id="separator" />
                 <IconDropDownItem id="settings" label="Settings" icon={<GearWide />} />
                 <IconDropDownItem id="separator" />
-                <IconDropDownItem id="closeProject" label="Close Project" icon={<FolderMinus />} />
-                <IconDropDownItem id="quit" label="Quit" icon={<DoorOpen />} />
+                <IconDropDownItem
+                    id="closeProject"
+                    label="Close Project"
+                    icon={<DashCircleFill />}
+                />
+                <IconDropDownItem id="quit" label="Quit" icon={<DoorOpenFill />} />
             </MenuBarGroup>
             <MenuBarGroup name="Project">
                 <IconDropDownItem
                     id="openExplorer"
                     label="Show in Explorer"
-                    icon={<Folder2Open />}
+                    icon={<FolderFill />}
                 />
-                <IconDropDownItem id="run" label="Run" icon={<CaretRight />} />
+                <IconDropDownItem id="run" label="Run" icon={<CaretRightFill />} />
                 <IconDropDownItem id="output" label="Build Project (Debug)" icon={<Wrench />} />
                 <IconDropDownItem id="build" label="Build Project (Release)" icon={<Tools />} />
             </MenuBarGroup>
             <MenuBarGroup name="About">
-                <IconDropDownItem id="help" label="Help" icon={<QuestionCircle />} />
-                <IconDropDownItem id="about" label="About" icon={<InfoCircle />} />
+                <IconDropDownItem id="help" label="Help" icon={<QuestionCircleFill />} />
+                <IconDropDownItem id="about" label="About" icon={<InfoCircleFill />} />
                 <IconDropDownItem id="separator" />
                 <IconDropDownItem
                     id="reloadSchemas"
                     label="Reload Schemas"
-                    icon={<FileEarmarkArrowDown />}
+                    icon={<FileEarmarkArrowDownFill />}
                 />
                 <IconDropDownItem id="softReset" label="Reload" icon={<ArrowRepeat />} />
             </MenuBarGroup>
