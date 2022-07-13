@@ -10,11 +10,11 @@ import { SettingsManager } from "../../../../Common/AppData/Settings";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { useSettings } from "../../../../Wrapper";
-import { EditorProps } from "../Editor";
+import { IEditorProps } from "../Editor";
 import CenteredMessage from "./CenteredMessage";
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
 
-function TextEditor(props: EditorProps) {
+function TextEditor(props: IEditorProps) {
     const { theme } = useSettings();
 
     const [loadStarted, setLoadStarted] = useState(false);
@@ -73,12 +73,13 @@ function TextEditor(props: EditorProps) {
     return (
         <Editor
             onChange={(value) => {
-                props.onChange?.();
-                props.file.data = value ?? "";
+                value = value ?? "";
+                props.onChange?.(value);
+                setFileText(value);
             }}
             loading={<CenteredSpinner />}
-            defaultLanguage={props.file.getMonacoLanguage()}
-            defaultValue={fileText}
+            language={props.file.getMonacoLanguage()}
+            value={fileText}
             onMount={handleComponentDidMount}
         />
     );

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { BoxArrowUpRight } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
-import { EditorProps } from "../../Editor";
+import { IEditorProps } from "../../Editor";
 import CenteredMessage from "../CenteredMessage";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
@@ -15,12 +15,13 @@ import InspectorObjectFieldTemplate from "./FieldTemplates/InspectorObjectFieldT
 
 export type InspectorProps = {
     schema: JSONSchema7;
-} & EditorProps;
+} & IEditorProps;
 
 function Inspector(props: InspectorProps) {
     const [loadStarted, setLoadStarted] = useState(false);
     const [loadDone, setLoadDone] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [formData, setFormData] = useState<object | null>(null);
 
     const loadFile = async (): Promise<string> => {
         return await invoke("read_file_as_string", {
@@ -31,14 +32,13 @@ function Inspector(props: InspectorProps) {
     if (!loadStarted) {
         setLoadStarted(true);
         if (props.file.path.startsWith("@@void@@")) {
+            setFormData({});
             setLoadDone(true);
         } else {
             loadFile()
                 .then((data) => {
-                    props.file.data = utils.getDefaultFormState(
-                        props.schema,
-                        JSON.parse(data),
-                        props.schema
+                    setFormData(
+                        utils.getDefaultFormState(props.schema, JSON.parse(data), props.schema)
                     );
                     setLoadDone(true);
                 })
@@ -46,7 +46,7 @@ function Inspector(props: InspectorProps) {
         }
     }
 
-    if (props.file.data === null || !loadDone) {
+    if (formData === null || !loadDone) {
         if (errorMessage) {
             return (
                 <CenteredMessage
@@ -82,8 +82,8 @@ function Inspector(props: InspectorProps) {
     };
 
     const onChange = (newData: object) => {
-        props.onChange?.();
-        props.file.data = newData;
+        setFormData(newData);
+        props.onChange?.(newData);
     };
 
     const formContext = {
@@ -93,11 +93,11 @@ function Inspector(props: InspectorProps) {
 
     return (
         <Form
-            onChange={(newData) => onChange(newData.formData as object)}
-            className={"mx-3 inspector-form"}
-            formData={props.file.data}
+            onChange={(newData) => onChange(newData.formData)}
+            className="mx-3 inspector-form"
+            formData={formData}
             formContext={formContext}
-            schema={props.schema}
+            schema={{ ...props.schema, $schema: "http://json-schema.org/draft-07/schema" }}
             uiSchema={uiSchema}
             fields={customFields}
             ArrayFieldTemplate={InspectorArrayFieldTemplate}

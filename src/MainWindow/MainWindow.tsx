@@ -121,12 +121,14 @@ function MainWindow() {
     });
 
     const resetContextMenuState = () => {
-        setContextMenuState({
-            x: 0,
-            y: 0,
-            currentId: "",
-            target: null
-        });
+        if (contextMenuState.target !== null) {
+            setContextMenuState({
+                x: 0,
+                y: 0,
+                currentId: "",
+                target: null
+            });
+        }
     };
 
     // #endregion

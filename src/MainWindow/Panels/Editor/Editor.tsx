@@ -11,8 +11,18 @@ export type EditorProps = {
     onChange?: () => void;
 };
 
+export type IEditorProps = {
+    file: ProjectFile;
+    onChange?: (newValue: string | object) => void;
+};
+
 function Editor(props: EditorProps & { schemaStore: SchemaStore }) {
     const { alwaysUseTextEditor } = useSettings();
+
+    const onChange = (newValue: string | object) => {
+        props.file.data = newValue;
+        props.onChange?.();
+    };
 
     switch (props.file.fileType) {
         case "planet":
@@ -21,11 +31,11 @@ function Editor(props: EditorProps & { schemaStore: SchemaStore }) {
         case "addon_manifest":
         case "mod_manifest":
             if (alwaysUseTextEditor) {
-                return <TextEditor onChange={props.onChange} file={props.file} />;
+                return <TextEditor onChange={onChange} file={props.file} />;
             } else {
                 return (
                     <Inspector
-                        onChange={props.onChange}
+                        onChange={onChange}
                         schema={props.schemaStore.schemas[props.file.fileType]}
                         file={props.file}
                     />
@@ -36,7 +46,7 @@ function Editor(props: EditorProps & { schemaStore: SchemaStore }) {
         case "binary":
             return <CenteredMessage message="Can't Read Binary Files" />;
         default:
-            return <TextEditor onChange={props.onChange} file={props.file} />;
+            return <TextEditor onChange={onChange} file={props.file} />;
     }
 }
 
