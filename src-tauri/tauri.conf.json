@@ -25,7 +25,8 @@
                 "request": true,
                 "scope": [
                     "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/*.json",
-                    "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/*/NewHorizons/Schemas/*.json"
+                    "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/*/NewHorizons/Schemas/*.json",
+                    "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/*/NewHorizons/Schemas/*.xsd"
                 ]
             },
             "dialog": {

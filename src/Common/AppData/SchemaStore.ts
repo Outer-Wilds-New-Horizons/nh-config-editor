@@ -1,15 +1,18 @@
 import { message } from "@tauri-apps/api/dialog";
-import { fetch } from "@tauri-apps/api/http";
+import { fetch, ResponseType } from "@tauri-apps/api/http";
 import { JSONSchema7 } from "json-schema";
 import { languages } from "monaco-editor";
 import { ProjectFile, ProjectFileType } from "../../MainWindow/Panels/ProjectView/ProjectFile";
-import AppData from "./AppData";
 
 import addonManifestSchema from "../../MainWindow/Schemas/addon_manifest_schema.json";
 import bodySchema from "../../MainWindow/Schemas/body_schema.json";
+import dialogueSchema from "../../MainWindow/Schemas/dialogue_schema.xsd";
 import modManifestSchema from "../../MainWindow/Schemas/mod_manifest_schema.json";
+import shiplogSchema from "../../MainWindow/Schemas/shiplog_schema.xsd";
 import starSystemSchema from "../../MainWindow/Schemas/star_system_schema.json";
+import text_schema from "../../MainWindow/Schemas/text_schema.xsd";
 import translationSchema from "../../MainWindow/Schemas/translation_schema.json";
+import AppData from "./AppData";
 import { SettingsManager } from "./Settings";
 import DiagnosticsOptions = languages.json.DiagnosticsOptions;
 
@@ -29,10 +32,19 @@ const fallbackSchemas: { [key: string]: JSONSchema7 } = {
     mod_manifest: modManifestSchema as JSONSchema7
 };
 
+type XmlSchemaType = "shiplog" | "dialogue" | "text";
+
+const fallBackXmlSchemas: { [key in XmlSchemaType]: string } = {
+    shiplog: shiplogSchema,
+    dialogue: dialogueSchema,
+    text: text_schema
+};
+
 export type SchemaStore = {
     lastBranch: string;
     lastUpdated: Date;
     schemas: { [key: string]: JSONSchema7 };
+    xmlSchemas: { [key: string]: string };
 };
 
 const branch = (await SettingsManager.get()).schemaBranch;
@@ -40,6 +52,7 @@ const branch = (await SettingsManager.get()).schemaBranch;
 const manager = new AppData<SchemaStore>("schema_store.json", {
     lastUpdated: new Date(),
     schemas: {},
+    xmlSchemas: {},
     lastBranch: branch
 });
 
@@ -105,6 +118,34 @@ export default class SchemaStoreManager {
             const schema = await SchemaStoreManager.fetchSchema(type);
             store.schemas[type] = schema;
             return schema;
+        }
+    }
+
+    static async getXmlSchema(store: SchemaStore, type: XmlSchemaType): Promise<string> {
+        if (store.xmlSchemas[type]) {
+            return store.xmlSchemas[type];
+        } else {
+            const response = await fetch<string>(
+                `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/${branch}/NewHorizons/Schemas/${type}_schema.xsd`,
+                {
+                    method: "GET",
+                    responseType: ResponseType.Text
+                }
+            );
+            if (response.ok) {
+                store.xmlSchemas[type] = response.data;
+            } else {
+                await message(
+                    `Couldn't Fetch Schema For ${type} (${response.status}), resorting to fallback schema (it might be outdated!)`,
+                    {
+                        type: "error",
+                        title: "Schema Error"
+                    }
+                );
+                store.xmlSchemas[type] = fallBackXmlSchemas[type];
+            }
+            await manager.save(store);
+            return store.xmlSchemas[type];
         }
     }
 
