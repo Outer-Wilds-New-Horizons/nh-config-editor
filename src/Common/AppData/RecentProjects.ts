@@ -23,8 +23,4 @@ export default class RecentProjects {
         const projectPaths = data.map((project) => project.path);
         await manager.save(projectPaths);
     }
-
-    static async clear() {
-        await manager.reset();
-    }
 }

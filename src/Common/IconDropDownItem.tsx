@@ -15,12 +15,12 @@ export type IconDropDownItemProps = {
 
 const osType = await os.type();
 
-const normalizeShortcut = (shortcut: string) => {
+const canonicalizeShortcut = (shortcut: string) => {
     if (osType === "Darwin") {
         shortcut = shortcut.replace("Ctrl", "⌘");
         shortcut = shortcut.replace("Alt", "⌥");
         shortcut = shortcut.replace("Shift", "⇧");
-        shortcut = shortcut.replace(/\+/, "");
+        shortcut = shortcut.replaceAll("+", "");
     }
     return shortcut;
 };
@@ -39,7 +39,7 @@ function IconDropDownItem(props: IconDropDownItemProps) {
         });
     }
 
-    const annotation = props.annotation ? normalizeShortcut(props.annotation) : props.annotation;
+    const annotation = props.annotation ? canonicalizeShortcut(props.annotation) : props.annotation;
 
     return (
         <Dropdown.Item
