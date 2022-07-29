@@ -24,6 +24,9 @@ export default defineConfig({
             inject: {
                 data: {
                     reactDevTools: inDebug ? '<script src="http://localhost:8097"></script>' : "",
+                    // This patch is used bc the websocket stuff looks
+                    // for a variable called global and expects the window
+                    // to be there; in production we don't have to worry about it though.
                     reduxDevToolsPatch: inDebug
                         ? "<script>var global = global || window;</script>"
                         : ""
