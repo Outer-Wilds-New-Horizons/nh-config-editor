@@ -29,10 +29,10 @@ import {
     Translate,
     TrophyFill
 } from "react-bootstrap-icons";
-import { SettingsManager } from "../Common/AppData/Settings";
-import { tauriCommands } from "../Common/TauriCommands";
-import { OpenFile } from "./OpenFiles";
-import { ProjectFile } from "./ProjectFile";
+import { SettingsManager } from "../../Common/AppData/Settings";
+import { tauriCommands } from "../../Common/TauriCommands";
+import { OpenFile } from "./OpenFilesSlice";
+import { ProjectFile } from "./ProjectFilesSlice";
 
 // PATH UTILS
 

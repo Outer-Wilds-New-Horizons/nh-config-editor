@@ -25,7 +25,7 @@ function MenuBarGroup(props: MenuBarGroupProps) {
             >
                 {props.name}
             </Dropdown.Toggle>
-            <Dropdown.Menu>{children}</Dropdown.Menu>
+            <Dropdown.Menu renderOnMount={true}>{children}</Dropdown.Menu>
         </Dropdown>
     );
 }

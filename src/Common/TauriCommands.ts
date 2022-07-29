@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { ProjectFile } from "../Store/ProjectFile";
+import { ProjectFile } from "../MainWindow/Store/ProjectFilesSlice";
 
 export type TauriCommands = {
     fileExists: (path: string) => Promise<boolean>;

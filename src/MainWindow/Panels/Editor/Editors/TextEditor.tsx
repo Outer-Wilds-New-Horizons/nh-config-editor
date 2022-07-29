@@ -3,7 +3,7 @@ import { editor } from "monaco-editor";
 import { getMonacoJsonDiagnostics } from "../../../../Common/AppData/SchemaStore";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
-import { getMonacoLanguage } from "../../../../Store/FileUtils";
+import { getMonacoLanguage } from "../../../Store/FileUtils";
 import { useSettings } from "../../../../Wrapper";
 import { IEditorProps } from "../Editor";
 import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;

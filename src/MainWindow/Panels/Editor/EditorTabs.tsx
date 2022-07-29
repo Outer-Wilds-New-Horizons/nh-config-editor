@@ -1,6 +1,6 @@
 import Row from "react-bootstrap/Row";
-import { useAppSelector } from "../../../Store/Hooks";
-import { selectTabs } from "../../../Store/OpenFiles";
+import { useAppSelector } from "../../Store/Hooks";
+import { selectTabs } from "../../Store/OpenFilesSlice";
 import EditorTab from "./EditorTab";
 
 function EditorTabs() {

@@ -1,10 +1,10 @@
 import { cloneElement } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import { useAppDispatch } from "../../../Store/Hooks";
-import { openFile } from "../../../Store/OpenFiles";
-import { ProjectFile } from "../../../Store/ProjectFile";
-import { determineIcon } from "../../../Store/FileUtils";
+import { useAppDispatch } from "../../Store/Hooks";
+import { openFile } from "../../Store/OpenFilesSlice";
+import { ProjectFile } from "../../Store/ProjectFilesSlice";
+import { determineIcon } from "../../Store/FileUtils";
 
 function ProjectFileView(props: { file: ProjectFile }) {
     const dispatch = useAppDispatch();

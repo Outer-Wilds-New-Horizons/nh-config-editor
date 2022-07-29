@@ -1,5 +1,6 @@
 import { Event, listen } from "@tauri-apps/api/event";
 import React from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Settings, SettingsManager } from "./Common/AppData/Settings";
 import "./Common/common.css";
 import CenteredSpinner from "./Common/Spinner/CenteredSpinner";
@@ -24,6 +25,10 @@ function Wrapper() {
 
     listen("nh://reload", () => {
         window.location.reload();
+    });
+
+    useHotkeys("ctrl+p,command+p,ctrl+shift+p,command+shift+p", (e) => {
+        e.preventDefault();
     });
 
     let page: JSX.Element;

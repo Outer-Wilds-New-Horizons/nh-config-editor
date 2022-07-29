@@ -3,16 +3,16 @@ import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
 import { SchemaStore } from "../../../Common/AppData/SchemaStore";
 import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
-import { useAppDispatch, useAppSelector } from "../../../Store/Hooks";
+import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
 import {
     fileEdited,
     OpenFile,
     readFileData,
     selectOpenFileByRelativePath,
     selectOpenFileIsSelectedFactory
-} from "../../../Store/OpenFiles";
-import { isAudio, isImage, usesInspector } from "../../../Store/FileUtils";
-import { RootState } from "../../../Store/Store";
+} from "../../Store/OpenFilesSlice";
+import { isAudio, isImage, usesInspector } from "../../Store/FileUtils";
+import { RootState } from "../../Store/Store";
 import { useSettings } from "../../../Wrapper";
 import AudioView from "./Editors/AudioView";
 import CenteredMessage from "./Editors/CenteredMessage";

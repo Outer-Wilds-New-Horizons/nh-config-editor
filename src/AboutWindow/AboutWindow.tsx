@@ -21,14 +21,21 @@ const tauriVersion = await getTauriVersion();
 const architecture = await arch();
 
 export const openAboutWindow = () => {
-    new WebviewWindow("about", {
-        title: "About",
-        width: 400,
-        height: 400,
-        resizable: false,
-        maximized: false,
-        url: "index.html#ABOUT"
-    });
+    const current = WebviewWindow.getByLabel("about");
+
+    if (current) {
+        current.setFocus();
+    } else {
+        new WebviewWindow("about", {
+            title: "About",
+            width: 400,
+            height: 400,
+            resizable: false,
+            maximized: false,
+            url: "index.html#ABOUT",
+            focus: true
+        });
+    }
 };
 
 function AboutWindow() {

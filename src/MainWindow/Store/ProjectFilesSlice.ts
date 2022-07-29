@@ -4,7 +4,11 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
-import { tauriCommands } from "../Common/TauriCommands";
+import { sep } from "@tauri-apps/api/path";
+import { SettingsManager } from "../../Common/AppData/Settings";
+import { getModManagerSettings } from "../../Common/ModManager";
+import { Project } from "../../Common/Project";
+import { tauriCommands } from "../../Common/TauriCommands";
 import { initialLoadState, LoadState } from "./LoadState";
 import { getParentDirectory } from "./FileUtils";
 
@@ -19,6 +23,26 @@ const compareItems = (a: ProjectFile, b: ProjectFile): number => {
 };
 
 export const loadProject = createAsyncThunk("projectFiles/loadProject", tauriCommands.walkProject);
+export const debugBuild = createAsyncThunk(
+    "projectFiles/debugBuild",
+    async (payload: { project: Project }) => {
+        const managerSettings = await getModManagerSettings();
+        const outputPath = `${managerSettings.owmlPath}${sep}Mods`;
+        await payload.project.copyToModsFolder(outputPath);
+    }
+);
+export const releaseBuild = createAsyncThunk(
+    "projectFiles/releaseBuild",
+    async (payload: { project: Project }, thunkAPI) => {
+        const { minify } = await SettingsManager.get();
+        await tauriCommands.buildProject(
+            payload.project.path,
+            `${payload.project.uniqueName}.zip`,
+            minify
+        );
+        thunkAPI.dispatch(invalidate());
+    }
+);
 
 // Should be kept in sync with the struct in commands.rs:56
 export type ProjectFile = {

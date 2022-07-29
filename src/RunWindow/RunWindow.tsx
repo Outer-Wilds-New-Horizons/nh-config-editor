@@ -14,13 +14,20 @@ import { Project } from "../Common/Project";
 import DescriptionPopover from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/DescriptionPopover";
 
 export const openRunWindow = (projectPath: string) => {
-    new WebviewWindow("run-game", {
-        width: 500,
-        height: 300,
-        resizable: false,
-        url: `index.html?path=${projectPath}#RUN`,
-        title: "Run Game"
-    });
+    const current = WebviewWindow.getByLabel("run-game");
+
+    if (current) {
+        current.setFocus();
+    } else {
+        new WebviewWindow("run-game", {
+            width: 500,
+            height: 300,
+            resizable: false,
+            url: `index.html?path=${projectPath}#RUN`,
+            title: "Run Game",
+            focus: true
+        });
+    }
 };
 
 const params = new URLSearchParams(window.location.search);

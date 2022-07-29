@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import devToolsEnhancer from "remote-redux-devtools";
 
-import projectFilesReducer from "./ProjectFile";
-import openFilesReducer from "./OpenFiles";
+import projectFilesReducer from "./ProjectFilesSlice";
+import openFilesReducer from "./OpenFilesSlice";
+import windowBlurReducer from "./BlurSlice";
 
 export const store = configureStore({
     reducer: {
         projectFiles: projectFilesReducer,
-        openFiles: openFilesReducer
+        openFiles: openFilesReducer,
+        blur: windowBlurReducer
     },
     enhancers:
         import.meta.env.NODE_ENV === "development"

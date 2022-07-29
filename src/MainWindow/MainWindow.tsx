@@ -11,7 +11,8 @@ import SchemaStoreManager from "../Common/AppData/SchemaStore";
 import { Project } from "../Common/Project";
 
 import "./main_window.css";
-import { store } from "../Store/Store";
+import { store } from "./Store/Store";
+import MainWindowBlur from "./MainWindowBlur";
 import MainWindowMenuBar from "./MenuBar/MainWindowMenuBar";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import ProjectView from "./Panels/ProjectView/ProjectView";
@@ -46,6 +47,7 @@ function MainWindow() {
     return (
         <Provider store={store}>
             <ProjectContext.Provider value={project}>
+                <MainWindowBlur />
                 <Container fluid className="vh-100 flex-column d-flex">
                     <Row className="py-0">
                         <MainWindowMenuBar />

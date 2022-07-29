@@ -11,7 +11,10 @@ import shiplogSchema from "../../MainWindow/Schemas/shiplog_schema.xsd";
 import starSystemSchema from "../../MainWindow/Schemas/star_system_schema.json";
 import text_schema from "../../MainWindow/Schemas/text_schema.xsd";
 import translationSchema from "../../MainWindow/Schemas/translation_schema.json";
-import { getModManifestSchemaLink, getSchemaLinkForNHConfig } from "../../Store/FileUtils";
+import {
+    getModManifestSchemaLink,
+    getSchemaLinkForNHConfig
+} from "../../MainWindow/Store/FileUtils";
 import AppData from "./AppData";
 import { SettingsManager } from "./Settings";
 import DiagnosticsOptions = languages.json.DiagnosticsOptions;

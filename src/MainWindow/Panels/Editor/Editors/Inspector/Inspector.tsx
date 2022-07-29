@@ -1,6 +1,6 @@
 import Form, { UiSchema } from "@rjsf/core";
 import { useState } from "react";
-import { getDocsLinkForNHConfig, getSchemaName } from "../../../../../Store/FileUtils";
+import { getDocsLinkForNHConfig, getSchemaName } from "../../../../Store/FileUtils";
 import { IEditorProps } from "../../Editor";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";

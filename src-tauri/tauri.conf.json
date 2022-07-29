@@ -18,9 +18,6 @@
             "os": {
                 "all": true
             },
-            "globalShortcut": {
-                "all": true
-            },
             "http": {
                 "request": true,
                 "scope": [

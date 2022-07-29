@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap-icons";
 import IconDropDownItem from "../../Common/IconDropDownItem";
 import { openSettingsWindow } from "../../SettingsWindow/SettingsWindow";
-import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
+import { useAppDispatch, useAppSelector } from "../Store/Hooks";
 import {
     closeAllUnchangedTabs,
     closeProjectConfirm,
@@ -23,22 +23,24 @@ import {
     selectFilesHaveUnsavedChanges,
     selectSelectedFile,
     selectTotalOpenFiles
-} from "../../Store/OpenFiles";
-import { invalidate } from "../../Store/ProjectFile";
-import {
-    addonManifestIcon,
-    planetsIcon,
-    systemsIcon,
-    translationsIcon
-} from "../../Store/FileUtils";
+} from "../Store/OpenFilesSlice";
+import { invalidate } from "../Store/ProjectFilesSlice";
+import { addonManifestIcon, planetsIcon, systemsIcon, translationsIcon } from "../Store/FileUtils";
 import { useProject } from "../MainWindow";
 import MenuBarGroup from "./MenuBarGroup";
 
-function NewFileItem(props: { label: string; icon: ReactElement; name: string }) {
+function NewFileItem(props: {
+    label: string;
+    icon: ReactElement;
+    name: string;
+    shortcutLetter: string;
+}) {
     const dispatch = useAppDispatch();
 
     return (
         <IconDropDownItem
+            annotation={`Ctrl+N+${props.shortcutLetter.toUpperCase()}`}
+            shortcut={`ctrl+n+${props.shortcutLetter},command+n+${props.shortcutLetter}`}
             onClick={() =>
                 dispatch(createVoidFile({ name: props.name, rootDir: `${props.name}s` }))
             }
@@ -62,6 +64,8 @@ function SaveFileItem() {
 
     return (
         <IconDropDownItem
+            annotation="Ctrl+S"
+            shortcut="ctrl+s,command+s"
             disabled={
                 selectedFile === undefined || selectedFile.memoryData === selectedFile.diskData
             }
@@ -86,6 +90,8 @@ function SaveAllItem() {
 
     return (
         <IconDropDownItem
+            annotation="Ctrl+Shift+S"
+            shortcut="ctrl+shift+s,command+shift+s"
             onClick={onClick}
             disabled={!openFiles.some((f) => f.memoryData !== f.diskData)}
             id="saveAll"
@@ -104,6 +110,8 @@ function ReloadDiskItem() {
 
     return (
         <IconDropDownItem
+            annotation="Ctrl+Y"
+            shortcut="ctrl+y,command+y"
             onClick={onClick}
             id="reloadFromDisk"
             label="Reload From Disk"
@@ -123,6 +131,8 @@ function CloseAllItem() {
 
     return (
         <IconDropDownItem
+            annotation="Ctrl+Shift+W"
+            shortcut="ctrl+shift+w,command+shift+w"
             onClick={onClick}
             disabled={totalOpen === 0}
             id="closeAll"
@@ -166,6 +176,8 @@ function CloseProjectItem() {
 
     return (
         <IconDropDownItem
+            annotation="Ctrl+Alt+Q"
+            shortcut="ctrl+alt+q,command+alt+q"
             onClick={onClick}
             id="closeProject"
             label="Close Project"
@@ -187,16 +199,32 @@ function QuitItem() {
         }
     };
 
-    return <IconDropDownItem onClick={onClick} id="quit" label="Quit" icon={<DoorOpenFill />} />;
+    return (
+        <IconDropDownItem
+            annotation="Ctrl+Q"
+            shortcut="ctr+q,command+q"
+            onClick={onClick}
+            id="quit"
+            label="Quit"
+            icon={<DoorOpenFill />}
+        />
+    );
 }
 
 export function FileGroup() {
     return (
         <MenuBarGroup name="File">
-            <NewFileItem label={"Planet"} icon={planetsIcon()} name={"planet"} />
-            <NewFileItem label={"System"} icon={systemsIcon()} name={"system"} />
-            <NewFileItem label={"Translation"} icon={translationsIcon()} name={"translation"} />
+            <NewFileItem label={"Planet"} icon={planetsIcon()} name={"planet"} shortcutLetter="p" />
+            <NewFileItem label={"System"} icon={systemsIcon()} name={"system"} shortcutLetter="s" />
+            <NewFileItem
+                label={"Translation"}
+                icon={translationsIcon()}
+                name={"translation"}
+                shortcutLetter="t"
+            />
             <IconDropDownItem
+                annotation="Ctrl+N+A"
+                shortcut="ctrl+n+a,command+n+a"
                 id="makeManifest"
                 label="Create Addon Manifest"
                 icon={addonManifestIcon()}
@@ -208,6 +236,8 @@ export function FileGroup() {
             <CloseAllItem />
             <IconDropDownItem id="separator" />
             <IconDropDownItem
+                annotation="Ctrl+Alt+S"
+                shortcut="ctrl+alt+s,command+alt+s"
                 onClick={openSettingsWindow}
                 id="settings"
                 label="Settings"

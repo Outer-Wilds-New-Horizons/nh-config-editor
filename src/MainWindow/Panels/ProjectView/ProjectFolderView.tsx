@@ -4,9 +4,9 @@ import { CaretRightFill } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { connect } from "react-redux";
-import { ProjectFile, selectProjectFileByParentDirFactory } from "../../../Store/ProjectFile";
-import { determineIcon } from "../../../Store/FileUtils";
-import { RootState } from "../../../Store/Store";
+import { ProjectFile, selectProjectFileByParentDirFactory } from "../../Store/ProjectFilesSlice";
+import { determineIcon } from "../../Store/FileUtils";
+import { RootState } from "../../Store/Store";
 import ProjectItemView from "./ProjectItemView";
 
 function ProjectFolderView(props: { file: ProjectFile; childPaths: string[] }) {

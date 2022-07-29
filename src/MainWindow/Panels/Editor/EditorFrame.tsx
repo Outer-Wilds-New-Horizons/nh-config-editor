@@ -1,7 +1,7 @@
 import Row from "react-bootstrap/Row";
 import { SchemaStore } from "../../../Common/AppData/SchemaStore";
-import { useAppSelector } from "../../../Store/Hooks";
-import { selectTabs, selectTotalOpenFiles } from "../../../Store/OpenFiles";
+import { useAppSelector } from "../../Store/Hooks";
+import { selectTabs, selectTotalOpenFiles } from "../../Store/OpenFilesSlice";
 import Editor from "./Editor";
 import CenteredMessage from "./Editors/CenteredMessage";
 import EditorTabs from "./EditorTabs";

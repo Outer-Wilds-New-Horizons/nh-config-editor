@@ -3,9 +3,9 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { connect } from "react-redux";
 import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
-import { useAppDispatch, useAppSelector } from "../../../Store/Hooks";
-import { loadProject, selectProjectFileByParentDirFactory } from "../../../Store/ProjectFile";
-import { RootState } from "../../../Store/Store";
+import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
+import { loadProject, selectProjectFileByParentDirFactory } from "../../Store/ProjectFilesSlice";
+import { RootState } from "../../Store/Store";
 import ProjectItemView from "./ProjectItemView";
 import ProjectViewHeader from "./ProjectViewHeader";
 

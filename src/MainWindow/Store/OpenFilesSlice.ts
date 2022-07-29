@@ -9,9 +9,9 @@ import {
 import { dialog } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
-import { tauriCommands } from "../Common/TauriCommands";
+import { tauriCommands } from "../../Common/TauriCommands";
 import { initialLoadState, LoadState } from "./LoadState";
-import { invalidate, ProjectFile } from "./ProjectFile";
+import { invalidate, ProjectFile } from "./ProjectFilesSlice";
 import {
     determineOpenFunction,
     getContentToSave,
@@ -92,6 +92,15 @@ const updateTabIndices = (state: OpenFilesSliceState) => {
     );
 };
 
+const tryRestoreSelectedTab = (state: OpenFilesSliceState, oldPath: string) => {
+    const index = state.tabs.indexOf(oldPath);
+    if (index !== -1) {
+        state.selectedTabIndex = index;
+    } else {
+        state.selectedTabIndex = state.tabs.length === 0 ? -1 : 0;
+    }
+};
+
 const openFilesSlice = createSlice({
     name: "openFiles",
     initialState: initialState as OpenFilesSliceState,
@@ -153,7 +162,7 @@ const openFilesSlice = createSlice({
                 }))
             );
             updateTabIndices(state);
-            state.selectedTabIndex = state.tabs.indexOf(currentSelectedPath) ?? state.tabs[0] ?? -1;
+            tryRestoreSelectedTab(state, currentSelectedPath);
         },
         closeAllUnchangedTabs: (state) => {
             if (state.ids.length === 0) return;
@@ -166,7 +175,7 @@ const openFilesSlice = createSlice({
             const currentSelectedPath = state.tabs[state.selectedTabIndex];
             state.tabs = state.tabs.filter((p) => state.ids.includes(p));
             updateTabIndices(state);
-            state.selectedTabIndex = state.tabs.indexOf(currentSelectedPath) ?? state.tabs[0] ?? -1;
+            tryRestoreSelectedTab(state, currentSelectedPath);
         },
         fileEdited: (state, action: PayloadAction<{ id: EntityId; content: string }>) => {
             const { id, content } = action.payload;

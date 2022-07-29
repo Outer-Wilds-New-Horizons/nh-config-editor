@@ -26,6 +26,7 @@ specifiers:
     react-bootstrap: ^2.4.0
     react-bootstrap-icons: ^1.8.4
     react-dom: ^18.2.0
+    react-hotkeys-hook: ^3.4.7
     react-jsonschema-form: ^1.8.1
     react-redux: ^8.0.2
     remote-redux-devtools: ^0.5.16
@@ -48,6 +49,7 @@ dependencies:
     react-bootstrap: 2.4.0_08741bd84ef3e6fa073678331eea05f2
     react-bootstrap-icons: 1.8.4_react@18.2.0
     react-dom: 18.2.0_react@18.2.0
+    react-hotkeys-hook: 3.4.7_react-dom@18.2.0+react@18.2.0
     react-jsonschema-form: 1.8.1_react@18.2.0
     react-redux: 8.0.2_afeb288e744707bf3e21b546d587f37c
 
@@ -2757,6 +2759,13 @@ packages:
             react-is: 16.13.1
         dev: false
 
+    /hotkeys-js/3.9.4:
+        resolution:
+            {
+                integrity: sha512-2zuLt85Ta+gIyvs4N88pCYskNrxf1TFv3LR9t5mdAZIX8BcgQQ48F2opUptvHa6m8zsy5v/a0i9mWzTrlNWU0Q==
+            }
+        dev: false
+
     /html-minifier-terser/6.1.0:
         resolution:
             {
@@ -3841,6 +3850,20 @@ packages:
             loose-envify: 1.4.0
             react: 18.2.0
             scheduler: 0.23.0
+        dev: false
+
+    /react-hotkeys-hook/3.4.7_react-dom@18.2.0+react@18.2.0:
+        resolution:
+            {
+                integrity: sha512-+bbPmhPAl6ns9VkXkNNyxlmCAIyDAcWbB76O4I0ntr3uWCRuIQf/aRLartUahe9chVMPj+OEzzfk3CQSjclUEQ==
+            }
+        peerDependencies:
+            react: ">=16.8.1"
+            react-dom: ">=16.8.1"
+        dependencies:
+            hotkeys-js: 3.9.4
+            react: 18.2.0
+            react-dom: 18.2.0_react@18.2.0
         dev: false
 
     /react-is/16.13.1:

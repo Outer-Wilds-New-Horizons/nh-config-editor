@@ -1,5 +1,5 @@
-import { useAppSelector } from "../../../Store/Hooks";
-import { selectProjectFileByRelativePath } from "../../../Store/ProjectFile";
+import { useAppSelector } from "../../Store/Hooks";
+import { selectProjectFileByRelativePath } from "../../Store/ProjectFilesSlice";
 import ProjectFileView from "./ProjectFileView";
 import ProjectFolderView from "./ProjectFolderView";
 

@@ -2,14 +2,14 @@ import { dialog } from "@tauri-apps/api";
 import { useMemo } from "react";
 import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
-import { useAppDispatch, useAppSelector } from "../../../Store/Hooks";
+import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
 import {
     closeTab,
     selectOpenFileByRelativePath,
     selectSelectedTabIndex,
     selectTab
-} from "../../../Store/OpenFiles";
-import { determineIcon } from "../../../Store/FileUtils";
+} from "../../Store/OpenFilesSlice";
+import { determineIcon } from "../../Store/FileUtils";
 
 export type EditorTabProps = {
     id: string;
