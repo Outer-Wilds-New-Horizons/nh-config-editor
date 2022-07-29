@@ -5,7 +5,8 @@ import Wrapper from "./Wrapper";
 const root = document.getElementById("root");
 
 document.oncontextmenu = (e) => e.preventDefault();
-(window as unknown as Window & { global: Window }).global = window;
+
+console.debug("Mounting Wrapper");
 
 if (root === null) {
     console.error("Catastrophic Failure");
