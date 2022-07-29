@@ -9,9 +9,16 @@ export const store = configureStore({
         projectFiles: projectFilesReducer,
         openFiles: openFilesReducer
     },
-    enhancers: import.meta.env.DEV
-        ? [devToolsEnhancer({ realtime: import.meta.env.DEV, hostname: "localhost", port: 8000 })]
-        : []
+    enhancers:
+        import.meta.env.NODE_ENV === "development"
+            ? [
+                  devToolsEnhancer({
+                      realtime: import.meta.env.NODE_ENV === "development",
+                      hostname: "localhost",
+                      port: 8000
+                  })
+              ]
+            : []
 });
 
 export type RootState = ReturnType<typeof store.getState>;

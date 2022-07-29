@@ -20,7 +20,6 @@ export default defineConfig({
         createHtmlPlugin({
             minify: true,
             template: "index.html",
-
             inject: {
                 data: {
                     reactDevTools: inDebug ? '<script src="http://localhost:8097"></script>' : "",
@@ -34,6 +33,7 @@ export default defineConfig({
             }
         })
     ],
+    envPrefix: "NODE_",
     build: {
         target: ["edge89", "firefox89", "chrome89", "safari15"]
     }

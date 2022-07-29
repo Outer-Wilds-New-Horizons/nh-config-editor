@@ -15,7 +15,7 @@ declare module "*.xsd" {
 
 declare interface ImportMeta {
     env: {
-        DEV: boolean;
+        NODE_ENV: "prod" | "development" | "test";
     };
 }
 
