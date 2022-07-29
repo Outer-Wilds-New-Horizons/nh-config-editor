@@ -14,7 +14,7 @@ function AsyncImage(props: AsyncImageProps) {
 
     if (!loadStarted) {
         setLoadStarted(true);
-        tauriCommands.loadBase64Image(props.path).then(setData).catch(setErrorMessage);
+        tauriCommands.loadBase64File(props.path).then(setData).catch(setErrorMessage);
     }
 
     if (data === null) {

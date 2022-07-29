@@ -1,10 +1,10 @@
-import AsyncImage from "../../../../Common/AsyncImage";
-import { ProjectFile } from "../../ProjectView/ProjectFile";
+import Image from "react-bootstrap/Image";
+import { IEditorProps } from "../Editor";
 
-function ImageView(props: { file: ProjectFile }) {
+function ImageView(props: IEditorProps) {
     return (
         <div className="mx-5 d-flex justify-content-center align-items-center h-100">
-            <AsyncImage path={props.file.path} alt={props.file.name} fluid />
+            <Image src={`data:image/png;base64,${props.fileData}`} fluid />
         </div>
     );
 }

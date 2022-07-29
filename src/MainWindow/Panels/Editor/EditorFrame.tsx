@@ -1,55 +1,36 @@
-import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { SchemaStore } from "../../../Common/AppData/SchemaStore";
-import { ProjectFile } from "../ProjectView/ProjectFile";
+import { useAppSelector } from "../../../Store/Hooks";
+import { selectTabs, selectTotalOpenFiles } from "../../../Store/OpenFiles";
 import Editor from "./Editor";
 import CenteredMessage from "./Editors/CenteredMessage";
-import EditorTab from "./EditorTab";
+import EditorTabs from "./EditorTabs";
 
 type EditorFrameProps = {
-    openFiles: ProjectFile[];
-    selectedFile: ProjectFile | null;
     schemaStore: SchemaStore;
-    onSelectFile?: (file: ProjectFile) => void;
-    onCloseFile?: (file: ProjectFile) => void;
-    onFileChanged?: (file: ProjectFile) => void;
-    onFileContextMenu?: (index: number, position: [number, number]) => void;
 };
 
+function EditorPanes(props: EditorFrameProps) {
+    const paths = useAppSelector((state) => selectTabs(state.openFiles)) as string[];
+    return (
+        <Row className="flex-grow-1 ms-0 w-100 position-relative">
+            {paths.map((path) => (
+                <Editor key={path} schemaStore={props.schemaStore} relativePath={path} />
+            ))}
+        </Row>
+    );
+}
+
 function EditorFrame(props: EditorFrameProps) {
-    if (props.selectedFile === null) {
+    const numberOpen = useAppSelector((state) => selectTotalOpenFiles(state.openFiles));
+
+    if (numberOpen === 0) {
         return <CenteredMessage message="Select a file on the left to edit it" />;
     } else {
         return (
             <>
-                <Row className="border-bottom lt-border m-0">
-                    {props.openFiles.map((file, index) => (
-                        <EditorTab
-                            active={props.selectedFile === file}
-                            onSelect={() => props.onSelectFile?.(file)}
-                            onClose={() => props.onCloseFile?.(file)}
-                            onContextMenu={(position) => props.onFileContextMenu?.(index, position)}
-                            key={file.path}
-                            file={file}
-                        />
-                    ))}
-                </Row>
-                <Row className="flex-grow-1 ms-0 w-100 position-relative">
-                    {props.openFiles.map((file) => (
-                        <Col
-                            key={file.path}
-                            className={`position-absolute p-0 top-0 end-0 start-0 bottom-0 overflow-y-auto${
-                                props.selectedFile === file ? "" : " d-none"
-                            }`}
-                        >
-                            <Editor
-                                onChange={() => props.onFileChanged?.(file)}
-                                schemaStore={props.schemaStore}
-                                file={file}
-                            />
-                        </Col>
-                    ))}
-                </Row>
+                <EditorTabs />
+                <EditorPanes {...props} />
             </>
         );
     }

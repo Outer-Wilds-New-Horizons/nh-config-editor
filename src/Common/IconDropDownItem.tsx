@@ -5,6 +5,7 @@ export type IconDropDownItemProps = {
     id: string;
     label?: string;
     annotation?: string;
+    disabled?: boolean;
     icon?: ReactElement<SVGAttributes<SVGElement>>;
     onClick?: () => void;
 };
@@ -15,7 +16,12 @@ function IconDropDownItem(props: IconDropDownItemProps) {
     }
 
     return (
-        <Dropdown.Item className="d-flex align-items-center" onClick={props.onClick}>
+        <Dropdown.Item
+            className={`d-flex user-select-none align-items-center${
+                props.disabled ? " disabled" : ""
+            }`}
+            onClick={props.onClick}
+        >
             {props.icon && cloneElement(props.icon, { className: "fs-6" })}
             <span className={`me-4${props.icon ? " ms-2" : " ms-4"}`}>
                 {props.label ?? props.id}

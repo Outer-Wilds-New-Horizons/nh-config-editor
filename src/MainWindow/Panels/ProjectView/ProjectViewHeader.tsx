@@ -1,6 +1,6 @@
-import { invoke } from "@tauri-apps/api/tauri";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AsyncImage from "../../../Common/AsyncImage";
+import { tauriCommands } from "../../../Common/TauriCommands";
 
 export type ProjectViewHeaderProps = {
     headerFallback: string;
@@ -10,9 +10,9 @@ export type ProjectViewHeaderProps = {
 function ProjectViewHeader(props: ProjectViewHeaderProps) {
     const [hasImage, setHasImage] = useState(false);
 
-    invoke("file_exists", { path: props.headerPath }).then((data) => {
-        setHasImage(data as boolean);
-    });
+    useEffect(() => {
+        tauriCommands.fileExists(props.headerPath).then(setHasImage);
+    }, [props.headerPath]);
 
     if (hasImage) {
         return <AsyncImage className="my-1" path={props.headerPath} fluid />;
