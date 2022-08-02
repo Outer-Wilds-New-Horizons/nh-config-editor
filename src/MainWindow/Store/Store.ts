@@ -4,12 +4,14 @@ import devToolsEnhancer from "remote-redux-devtools";
 import projectFilesReducer from "./ProjectFilesSlice";
 import openFilesReducer from "./OpenFilesSlice";
 import windowBlurReducer from "./BlurSlice";
+import contextMenuReducer from "./ContextMenuSlice";
 
 export const store = configureStore({
     reducer: {
         projectFiles: projectFilesReducer,
         openFiles: openFilesReducer,
-        blur: windowBlurReducer
+        blur: windowBlurReducer,
+        contextMenu: contextMenuReducer
     },
     enhancers:
         import.meta.env.NODE_ENV === "development"

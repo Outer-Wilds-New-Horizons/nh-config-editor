@@ -50,7 +50,8 @@ export class Project {
             minHeight: 800,
             height: 800,
             resizable: true,
-            maximized: true
+            maximized: true,
+            fileDropEnabled: false
         });
 
         await webview.once("tauri://created", () => {

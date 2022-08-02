@@ -20,11 +20,11 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
 import RecentProjects from "../Common/AppData/RecentProjects";
-import ContextMenu from "../Common/ContextMenu/ContextMenu";
+import ContextMenu from "./ContextMenu/ContextMenu";
 import ContextMenuRoot, {
     ContextMenuActionRegistry,
     ContextMenuState
-} from "../Common/ContextMenu/ContextMenuRoot";
+} from "./ContextMenu/ContextMenuRoot";
 import IconDropDownItem from "../Common/IconDropDownItem";
 import { Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";

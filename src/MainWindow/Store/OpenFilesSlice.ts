@@ -19,6 +19,7 @@ import {
     getInitialContent,
     getRootDirectory
 } from "./FileUtils";
+import { RootState } from "./Store";
 
 type FileData = string | null;
 
@@ -41,7 +42,7 @@ export const saveFileData = createAsyncThunk(
         const rootDirectory = getRootDirectory(file.relativePath);
         if (file.relativePath.startsWith("@@void@@")) {
             const newPath = await dialog.save({
-                title: "Save file",
+                title: "Save File",
                 defaultPath: `${projectPath}${sep}${rootDirectory}${sep}${file.name}`,
                 filters: [
                     {
@@ -67,6 +68,64 @@ export const saveFileData = createAsyncThunk(
             await tauriCommands.writeFileText(file.absolutePath, await getContentToSave(file));
             return { createdNewFile: false, newPath: file.absolutePath };
         }
+    }
+);
+
+const confirmIfFileChanged = async (file: OpenFile): Promise<boolean> => {
+    let result = true;
+    if (file.diskData !== file.memoryData) {
+        result = await dialog.ask("Are you sure you want to close this file without saving?", {
+            type: "warning",
+            title: file.name
+        });
+    }
+    return result;
+};
+
+export const closeTab = createAsyncThunk("openFiles/closeTab", async (file: OpenFile, thunkAPI) => {
+    if (await confirmIfFileChanged(file)) {
+        thunkAPI.dispatch(forceCloseTab(file.relativePath));
+    }
+});
+
+export const closeTabs = createAsyncThunk(
+    "openFiles/closeTabs",
+    async (files: OpenFile[], thunkAPI) => {
+        const tabsToClose: string[] = [];
+        for (const file of files) {
+            if (await confirmIfFileChanged(file)) {
+                tabsToClose.push(file.relativePath);
+            }
+        }
+        thunkAPI.dispatch(forceCloseTabs(tabsToClose));
+    }
+);
+
+export const closeAllTabs = createAsyncThunk("openFiles/closeAllTabs", async (_, thunkAPI) => {
+    thunkAPI.dispatch(closeTabs(selectAllOpenFiles((thunkAPI.getState() as RootState).openFiles)));
+});
+
+export const closeTabsToTheRight = createAsyncThunk(
+    "openFiles/closeTabsToTheRight",
+    async (index: number, thunkAPI) => {
+        const files = selectAllOpenFiles((thunkAPI.getState() as RootState).openFiles);
+        thunkAPI.dispatch(closeTabs(files.filter((f) => f.tabIndex > index)));
+    }
+);
+
+export const closeTabsToTheLeft = createAsyncThunk(
+    "openFiles/closeTabsToTheLeft",
+    async (index: number, thunkAPI) => {
+        const files = selectAllOpenFiles((thunkAPI.getState() as RootState).openFiles);
+        thunkAPI.dispatch(closeTabs(files.filter((f) => f.tabIndex < index)));
+    }
+);
+
+export const closeOtherTabs = createAsyncThunk(
+    "openFiles/closeOtherTabs",
+    async (index: number, thunkAPI) => {
+        const files = selectAllOpenFiles((thunkAPI.getState() as RootState).openFiles);
+        thunkAPI.dispatch(closeTabs(files.filter((f) => f.tabIndex !== index)));
     }
 );
 
@@ -150,30 +209,26 @@ const openFilesSlice = createSlice({
         selectTab: (state, action: PayloadAction<string>) => {
             state.selectedTabIndex = state.tabs.indexOf(action.payload);
         },
-        closeTab: (state, action: PayloadAction<string>) => {
+        forceCloseTab: (state, action: PayloadAction<string>) => {
+            if (!state.ids.includes(action.payload)) return;
+
             openFilesAdapter.removeOne(state, action.payload);
             const currentSelectedPath = state.tabs[state.selectedTabIndex];
             state.tabs = state.tabs.filter((p) => p !== action.payload);
-            openFilesAdapter.updateMany(
-                state,
-                state.tabs.map((p, i) => ({
-                    id: p,
-                    changes: { tabIndex: i }
-                }))
-            );
             updateTabIndices(state);
             tryRestoreSelectedTab(state, currentSelectedPath);
         },
-        closeAllUnchangedTabs: (state) => {
-            if (state.ids.length === 0) return;
-            openFilesAdapter.removeMany(
-                state,
-                state.ids.filter(
-                    (id) => state.entities[id]!.diskData === state.entities[id]!.memoryData
-                )
-            );
+        forceCloseTabs: (state, action: PayloadAction<string[]>) => {
+            openFilesAdapter.removeMany(state, action.payload);
             const currentSelectedPath = state.tabs[state.selectedTabIndex];
-            state.tabs = state.tabs.filter((p) => state.ids.includes(p));
+            state.tabs = state.tabs.filter((p) => !action.payload.includes(p));
+            updateTabIndices(state);
+            tryRestoreSelectedTab(state, currentSelectedPath);
+        },
+        setTabs: (state, action: PayloadAction<string[]>) => {
+            if (state.tabs === action.payload) return;
+            const currentSelectedPath = state.tabs[state.selectedTabIndex];
+            state.tabs = action.payload;
             updateTabIndices(state);
             tryRestoreSelectedTab(state, currentSelectedPath);
         },
@@ -252,12 +307,20 @@ const openFilesSlice = createSlice({
 
 export default openFilesSlice.reducer;
 
-export const { openFile, selectTab, closeTab, closeAllUnchangedTabs, fileEdited, createVoidFile } =
-    openFilesSlice.actions;
+export const {
+    openFile,
+    selectTab,
+    setTabs,
+    forceCloseTab,
+    forceCloseTabs,
+    fileEdited,
+    createVoidFile
+} = openFilesSlice.actions;
 
 export const {
     selectAll: selectAllOpenFiles,
     selectById: selectOpenFileByRelativePath,
+    selectIds: selectOpenFileIds,
     selectTotal: selectTotalOpenFiles
 } = openFilesAdapter.getSelectors();
 

@@ -1,3 +1,4 @@
+import { dialog, shell } from "@tauri-apps/api";
 import { sep } from "@tauri-apps/api/path";
 import { ReactElement } from "react";
 import {
@@ -199,6 +200,15 @@ export const isImage = (file: ProjectFile | OpenFile): boolean => {
 
 export const isAudio = (file: ProjectFile | OpenFile): boolean => {
     return audioExtensions.includes(file.extension.toLowerCase());
+};
+
+export const openInExternal = (file: ProjectFile | OpenFile) => {
+    shell.open(file.absolutePath).catch((e) => {
+        dialog.message(`Failed to open ${file.name}: ${e}`, {
+            type: "error",
+            title: "Error"
+        });
+    });
 };
 
 export const determineOpenFunction = (

@@ -14,7 +14,7 @@ import IconDropDownItem from "../../Common/IconDropDownItem";
 import { openSettingsWindow } from "../../SettingsWindow/SettingsWindow";
 import { useAppDispatch, useAppSelector } from "../Store/Hooks";
 import {
-    closeAllUnchangedTabs,
+    closeAllTabs,
     closeProjectConfirm,
     createVoidFile,
     quitConfirm,
@@ -126,7 +126,7 @@ function CloseAllItem() {
     const totalOpen = useAppSelector((state) => selectTotalOpenFiles(state.openFiles));
 
     const onClick = () => {
-        dispatch(closeAllUnchangedTabs());
+        dispatch(closeAllTabs());
     };
 
     return (
@@ -136,7 +136,7 @@ function CloseAllItem() {
             onClick={onClick}
             disabled={totalOpen === 0}
             id="closeAll"
-            label="Close All Unchanged"
+            label="Close All"
             icon={<FileXFill />}
         />
     );

@@ -4,6 +4,7 @@ import {
     createSelector,
     createSlice
 } from "@reduxjs/toolkit";
+import { dialog } from "@tauri-apps/api";
 import { sep } from "@tauri-apps/api/path";
 import { SettingsManager } from "../../Common/AppData/Settings";
 import { getModManagerSettings } from "../../Common/ModManager";
@@ -11,6 +12,7 @@ import { Project } from "../../Common/Project";
 import { tauriCommands } from "../../Common/TauriCommands";
 import { initialLoadState, LoadState } from "./LoadState";
 import { getParentDirectory } from "./FileUtils";
+import { forceCloseTab } from "./OpenFilesSlice";
 
 const compareItems = (a: ProjectFile, b: ProjectFile): number => {
     if (a.isFolder && !b.isFolder) {
@@ -41,6 +43,24 @@ export const releaseBuild = createAsyncThunk(
             minify
         );
         thunkAPI.dispatch(invalidate());
+    }
+);
+export const deleteFile = createAsyncThunk(
+    "projectFiles/deleteFile",
+    async (payload: ProjectFile, thunkAPI) => {
+        const result = await dialog.ask(`Are you sure you want to delete ${payload.name}?`, {
+            type: "warning",
+            title: "Delete file"
+        });
+        if (result) {
+            if (payload.isFolder) {
+                await tauriCommands.deleteDirectory(payload.absolutePath);
+            } else {
+                await tauriCommands.deleteFile(payload.absolutePath);
+            }
+            thunkAPI.dispatch(invalidate());
+            thunkAPI.dispatch(forceCloseTab(payload.relativePath));
+        }
     }
 );
 

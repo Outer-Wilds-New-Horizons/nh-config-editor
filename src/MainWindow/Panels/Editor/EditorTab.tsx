@@ -1,7 +1,7 @@
-import { dialog } from "@tauri-apps/api";
 import { useMemo } from "react";
 import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
+import { contextMenu } from "../../Store/ContextMenuSlice";
 import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
 import {
     closeTab,
@@ -33,34 +33,28 @@ function EditorTab(props: EditorTabProps) {
 
     const onClick = () => dispatch(selectTab(props.id));
 
-    const onClose = () => dispatch(closeTab(props.id));
+    const onClose = () => dispatch(closeTab(file));
 
-    const confirmClose = () => {
-        if (file.memoryData === file.diskData) {
-            onClose();
-        } else {
-            dialog
-                .ask("Are you sure you want to close this file without saving?", {
-                    type: "warning",
-                    title: file.name
-                })
-                .then((result) => {
-                    if (result) onClose();
-                });
-        }
-    };
+    const onContext = (e: { clientX: number; clientY: number }) =>
+        dispatch(
+            contextMenu.openMenu({
+                position: [e.clientX, e.clientY],
+                target: props.id,
+                menu: "openFile"
+            })
+        );
 
     const icon = useMemo(() => determineIcon(file), [props.id]);
 
     return (
-        <Col xs="auto" className={classes}>
+        <Col data-relpath={props.id} onContextMenu={onContext} xs="auto" className={classes}>
             <span onClick={onClick} className="d-flex align-items-center justify-content-center">
                 {icon}
                 <span className="ms-1">
                     {file.name + (file.memoryData !== file.diskData ? "*" : "")}
                 </span>
             </span>
-            <X onClick={confirmClose} className="small ms-1" />
+            <X onClick={onClose} className="small ms-1" />
         </Col>
     );
 }

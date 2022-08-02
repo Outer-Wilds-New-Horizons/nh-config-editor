@@ -1,6 +1,6 @@
 import { cloneElement, ReactElement } from "react";
 import { Dropdown } from "react-bootstrap";
-import { IconDropDownItemProps } from "../IconDropDownItem";
+import { IconDropDownItemProps } from "../../Common/IconDropDownItem";
 
 export type ContextMenuProps = {
     id: string;
