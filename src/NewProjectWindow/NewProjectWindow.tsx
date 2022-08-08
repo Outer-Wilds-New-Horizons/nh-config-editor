@@ -9,6 +9,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import RecentProjects from "../Common/AppData/RecentProjects";
 import { Project } from "../Common/Project";
+import { tauriCommands } from "../Common/TauriCommands";
 import { useSettings } from "../Wrapper";
 
 const templateContents = [
@@ -49,10 +50,7 @@ function NewProjectWindow() {
             const filePath = await resolveResource(
                 `resources${sep}new_project_template${sep}${file}`
             );
-            await invoke("copy_file", {
-                src: filePath,
-                dest: `${projectPath}${sep}${file}`
-            });
+            await tauriCommands.copyFile(filePath, `${projectPath}${sep}${file}`);
         }
 
         await invoke("write_string_to_file", {

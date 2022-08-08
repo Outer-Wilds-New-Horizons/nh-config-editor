@@ -1,5 +1,5 @@
 import { os } from "@tauri-apps/api";
-import { cloneElement, ReactElement, SVGAttributes } from "react";
+import { cloneElement, ReactElement, SVGAttributes, useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -13,7 +13,7 @@ export type IconDropDownItemProps = {
     onClick?: () => void;
 };
 
-const osType = await os.type();
+let osType = "None";
 
 const canonicalizeShortcut = (shortcut: string) => {
     if (osType === "Darwin") {
@@ -30,6 +30,19 @@ function IconDropDownItem(props: IconDropDownItemProps) {
         return <Dropdown.Divider />;
     }
 
+    const [annotation, setAnnotation] = useState(props.annotation ?? "");
+
+    useEffect(() => {
+        if (osType === "None") {
+            os.type().then((result) => {
+                osType = result;
+                setAnnotation(canonicalizeShortcut(annotation) ?? "");
+            });
+        } else {
+            setAnnotation(canonicalizeShortcut(annotation) ?? "");
+        }
+    }, []);
+
     if (props.shortcut !== undefined) {
         useHotkeys(props.shortcut, (e) => {
             e.preventDefault();
@@ -38,8 +51,6 @@ function IconDropDownItem(props: IconDropDownItemProps) {
             }
         });
     }
-
-    const annotation = props.annotation ? canonicalizeShortcut(props.annotation) : props.annotation;
 
     return (
         <Dropdown.Item

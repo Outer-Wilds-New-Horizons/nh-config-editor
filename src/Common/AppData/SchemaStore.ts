@@ -1,7 +1,7 @@
 import { message } from "@tauri-apps/api/dialog";
 import { fetch } from "@tauri-apps/api/http";
 import { JSONSchema7 } from "json-schema";
-import { languages } from "monaco-editor";
+import * as monaco from "monaco-editor";
 
 import addonManifestSchema from "../../MainWindow/Schemas/addon_manifest_schema.json";
 import bodySchema from "../../MainWindow/Schemas/body_schema.json";
@@ -17,7 +17,7 @@ import {
 } from "../../MainWindow/Store/FileUtils";
 import AppData from "./AppData";
 import { SettingsManager } from "./Settings";
-import DiagnosticsOptions = languages.json.DiagnosticsOptions;
+import DiagnosticsOptions = monaco.languages.json.DiagnosticsOptions;
 
 const schemaTypes = [
     "body_schema.json",
@@ -30,7 +30,7 @@ const schemaTypes = [
     "dialogue_schema.xsd"
 ];
 
-const fallbackSchemas: { [key: string]: JSONSchema7 | string } = {
+export const fallbackSchemas: { [key: string]: JSONSchema7 | string } = {
     "body_schema.json": bodySchema as JSONSchema7,
     "star_system_schema.json": starSystemSchema as JSONSchema7,
     "addon_manifest_schema.json": addonManifestSchema as JSONSchema7,
@@ -47,16 +47,15 @@ export type SchemaStore = {
     schemas: { [key: string]: JSONSchema7 | string };
 };
 
-const branch = (await SettingsManager.get()).schemaBranch;
-
-const manager = new AppData<SchemaStore>("schema_store.json", {
+const manager = new AppData<SchemaStore>("schema_store.json", async () => ({
     lastUpdated: new Date(),
     schemas: {},
-    lastBranch: branch
-});
+    lastBranch: (await SettingsManager.get()).schemaBranch
+}));
 
 export const getMonacoJsonDiagnostics = async (): Promise<DiagnosticsOptions> => {
     const store = await SchemaStoreManager.get();
+    const branch = (await SettingsManager.get()).schemaBranch;
     return {
         schemaRequest: "ignore",
         schemaValidation: "error",
@@ -93,13 +92,13 @@ export const getMonacoJsonDiagnostics = async (): Promise<DiagnosticsOptions> =>
 };
 
 export default class SchemaStoreManager {
-    static async fetchSchema<T>(name: string, xsd: boolean): Promise<T> {
+    static async fetchSchema<T>(name: string, xsd: boolean, branch: string): Promise<T> {
         console.debug(`Fetching schema: ${name}`);
         const link =
             name === "manifest_schema.json"
                 ? getModManifestSchemaLink(branch)
                 : getSchemaLinkForNHConfig(name, branch);
-        const response = await fetch<JSONSchema7>(link, {
+        const response = await fetch<T>(link, {
             method: "GET",
             responseType: xsd ? 2 : 1
         });
@@ -117,16 +116,23 @@ export default class SchemaStoreManager {
         }
     }
 
-    static async getSchema<T>(store: SchemaStore, name: string, xsd: boolean): Promise<T> {
+    static async getSchema<T>(
+        store: SchemaStore,
+        name: string,
+        xsd: boolean,
+        branch: string
+    ): Promise<T> {
         if (store.schemas[name]) {
+            console.debug(`Using cached schema: ${name}`);
             return store.schemas[name] as T;
         } else {
-            return await SchemaStoreManager.fetchSchema<T>(name, xsd);
+            return await SchemaStoreManager.fetchSchema<T>(name, xsd, branch);
         }
     }
 
     static async get(): Promise<SchemaStore> {
         const currentStore = await manager.get();
+        const branch = (await SettingsManager.get()).schemaBranch;
         // Check if the store is on a different branch or if it is outdated (has one day passed since last update)
         if (
             currentStore.lastBranch !== branch ||
@@ -141,7 +147,8 @@ export default class SchemaStoreManager {
             newStore.schemas[name] = await SchemaStoreManager.getSchema(
                 currentStore,
                 name,
-                name.endsWith(".xsd")
+                name.endsWith(".xsd"),
+                branch
             );
         }
         await manager.save(newStore);

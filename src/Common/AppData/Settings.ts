@@ -1,4 +1,3 @@
-import { utils } from "@rjsf/core";
 import { dataDir, documentDir } from "@tauri-apps/api/path";
 import { Theme } from "../Theme/ThemeManager";
 import AppData from "./AppData";
@@ -51,7 +50,18 @@ export type Settings = {
 
 const MANAGER_FOLDER_NAME = "OuterWildsModManager";
 
-export const defaultSettings: Settings = {
+export const blankSettings: Settings = {
+    theme: "Follow System",
+    defaultProjectName: "New Project",
+    defaultAuthor: "",
+    defaultProjectFolder: "",
+    minify: false,
+    alwaysUseTextEditor: false,
+    schemaBranch: "main",
+    modManagerPath: ""
+};
+
+export const defaultSettings = async (): Promise<Settings> => ({
     theme: "Follow System",
     defaultProjectName: "New Project",
     defaultAuthor: "Slate",
@@ -60,10 +70,6 @@ export const defaultSettings: Settings = {
     alwaysUseTextEditor: false,
     schemaBranch: "main",
     modManagerPath: `${await dataDir()}${MANAGER_FOLDER_NAME}`
-};
+});
 
 export const SettingsManager = new AppData<Settings>("settings.json", defaultSettings);
-
-await SettingsManager.save(
-    utils.mergeObjects(defaultSettings, await SettingsManager.get()) as Settings
-);

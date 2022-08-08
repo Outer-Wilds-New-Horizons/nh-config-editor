@@ -27,7 +27,7 @@ function OpenExplorerItem() {
 }
 
 function RunItem() {
-    const project = useProject()!;
+    const project = useProject();
 
     const onClick = () => {
         openRunWindow(project.path);
@@ -47,7 +47,7 @@ function RunItem() {
 
 function BuildDebugItem() {
     const dispatch = useAppDispatch();
-    const project = useProject()!;
+    const project = useProject();
 
     const onClick = () => {
         dispatch(debugBuild({ project }));

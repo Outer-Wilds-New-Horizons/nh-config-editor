@@ -1,50 +1,42 @@
-import { message } from "@tauri-apps/api/dialog";
+import { EnhancedStore } from "@reduxjs/toolkit";
 import { sep } from "@tauri-apps/api/path";
-import { exit } from "@tauri-apps/api/process";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Provider } from "react-redux";
 
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import SchemaStoreManager from "../Common/AppData/SchemaStore";
-import { Project } from "../Common/Project";
+import SchemaStoreManager, { SchemaStore } from "../Common/AppData/SchemaStore";
+import { loadProjectFromURLParams, Project } from "../Common/Project";
 
 import "./main_window.css";
 import MainWindowContextMenu from "./ContextMenu/MainWindowContextMenu";
-import { store } from "./Store/Store";
+import { windowBlur } from "./Store/BlurSlice";
+import { RootState, setupStore } from "./Store/Store";
 import MainWindowBlur from "./MainWindowBlur";
 import MainWindowMenuBar from "./MenuBar/MainWindowMenuBar";
 import EditorFrame from "./Panels/Editor/EditorFrame";
 import ProjectView from "./Panels/ProjectView/ProjectView";
 
-const projectPath = new URLSearchParams(window.location.search).get("path");
+const ProjectContext = createContext<Project>(new Project("", "", ""));
 
-let project: Project | null = null;
+function MainWindow(props: { testStore?: EnhancedStore<RootState> }) {
+    const [project, setProject] = useState<Project>(new Project("", "", ""));
+    const [schemaStore, setSchemaStore] = useState<SchemaStore | null>(null);
+    const store = useMemo(() => props.testStore ?? setupStore(), []);
 
-if (projectPath === null) {
-    await message("No project path specified", {
-        type: "error",
-        title: "Error"
-    });
-    await exit(1);
-} else {
-    try {
-        project = await Project.load(decodeURIComponent(projectPath));
-    } catch (e) {
-        await message(`${e}`, {
-            type: "error",
-            title: "Error"
+    useEffect(() => {
+        (async () => {
+            const loadedProject = await loadProjectFromURLParams();
+            // This NNA is safe because if the project fails to load, the app will exit
+            setProject(loadedProject!);
+            setSchemaStore(await SchemaStoreManager.get());
+            store.dispatch(windowBlur.setStatus("idle"));
+        })().catch((e) => {
+            store.dispatch(windowBlur.showError(e.toString()));
         });
-        await exit(1);
-    }
-}
+    }, []);
 
-const ProjectContext = createContext(project);
-
-const schemaStore = await SchemaStoreManager.get();
-
-function MainWindow() {
     return (
         <Provider store={store}>
             <ProjectContext.Provider value={project}>
@@ -56,14 +48,16 @@ function MainWindow() {
                     </Row>
                     <Row className="flex-grow-1 border-top lt-border overflow-hidden">
                         <Col className="d-flex flex-column border-end lt-border">
-                            <ProjectView
-                                projectPath={project!.path}
-                                header={project!.name}
-                                headerPath={`${project!.path}${sep}subtitle.png`}
-                            />
+                            {project.path !== "" && (
+                                <ProjectView
+                                    projectPath={project!.path}
+                                    header={project!.name}
+                                    headerPath={`${project!.path}${sep}subtitle.png`}
+                                />
+                            )}
                         </Col>
                         <Col className="p-0 h-100 d-flex flex-column" xs={8}>
-                            <EditorFrame schemaStore={schemaStore} />
+                            {schemaStore && <EditorFrame schemaStore={schemaStore} />}
                         </Col>
                     </Row>
                 </Container>
