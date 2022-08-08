@@ -4,12 +4,12 @@ import { emit } from "@tauri-apps/api/event";
 import { invoke } from "@tauri-apps/api/tauri";
 import { getAll, WebviewWindow } from "@tauri-apps/api/window";
 import { JSONSchema7 } from "json-schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import { SettingsManager } from "../Common/AppData/Settings";
+import { blankSettings, SettingsManager } from "../Common/AppData/Settings";
 
 import settingsSchema from "../Common/AppData/SettingsSchema.json";
 import InspectorBoolean from "../MainWindow/Panels/Editor/Editors/Inspector/Fields/InspectorBoolean";
@@ -33,10 +33,16 @@ export const openSettingsWindow = () => {
     });
 };
 
-const initialSettings = await SettingsManager.get();
-
 function SettingsWindow() {
-    const [settings, setSettings] = useState(initialSettings);
+    const [settings, setSettings] = useState(blankSettings);
+    const [initialSettings, setInitialSettings] = useState(blankSettings);
+
+    useEffect(() => {
+        SettingsManager.get().then((s) => {
+            setSettings(s);
+            setInitialSettings(s);
+        });
+    });
 
     const customFields = {
         BooleanField: InspectorBoolean

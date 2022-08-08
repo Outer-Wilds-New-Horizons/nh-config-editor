@@ -16,9 +16,7 @@ function RecentProject(props: RecentProjectProps) {
 
     const onDeleteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        if (props.onDeleteClick) {
-            props.onDeleteClick();
-        }
+        props.onDeleteClick?.();
     };
 
     return (
@@ -36,6 +34,7 @@ function RecentProject(props: RecentProjectProps) {
                 className={`position-absolute end-0 top-0 py-1 mt-1 me-1${
                     deleteVisible ? " d-flex align-items-center" : " d-none"
                 }`}
+                aria-label="Delete"
                 variant="outline-danger"
                 size="sm"
             >

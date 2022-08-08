@@ -14,10 +14,17 @@ const buildErrorMessage = (error: string) => {
 // Uses LoadState, but status should never be set to "done"
 const blurSlice = createSlice({
     name: "blur",
-    initialState: initialLoadState,
+    initialState: {
+        status: "loading",
+        error: "Unknown Error"
+    },
     reducers: {
         setStatus: (state, action: PayloadAction<LoadStatus>) => {
             state.status = action.payload;
+        },
+        showError: (state, action: PayloadAction<string>) => {
+            state.error = action.payload;
+            state.status = "error";
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;
@@ -51,12 +58,13 @@ const blurSlice = createSlice({
     }
 });
 
-const { setStatus, setError, reset } = blurSlice.actions;
+const { setStatus, showError, setError, reset } = blurSlice.actions;
 const selectBlurStatus = (state: RootState) => state.blur.status;
 const selectBlurError = (state: RootState) => state.blur.error;
 
 export const windowBlur = {
     setStatus,
+    showError,
     setError,
     reset,
     selectBlurStatus,

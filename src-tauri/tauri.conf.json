@@ -88,7 +88,7 @@
         },
         "windows": [
             {
-                "label": "main",
+                "label": "start",
                 "fullscreen": false,
                 "resizable": false,
                 "title": "Welcome",

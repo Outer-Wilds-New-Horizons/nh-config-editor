@@ -1,6 +1,32 @@
+import { message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
+import { exit } from "@tauri-apps/api/process";
 import { getAll, WebviewWindow } from "@tauri-apps/api/window";
 import { tauriCommands } from "./TauriCommands";
+
+export const loadProjectFromURLParams = async () => {
+    const projectPath = new URLSearchParams(window.location.search).get("path");
+    if (projectPath === null) {
+        // This should only happen when the window is opened directly.
+        await message("No Project Path Specified", {
+            type: "error",
+            title: "Error"
+        });
+        await exit(1);
+        throw new Error("No Project Path Specified");
+    } else {
+        try {
+            return await Project.load(decodeURIComponent(projectPath));
+        } catch (e) {
+            await message(`Error loading project: ${e}`, {
+                type: "error",
+                title: "Error"
+            });
+            await exit(1);
+            throw e;
+        }
+    }
+};
 
 export class Project {
     name: string;
@@ -36,12 +62,16 @@ export class Project {
             throw new Error(`Project at ${path} has invalid manifest (${e})`);
         }
 
+        if (!Object.hasOwn(data!, "uniqueName") || !Object.hasOwn(data!, "name")) {
+            throw new Error(`Project at ${path} does not have a name or unique name`);
+        }
+
         const rawProject = data as Project;
         return new Project(rawProject.name, rawProject.uniqueName, path);
     }
 
     async openInMain() {
-        const webview = new WebviewWindow("mainApp", {
+        const webview = new WebviewWindow("main", {
             url: `index.html?path=${encodeURIComponent(this.path)}#MAIN`,
             title: `${this.name} | New Horizons Config Editor`,
             center: true,
@@ -56,7 +86,7 @@ export class Project {
 
         await webview.once("tauri://created", () => {
             getAll()
-                .filter((w) => w.label !== "mainApp")
+                .filter((w) => w.label !== "main")
                 .forEach((window) => window.close());
         });
     }

@@ -5,6 +5,7 @@ import { appDir } from "@tauri-apps/api/path";
 import { relaunch } from "@tauri-apps/api/process";
 import { open } from "@tauri-apps/api/shell";
 import { WebviewWindow } from "@tauri-apps/api/window";
+import { useEffect, useState } from "react";
 import { Github } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
@@ -15,10 +16,21 @@ import Row from "react-bootstrap/Row";
 import aboutImage from "../Common/Images/nh_logo.png";
 import { tauriCommands } from "../Common/TauriCommands";
 
-const version = await getVersion();
-const platformName = await platform();
-const tauriVersion = await getTauriVersion();
-const architecture = await arch();
+type AboutData = {
+    version: string;
+    platformName: string;
+    tauriVersion: string;
+    architecture: string;
+};
+
+const getAboutData = async () => {
+    return {
+        version: await getVersion(),
+        platformName: await platform(),
+        tauriVersion: await getTauriVersion(),
+        architecture: await arch()
+    };
+};
 
 export const openAboutWindow = () => {
     const current = WebviewWindow.getByLabel("about");
@@ -39,6 +51,17 @@ export const openAboutWindow = () => {
 };
 
 function AboutWindow() {
+    const [aboutData, setAboutData] = useState<AboutData>({
+        version: "",
+        platformName: "",
+        tauriVersion: "",
+        architecture: ""
+    });
+
+    useEffect(() => {
+        getAboutData().then(setAboutData);
+    });
+
     const resetData = async () => {
         const result = await ask("This will reset all data and relaunch the app. Are you sure?", {
             title: "Reset data",
@@ -80,14 +103,14 @@ function AboutWindow() {
                 </Col>
             </Row>
             <Row>
-                <Col>Version: {version}</Col>
+                <Col>Version: {aboutData.version}</Col>
             </Row>
             <Row>
-                <Col>Tauri Version: {tauriVersion}</Col>
+                <Col>Tauri Version: {aboutData.tauriVersion}</Col>
             </Row>
             <Row>
                 <Col>
-                    Platform: {platformName}_{architecture}
+                    Platform: {aboutData.platformName}_{aboutData.architecture}
                 </Col>
             </Row>
             <Row className="mt-3">

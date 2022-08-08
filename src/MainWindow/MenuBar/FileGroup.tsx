@@ -143,7 +143,7 @@ function CloseAllItem() {
 }
 
 const closeProject = () => {
-    const webview = new WebviewWindow("welcome", {
+    const webview = new WebviewWindow("start", {
         url: "index.html#START",
         title: "Welcome",
         center: true,
