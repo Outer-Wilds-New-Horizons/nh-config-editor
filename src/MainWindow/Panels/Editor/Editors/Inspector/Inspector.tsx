@@ -20,10 +20,6 @@ function Inspector(props: IEditorProps) {
             norender: true,
             submitText: "",
             props: {}
-        },
-        // Autocomplete happens on anything named "Name" so we want to disable it for the "Name" field.
-        name: {
-            autocomplete: "off"
         }
     };
 
