@@ -3,12 +3,7 @@ import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import { contextMenu } from "../../Store/ContextMenuSlice";
 import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
-import {
-    closeTab,
-    selectOpenFileByRelativePath,
-    selectSelectedTabIndex,
-    selectTab
-} from "../../Store/OpenFilesSlice";
+import { closeTab, selectOpenFileByRelativePath, selectTab } from "../../Store/OpenFilesSlice";
 import { determineIcon } from "../../Store/FileUtils";
 
 export type EditorTabProps = {
@@ -25,7 +20,7 @@ function EditorTab(props: EditorTabProps) {
     let classes =
         "editor-tab lt-border interactable d-flex align-items-center justify-content-center px-2 py-1";
 
-    const selectedIndex = useAppSelector((state) => selectSelectedTabIndex(state.openFiles));
+    const selectedIndex = useAppSelector((state) => state.openFiles.selectedTabIndex);
 
     if (file.tabIndex === selectedIndex) {
         classes += " bg-primary text-white";

@@ -123,7 +123,6 @@ export default class SchemaStoreManager {
         branch: string
     ): Promise<T> {
         if (store.schemas[name]) {
-            console.debug(`Using cached schema: ${name}`);
             return store.schemas[name] as T;
         } else {
             return await SchemaStoreManager.fetchSchema<T>(name, xsd, branch);

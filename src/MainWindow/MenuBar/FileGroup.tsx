@@ -21,7 +21,7 @@ import {
     saveFileData,
     selectAllOpenFiles,
     selectFilesHaveUnsavedChanges,
-    selectSelectedFile,
+    selectOpenFileByRelativePath,
     selectTotalOpenFiles
 } from "../Store/OpenFilesSlice";
 import { invalidate } from "../Store/ProjectFilesSlice";
@@ -54,11 +54,17 @@ function NewFileItem(props: {
 function SaveFileItem() {
     const project = useProject();
     const dispatch = useAppDispatch();
-    const selectedFile = useAppSelector((state) => selectSelectedFile(state.openFiles));
+    const selectedIndex = useAppSelector((state) => state.openFiles.selectedTabIndex);
+    const selectedFile = useAppSelector((state) =>
+        selectOpenFileByRelativePath(state.openFiles, state.openFiles.tabs[selectedIndex])
+    );
 
     const onClick = () => {
-        if (selectedFile) {
-            dispatch(saveFileData({ file: selectedFile, projectPath: project!.path }));
+        console.debug("Save Action");
+        console.debug(selectedFile);
+        if (selectedIndex !== -1 && selectedFile !== undefined) {
+            console.debug("Saving file", selectedFile.name);
+            dispatch(saveFileData({ file: selectedFile, projectPath: project.path }));
         }
     };
 
@@ -67,7 +73,9 @@ function SaveFileItem() {
             annotation="Ctrl+S"
             shortcut="ctrl+s,command+s"
             disabled={
-                selectedFile === undefined || selectedFile.memoryData === selectedFile.diskData
+                selectedIndex === -1 ||
+                selectedFile === undefined ||
+                selectedFile.memoryData === selectedFile.diskData
             }
             id="save"
             label="Save"
@@ -202,7 +210,7 @@ function QuitItem() {
     return (
         <IconDropDownItem
             annotation="Ctrl+Q"
-            shortcut="ctr+q,command+q"
+            shortcut="ctrl+q,command+q"
             onClick={onClick}
             id="quit"
             label="Quit"

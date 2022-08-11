@@ -44,12 +44,17 @@ function IconDropDownItem(props: IconDropDownItemProps) {
     }, []);
 
     if (props.shortcut !== undefined) {
-        useHotkeys(props.shortcut, (e) => {
-            e.preventDefault();
-            if (props.disabled !== false) {
-                props.onClick?.();
-            }
-        });
+        useHotkeys(
+            props.shortcut,
+            (e) => {
+                e.preventDefault();
+                if (!props.disabled) {
+                    props.onClick?.();
+                }
+            },
+            { enableOnTags: ["TEXTAREA", "INPUT"] },
+            [props.disabled, props.onClick]
+        );
     }
 
     return (

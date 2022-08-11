@@ -324,18 +324,6 @@ export const {
     selectTotal: selectTotalOpenFiles
 } = openFilesAdapter.getSelectors();
 
-export const selectSelectedTabIndex = createSelector(
-    [selectAllOpenFiles, (state) => state.selectedTabIndex],
-    (openFiles, selectedTabIndex) => selectedTabIndex
-);
-
-export const selectSelectedFile = createSelector(
-    [selectAllOpenFiles, (state) => state.selectedTabIndex],
-    (openFiles, selectedTabIndex) => {
-        return openFiles.find((file) => file.tabIndex === selectedTabIndex);
-    }
-);
-
 export const selectTabs = createSelector([(state) => state.tabs], (tabs) => tabs);
 
 export const selectOpenFileIsSelectedFactory = () =>
