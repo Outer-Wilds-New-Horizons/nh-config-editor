@@ -1,73 +1,15 @@
-import Form, { UiSchema, utils } from "@rjsf/core";
-import { shell } from "@tauri-apps/api";
-import { invoke } from "@tauri-apps/api/tauri";
-import { JSONSchema7 } from "json-schema";
+import Form, { UiSchema } from "@rjsf/core";
 import { useState } from "react";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
-import Button from "react-bootstrap/Button";
-import CenteredSpinner from "../../../../../Common/Spinner/CenteredSpinner";
-import { EditorProps } from "../../Editor";
-import CenteredMessage from "../CenteredMessage";
+import { getDocsLinkForNHConfig, getSchemaName } from "../../../../Store/FileUtils";
+import { IEditorProps } from "../../Editor";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "./FieldTemplates/InspectorFieldTemplate";
 import InspectorObjectFieldTemplate from "./FieldTemplates/InspectorObjectFieldTemplate";
+import baseValidate, { customFormats, transformErrors } from "./Validator";
 
-export type InspectorProps = {
-    schema: JSONSchema7;
-} & EditorProps;
-
-function Inspector(props: InspectorProps) {
-    const [loadStarted, setLoadStarted] = useState(false);
-    const [loadDone, setLoadDone] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const loadFile = async (): Promise<string> => {
-        return await invoke("read_file_as_string", {
-            path: props.file.path
-        });
-    };
-
-    if (!loadStarted) {
-        setLoadStarted(true);
-        if (props.file.path.startsWith("@@void@@")) {
-            setLoadDone(true);
-        } else {
-            loadFile()
-                .then((data) => {
-                    props.file.data = utils.getDefaultFormState(
-                        props.schema,
-                        JSON.parse(data),
-                        props.schema
-                    );
-                    setLoadDone(true);
-                })
-                .catch(setErrorMessage);
-        }
-    }
-
-    if (props.file.data === null || !loadDone) {
-        if (errorMessage) {
-            return (
-                <CenteredMessage
-                    variant="danger"
-                    message={`Failed to load file: ${errorMessage}`}
-                    after={
-                        <Button
-                            className="mt-2 mx-auto d-flex align-items-center"
-                            onClick={() => shell.open(props.file.path)}
-                            variant="outline-info"
-                        >
-                            <BoxArrowUpRight className="me-1" />
-                            Fix In External Editor
-                        </Button>
-                    }
-                />
-            );
-        } else {
-            return <CenteredSpinner />;
-        }
-    }
+function Inspector(props: IEditorProps) {
+    const [formData, setFormData] = useState(JSON.parse(props.fileData));
 
     const customFields = {
         BooleanField: InspectorBoolean
@@ -82,24 +24,34 @@ function Inspector(props: InspectorProps) {
     };
 
     const onChange = (newData: object) => {
-        props.onChange?.();
-        props.file.data = newData;
+        setFormData(newData);
+        props.onChange?.(JSON.stringify(newData));
     };
 
     const formContext = {
         docsSchemaLink:
-            props.file.fileType === "mod_manifest" ? null : props.file.getDocsSchemaLink()
+            props.file.name === "manifest.json"
+                ? null
+                : getDocsLinkForNHConfig(getSchemaName(props.file))
     };
 
     return (
         <Form
-            onChange={(newData) => onChange(newData.formData as object)}
-            className={"mx-3 inspector-form"}
-            formData={props.file.data}
+            autoComplete="off"
+            onChange={(newData) => onChange(newData.formData)}
+            className="mx-3 inspector-form"
+            formData={formData}
             formContext={formContext}
-            schema={props.schema}
+            schema={{
+                ...(props.schemaStore.schemas[getSchemaName(props.file)] as object),
+                $schema: "http://json-schema.org/draft-07/schema"
+            }}
             uiSchema={uiSchema}
             fields={customFields}
+            transformErrors={transformErrors}
+            validate={baseValidate}
+            customFormats={customFormats}
+            liveValidate={true}
             ArrayFieldTemplate={InspectorArrayFieldTemplate}
             ObjectFieldTemplate={InspectorObjectFieldTemplate}
             FieldTemplate={InspectorFieldTemplate}

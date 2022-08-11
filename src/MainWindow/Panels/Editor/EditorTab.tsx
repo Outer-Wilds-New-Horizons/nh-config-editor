@@ -1,34 +1,55 @@
+import { useMemo } from "react";
 import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
-import { ProjectFile } from "../ProjectView/ProjectFile";
+import { contextMenu } from "../../Store/ContextMenuSlice";
+import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
+import { closeTab, selectOpenFileByRelativePath, selectTab } from "../../Store/OpenFilesSlice";
+import { determineIcon } from "../../Store/FileUtils";
 
 export type EditorTabProps = {
-    file: ProjectFile;
-    active: boolean;
-    onSelect?: () => void;
-    onContextMenu?: (position: [number, number]) => void;
-    onClose?: () => void;
+    id: string;
 };
 
 function EditorTab(props: EditorTabProps) {
-    let classes =
-        "border-bottom editor-tab lt-border interactable d-flex border-end align-items-center justify-content-center px-2 py-1";
+    const dispatch = useAppDispatch();
 
-    if (props.active) {
+    const file = useAppSelector((state) =>
+        selectOpenFileByRelativePath(state.openFiles, props.id)
+    )!;
+
+    let classes =
+        "editor-tab lt-border interactable d-flex align-items-center justify-content-center px-2 py-1";
+
+    const selectedIndex = useAppSelector((state) => state.openFiles.selectedTabIndex);
+
+    if (file.tabIndex === selectedIndex) {
         classes += " bg-primary text-white";
     }
 
+    const onClick = () => dispatch(selectTab(props.id));
+
+    const onClose = () => dispatch(closeTab(file));
+
+    const onContext = (e: { clientX: number; clientY: number }) =>
+        dispatch(
+            contextMenu.openMenu({
+                position: [e.clientX, e.clientY],
+                target: props.id,
+                menu: "openFile"
+            })
+        );
+
+    const icon = useMemo(() => determineIcon(file), [props.id]);
+
     return (
-        <Col xs="auto" className={classes}>
-            <span
-                className="d-flex align-items-center justify-content-center"
-                onClick={props.onSelect}
-                onContextMenu={(e) => props.onContextMenu?.([e.clientX, e.clientY])}
-            >
-                {props.file.getIcon()}
-                <span className="ms-1">{props.file.name + (props.file.changed ? "*" : "")}</span>
+        <Col data-relpath={props.id} onContextMenu={onContext} xs="auto" className={classes}>
+            <span onClick={onClick} className="d-flex align-items-center justify-content-center">
+                {icon}
+                <span className="ms-1">
+                    {file.name + (file.memoryData !== file.diskData ? "*" : "")}
+                </span>
             </span>
-            <X onClick={props.onClose} className="small ms-1" />
+            <X onClick={onClose} className="small ms-1" />
         </Col>
     );
 }

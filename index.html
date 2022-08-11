@@ -5,8 +5,8 @@
         <link href="/src/Common/Images/favicon.ico" rel="icon" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>New Horizons Config Editor</title>
-        <script src="/src/Main.tsx" type="module"></script>
-        <!-- Styles we need before react mounts -->
+        <script src="/src/Main.tsx" type="module" defer></script>
+        <%- reactDevTools -%> <%- reduxDevToolsPatch -%>
         <style>
             .nh-spinner {
                 animation: spin 1s linear infinite;

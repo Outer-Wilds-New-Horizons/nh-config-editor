@@ -1,84 +1,39 @@
 import Editor, { Monaco } from "@monaco-editor/react";
-import { shell } from "@tauri-apps/api";
-import { invoke } from "@tauri-apps/api/tauri";
-import { editor } from "monaco-editor";
-import { useState } from "react";
-import { BoxArrowUpRight } from "react-bootstrap-icons";
-import Button from "react-bootstrap/Button";
+import { getCurrent } from "@tauri-apps/api/window";
+import * as monaco from "monaco-editor";
 import { getMonacoJsonDiagnostics } from "../../../../Common/AppData/SchemaStore";
-import { SettingsManager } from "../../../../Common/AppData/Settings";
 import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
+import { getMonacoLanguage } from "../../../Store/FileUtils";
 import { useSettings } from "../../../../Wrapper";
-import { EditorProps } from "../Editor";
-import CenteredMessage from "./CenteredMessage";
-import IStandaloneCodeEditor = editor.IStandaloneCodeEditor;
+import { IEditorProps } from "../Editor";
+import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 
-function TextEditor(props: EditorProps) {
+function TextEditor(props: IEditorProps) {
     const { theme } = useSettings();
 
-    const [loadStarted, setLoadStarted] = useState(false);
-    const [fileText, setFileText] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const loadFile = async (): Promise<string> => {
-        return await invoke("read_file_as_string", {
-            path: props.file.path
-        });
-    };
-
-    if (!loadStarted) {
-        setLoadStarted(true);
-        if (props.file.path.startsWith("@@void@@")) {
-            SettingsManager.get().then(({ schemaBranch }) => {
-                setFileText(
-                    JSON.stringify({ $schema: props.file.getSchemaLink(schemaBranch) }, null, 4)
-                );
-            });
-        } else {
-            loadFile().then(setFileText).catch(setErrorMessage);
+    const handleComponentDidMount = async (
+        codeEditor: IStandaloneCodeEditor,
+        monacoInstance: Monaco
+    ) => {
+        let chosenTheme = theme;
+        if (theme === "Follow System") {
+            chosenTheme =
+                (await getCurrent().theme()) === "dark" ? "Default Dark" : "Default Light";
         }
-    }
-
-    if (fileText === null || !loadStarted) {
-        if (errorMessage) {
-            return (
-                <CenteredMessage
-                    variant="danger"
-                    className="text-danger"
-                    message={`This doesn't seem to be a text file (${errorMessage})`}
-                    after={
-                        <Button
-                            onClick={() => shell.open(props.file.path)}
-                            variant="outline-info"
-                            className="mt-2 mx-auto d-flex align-items-center"
-                        >
-                            <BoxArrowUpRight className="me-1" />
-                            Open In Default Editor
-                        </Button>
-                    }
-                />
-            );
-        } else {
-            return <CenteredSpinner />;
-        }
-    }
-
-    const handleComponentDidMount = async (codeEditor: IStandaloneCodeEditor, monaco: Monaco) => {
-        monaco.editor.setTheme(ThemeMonacoMap[theme]);
+        monacoInstance.editor.setTheme(ThemeMonacoMap[chosenTheme]);
         const jsonDiagnostics = await getMonacoJsonDiagnostics();
-        monaco.languages.json.jsonDefaults.setDiagnosticsOptions(jsonDiagnostics);
+        monacoInstance.languages.json.jsonDefaults.setDiagnosticsOptions(jsonDiagnostics);
     };
 
     return (
         <Editor
             onChange={(value) => {
-                props.onChange?.();
-                props.file.data = value ?? "";
+                props.onChange?.(value ?? "");
             }}
             loading={<CenteredSpinner />}
-            defaultLanguage={props.file.getMonacoLanguage()}
-            defaultValue={fileText}
+            language={getMonacoLanguage(props.file)}
+            value={props.fileData}
             onMount={handleComponentDidMount}
         />
     );

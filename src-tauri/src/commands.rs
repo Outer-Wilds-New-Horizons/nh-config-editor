@@ -5,14 +5,10 @@ use std::fs::create_dir;
 use std::path::Path;
 use std::process::Command;
 use fs_extra::dir;
+use walkdir::WalkDir;
+use serde::{Serialize, Deserialize};
 
 use super::build_project;
-
-#[tauri::command]
-pub fn get_env(key: String) -> String {
-    let env_var = std::env::var(key).unwrap_or("0".to_string());
-    return env_var;
-}
 
 #[tauri::command]
 pub fn zip_project(path: String, output_zip_name: String, minify: bool) {
@@ -58,27 +54,35 @@ pub fn get_metadata(path: String) -> (String, String) {
             path.extension().unwrap_or_default().to_str().unwrap().to_string());
 }
 
-#[tauri::command]
-pub fn root_dir(path: String, root_path: String) -> Result<String, String> {
-    let p_path = Path::new(&path);
-    let p_root_path = Path::new(&root_path);
-    let no_prefix = p_path.strip_prefix(p_root_path);
-    return if no_prefix.is_err() {
-        Err(format!("{}", no_prefix.unwrap_err()))
-    } else {
-        let mut ancestors = no_prefix.unwrap().ancestors();
-        return if ancestors.count() == 2 {
-            Ok("".to_string())
-        } else {
-            Ok(ancestors.nth(ancestors.count() - 2).unwrap().to_str().unwrap().to_string())
-        }
-    }
-
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectFile {
+    name: String,
+    relative_path: String,
+    absolute_path: String,
+    extension: String,
+    is_folder: bool
 }
 
 #[tauri::command]
-pub fn canonicalize(path: String) -> String {
-    return Path::new(&path).canonicalize().unwrap().to_str().unwrap().to_string();
+pub fn walk_project(path: String) -> Result<Vec<ProjectFile>, String> {
+    let mut result = Vec::new();
+    for entry in WalkDir::new(&path).into_iter().filter_map(|e| e.ok()).filter(|e| e.path().to_str().unwrap_or_default() != path) {
+        let name = entry.file_name().to_str().unwrap().to_string();
+        let file_path = entry.path();
+        let relative_path = file_path.strip_prefix(&path).unwrap().to_str().unwrap().to_string();
+        let absolute_path = file_path.to_str().unwrap().to_string();
+        let extension = entry.path().extension().unwrap_or_default().to_str().unwrap().to_string();
+        let is_folder = entry.path().is_dir();
+        result.push(ProjectFile {
+            name,
+            relative_path,
+            absolute_path,
+            extension,
+            is_folder
+        });
+    }
+    return Ok(result);
 }
 
 #[tauri::command]
@@ -87,13 +91,13 @@ pub fn file_exists(path: String) -> bool {
 }
 
 #[tauri::command]
-pub fn load_image_as_base_64(img_path: String) -> Result<String, String> {
-    let img_bytes = fs::read(img_path);
-    return if img_bytes.is_err() {
-        Err(format!("{}", img_bytes.unwrap_err()))
+pub fn load_file_as_base_64(path: String) -> Result<String, String> {
+    let bytes = fs::read(path);
+    return if bytes.is_err() {
+        Err(format!("{}", bytes.unwrap_err()))
     } else {
-        let img_base64 = base64::encode(&img_bytes.unwrap());
-        Ok(img_base64)
+        let base64_data = base64::encode(&bytes.unwrap());
+        Ok(base64_data)
     };
 }
 

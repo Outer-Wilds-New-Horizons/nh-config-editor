@@ -1,6 +1,7 @@
 import { Event, listen } from "@tauri-apps/api/event";
-import React from "react";
-import { Settings, SettingsManager } from "./Common/AppData/Settings";
+import React, { useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { blankSettings, Settings, SettingsManager } from "./Common/AppData/Settings";
 import "./Common/common.css";
 import CenteredSpinner from "./Common/Spinner/CenteredSpinner";
 import ThemeManager from "./Common/Theme/ThemeManager";
@@ -12,11 +13,10 @@ const SettingsWindow = React.lazy(() => import("./SettingsWindow/SettingsWindow"
 const NewProjectWindow = React.lazy(() => import("./NewProjectWindow/NewProjectWindow"));
 const AboutWindow = React.lazy(() => import("./AboutWindow/AboutWindow"));
 
-const loadedSettings = await SettingsManager.get();
-const SettingsContext = React.createContext(loadedSettings);
+const SettingsContext = React.createContext(blankSettings);
 
 function Wrapper() {
-    const [settings, setSettings] = React.useState(loadedSettings);
+    const [settings, setSettings] = React.useState<Settings | null>(null);
 
     listen("nh://settings-changed", (event: Event<string>) => {
         setSettings(JSON.parse(event.payload) as Settings);
@@ -25,6 +25,19 @@ function Wrapper() {
     listen("nh://reload", () => {
         window.location.reload();
     });
+
+    // No Printing >:(
+    useHotkeys("ctrl+p,command+p,ctrl+shift+p,command+shift+p", (e) => {
+        e.preventDefault();
+    });
+
+    useEffect(() => {
+        SettingsManager.get().then(setSettings);
+    }, []);
+
+    if (settings === null) {
+        return <CenteredSpinner />;
+    }
 
     let page: JSX.Element;
 

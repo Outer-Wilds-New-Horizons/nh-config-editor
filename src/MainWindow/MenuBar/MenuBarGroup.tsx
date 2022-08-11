@@ -1,14 +1,12 @@
 import { ReactElement } from "react";
 import { Dropdown } from "react-bootstrap";
-import IconDropDownItem, { IconDropDownItemProps } from "../../Common/IconDropDownItem";
-import { KeyboardShortcutMapping } from "../../Common/KeyboardManager";
+import { IconDropDownItemProps } from "../../Common/IconDropDownItem";
 
 type MenuBarGroupItem = ReactElement<IconDropDownItemProps>;
 
 export type MenuBarGroupProps = {
     name: string;
     children: MenuBarGroupItem | MenuBarGroupItem[];
-    keyBoardShortcuts?: KeyboardShortcutMapping;
     onItemClicked?: (actionId: string) => void;
 };
 
@@ -27,21 +25,7 @@ function MenuBarGroup(props: MenuBarGroupProps) {
             >
                 {props.name}
             </Dropdown.Toggle>
-            <Dropdown.Menu>
-                {children.map((child, index) => (
-                    <IconDropDownItem
-                        key={index}
-                        {...child.props}
-                        onClick={() => props.onItemClicked?.(child.props.id)}
-                        annotation={
-                            props.keyBoardShortcuts?.[child.props.id]?.replace(
-                                "CommandOrControl",
-                                "Ctrl"
-                            ) ?? ""
-                        }
-                    />
-                ))}
-            </Dropdown.Menu>
+            <Dropdown.Menu renderOnMount={true}>{children}</Dropdown.Menu>
         </Dropdown>
     );
 }

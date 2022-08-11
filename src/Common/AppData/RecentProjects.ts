@@ -11,8 +11,12 @@ export default class RecentProjects {
         const projects = [];
         for (const path of projectPaths) {
             if (projects.filter((p) => p.path === path).length === 0) {
-                const project =
-                    (await Project.load(path)) ?? new Project("Error Loading Project", "", path);
+                let project = new Project("Error Loading Project", "", path);
+                try {
+                    project = await Project.load(path);
+                } catch (e) {
+                    project = new Project("Error Loading Project", "", path);
+                }
                 projects.push(project);
             }
         }
@@ -22,9 +26,5 @@ export default class RecentProjects {
     static async save(data: Project[]) {
         const projectPaths = data.map((project) => project.path);
         await manager.save(projectPaths);
-    }
-
-    static async clear() {
-        await manager.reset();
     }
 }

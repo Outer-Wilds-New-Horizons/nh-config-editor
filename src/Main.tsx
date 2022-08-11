@@ -6,6 +6,8 @@ const root = document.getElementById("root");
 
 document.oncontextmenu = (e) => e.preventDefault();
 
+console.debug("Mounting Wrapper");
+
 if (root === null) {
     console.error("Catastrophic Failure");
 } else {

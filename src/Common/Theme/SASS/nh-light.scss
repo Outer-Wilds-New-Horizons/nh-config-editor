@@ -4,6 +4,7 @@ $info: rgb(0, 106, 108);
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
+//noinspection SassScssResolvedByNameOnly
 .menubar-item {
     background-color: $body-bg !important;
     color: $body-color !important;

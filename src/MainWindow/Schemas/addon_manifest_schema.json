@@ -25,7 +25,7 @@
             "properties": {
                 "ID": {
                     "type": "string",
-                    "description": "The unique ID of the achievement. This must be globally unique, meaning all achievements for\nyou mod should start with something to identify the mod they are from. For example, Real Solar System\nuses \"RSS_\" and Signals+ would use \"SIGNALS_PLUS_\"."
+                    "description": "The unique ID of the achievement. This must be globally unique, meaning all achivements for\nyou mod should start with something to identify the mod they are from. For example, Real Solar System\nuses \"RSS_\" and Signals+ would use \"SIGNALS_PLUS_\"."
                 },
                 "secret": {
                     "type": "boolean",

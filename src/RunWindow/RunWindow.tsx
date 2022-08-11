@@ -3,44 +3,54 @@ import { message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
 import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Spinner } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import { getModManagerSettings } from "../Common/ModManager";
-import { Project } from "../Common/Project";
+import { loadProjectFromURLParams, Project } from "../Common/Project";
+import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import DescriptionPopover from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/DescriptionPopover";
 
 export const openRunWindow = (projectPath: string) => {
-    new WebviewWindow("run-game", {
-        width: 500,
-        height: 300,
-        resizable: false,
-        url: `index.html?path=${projectPath}#RUN`,
-        title: "Run Game"
-    });
+    const current = WebviewWindow.getByLabel("run-game");
+
+    if (current) {
+        current.setFocus();
+    } else {
+        new WebviewWindow("run-game", {
+            width: 500,
+            height: 300,
+            resizable: false,
+            url: `index.html?path=${projectPath}#RUN`,
+            title: "Run Game",
+            focus: true
+        });
+    }
 };
 
-const params = new URLSearchParams(window.location.search);
-const projectPath = params.get("path") ?? "";
-
-let project: Project | undefined;
-
-try {
-    project = await Project.load(decodeURIComponent(projectPath));
-} catch (e) {
-    await message(`${e}`, {
-        type: "error",
-        title: "Error"
-    });
-    await exit(1);
-}
-
 function RunWindow() {
+    const [project, setProject] = React.useState<Project | undefined>(undefined);
     const [logPort, setLogPort] = React.useState(50000);
     const [isRunning, setIsRunning] = React.useState(false);
+
+    useEffect(() => {
+        loadProjectFromURLParams()
+            .then(setProject)
+            .catch((e) => {
+                message(e.message, {
+                    type: "error",
+                    title: "Error"
+                });
+                exit(1);
+            });
+    });
+
+    if (project === undefined) {
+        return <CenteredSpinner />;
+    }
 
     const onRun = async () => {
         setIsRunning(true);

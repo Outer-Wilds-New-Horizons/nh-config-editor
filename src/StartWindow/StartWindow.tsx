@@ -6,7 +6,7 @@ import { WebviewWindow } from "@tauri-apps/api/window";
 import { useEffect, useState } from "react";
 import {
     ArrowRepeat,
-    BoxArrowUpRight,
+    ArrowUpRightCircleFill,
     DoorOpen,
     Folder2Open,
     GearWide,
@@ -20,11 +20,11 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
 import RecentProjects from "../Common/AppData/RecentProjects";
-import ContextMenu from "../Common/ContextMenu/ContextMenu";
+import ContextMenu from "./ContextMenu/ContextMenu";
 import ContextMenuRoot, {
     ContextMenuActionRegistry,
     ContextMenuState
-} from "../Common/ContextMenu/ContextMenuRoot";
+} from "./ContextMenu/ContextMenuRoot";
 import IconDropDownItem from "../Common/IconDropDownItem";
 import { Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
@@ -154,7 +154,7 @@ function StartWindow() {
                     <IconDropDownItem
                         id="openExplorer"
                         label="Open in Explorer"
-                        icon={<BoxArrowUpRight />}
+                        icon={<ArrowUpRightCircleFill />}
                     />
                     <IconDropDownItem id="reloadProject" label="Reload" icon={<ArrowRepeat />} />
                 </ContextMenu>
