@@ -43,19 +43,6 @@ jobs:
                   version: 6.11.0
                   run_install: false
 
-            - name: Get pnpm Store Directory
-              id: pnpm-cache
-              run: |
-                  echo "::set-output name=pnpm_cache_dir::$(pnpm store path)"
-
-            - name: Setup pnpm Cache
-              uses: actions/cache@v3
-              with:
-                  path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-                  key: ${{ matrix.platform }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-                  restore-keys: |
-                      "${{ runner.os }}-pnpm-store-"
-
             - name: Install pnpm Dependencies
               run: pnpm install
 
