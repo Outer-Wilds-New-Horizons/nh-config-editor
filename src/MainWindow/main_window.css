@@ -43,3 +43,7 @@
     backdrop-filter: blur(5px);
     z-index: 100;
 }
+
+.tab-danger {
+    color: var(--bs-danger);
+}

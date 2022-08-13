@@ -60,10 +60,7 @@ function SaveFileItem() {
     );
 
     const onClick = () => {
-        console.debug("Save Action");
-        console.debug(selectedFile);
         if (selectedIndex !== -1 && selectedFile !== undefined) {
-            console.debug("Saving file", selectedFile.name);
             dispatch(saveFileData({ file: selectedFile, projectPath: project.path }));
         }
     };

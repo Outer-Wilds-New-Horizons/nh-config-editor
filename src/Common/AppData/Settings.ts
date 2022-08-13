@@ -33,7 +33,7 @@ export type Settings = {
     minify: boolean;
 
     /**
-     * @description Always use a text editor for files instead of the inspector. (Reload Required)
+     * @description Always use a text editor for files instead of the inspector.
      */
     alwaysUseTextEditor: boolean;
 

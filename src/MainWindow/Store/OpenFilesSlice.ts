@@ -10,8 +10,7 @@ import { dialog } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
 import { sep } from "@tauri-apps/api/path";
 import { tauriCommands } from "../../Common/TauriCommands";
-import { initialLoadState, LoadState } from "./LoadState";
-import { invalidate, ProjectFile } from "./ProjectFilesSlice";
+import validate, { ValidationError } from "../Validation/Validator";
 import {
     determineOpenFunction,
     getContentToSave,
@@ -19,6 +18,8 @@ import {
     getInitialContent,
     getRootDirectory
 } from "./FileUtils";
+import { initialLoadState, LoadState } from "./LoadState";
+import { invalidate, ProjectFile } from "./ProjectFilesSlice";
 import { RootState } from "./Store";
 
 type FileData = string | null;
@@ -28,12 +29,19 @@ export type OpenFile = {
     memoryData: FileData;
     diskData: FileData;
     loadState: LoadState;
+    errors: ValidationError[];
+    otherErrors: boolean;
 } & Omit<ProjectFile, "isFolder">;
 
-export const readFileData = createAsyncThunk("openFiles/readFileData", async (file: OpenFile) => {
-    const openFunc = determineOpenFunction(file);
-    return await openFunc(file.absolutePath);
-});
+export const readFileData = createAsyncThunk(
+    "openFiles/readFileData",
+    async (file: OpenFile, thunkAPI) => {
+        const openFunc = determineOpenFunction(file);
+        const data = await openFunc(file.absolutePath);
+        thunkAPI.dispatch(validateFile({ value: data, file }));
+        return data;
+    }
+);
 
 export const saveFileData = createAsyncThunk(
     "openFiles/saveFileData",
@@ -87,6 +95,16 @@ export const closeTab = createAsyncThunk("openFiles/closeTab", async (file: Open
         thunkAPI.dispatch(forceCloseTab(file.relativePath));
     }
 });
+
+export const validateFile = createAsyncThunk(
+    "openFiles/validateFile",
+    async (payload: { value: string; file: OpenFile }) => {
+        const { value, file } = payload;
+        // Wait a sec in case the user isn't done typing
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return await validate(value, file);
+    }
+);
 
 export const closeTabs = createAsyncThunk(
     "openFiles/closeTabs",
@@ -178,6 +196,8 @@ const openFilesSlice = createSlice({
                     extension: projectFile.extension,
                     diskData: null,
                     memoryData: null,
+                    errors: [],
+                    otherErrors: false,
                     loadState: initialLoadState
                 };
                 openFilesAdapter.addOne(state, newOpenFile);
@@ -199,6 +219,8 @@ const openFilesSlice = createSlice({
                 absolutePath: "@@void@@",
                 extension: "json",
                 diskData: null,
+                errors: [],
+                otherErrors: false,
                 memoryData: getInitialContent(action.payload.rootDir),
                 loadState: { status: "done", error: "Unknown Error" }
             };
@@ -235,6 +257,10 @@ const openFilesSlice = createSlice({
         fileEdited: (state, action: PayloadAction<{ id: EntityId; content: string }>) => {
             const { id, content } = action.payload;
             openFilesAdapter.updateOne(state, { id: id, changes: { memoryData: content } });
+        },
+        setOtherErrors: (state, action: PayloadAction<{ id: EntityId; otherErrors: boolean }>) => {
+            const { id, otherErrors } = action.payload;
+            openFilesAdapter.updateOne(state, { id: id, changes: { otherErrors: otherErrors } });
         }
     },
     extraReducers: (builder) => {
@@ -302,6 +328,12 @@ const openFilesSlice = createSlice({
                 openFile.loadState.status = "done";
             }
         });
+        builder.addCase(validateFile.fulfilled, (state, action) => {
+            const openFile = state.entities[action.meta.arg.file.relativePath];
+            if (openFile !== undefined) {
+                openFile.errors = action.payload;
+            }
+        });
     }
 });
 
@@ -314,7 +346,8 @@ export const {
     forceCloseTab,
     forceCloseTabs,
     fileEdited,
-    createVoidFile
+    createVoidFile,
+    setOtherErrors
 } = openFilesSlice.actions;
 
 export const {

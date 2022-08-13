@@ -1,9 +1,9 @@
 import { ArrayFieldTemplateProps } from "@rjsf/core";
 import { cloneElement, useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
-import { CaretRightFill } from "react-bootstrap-icons";
+import { CaretRightFill, InfoCircle } from "react-bootstrap-icons";
 import { camelToTitleCase } from "../../../../../../Common/Utils";
-import DescriptionPopover from "./DescriptionPopover";
+import IconPopover from "../../../../../../Common/Popover/IconPopover";
 
 function InspectorArrayFieldTemplate({
     canAdd,
@@ -35,10 +35,11 @@ function InspectorArrayFieldTemplate({
                         {camelToTitleCase(title)}
                     </span>
                     {schema.description !== undefined && (
-                        <DescriptionPopover
+                        <IconPopover
+                            icon={<InfoCircle />}
                             id={title}
                             title={title}
-                            description={schema.description}
+                            body={schema.description}
                         />
                     )}
                 </h4>

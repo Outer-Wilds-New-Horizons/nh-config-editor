@@ -7,7 +7,7 @@
             "additionalProperties": false,
             "properties": {
                 "alwaysUseTextEditor": {
-                    "description": "Always use a text editor for files instead of the inspector. (Reload Required)",
+                    "description": "Always use a text editor for files instead of the inspector.",
                     "type": "boolean"
                 },
                 "defaultAuthor": {

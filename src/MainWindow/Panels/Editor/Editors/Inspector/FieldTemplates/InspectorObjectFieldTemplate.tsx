@@ -1,10 +1,10 @@
 import { ObjectFieldTemplateProps } from "@rjsf/core";
 import { useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
-import { CaretRightFill } from "react-bootstrap-icons";
+import { CaretRightFill, InfoCircle } from "react-bootstrap-icons";
 
 import { camelToTitleCase } from "../../../../../../Common/Utils";
-import DescriptionPopover from "./DescriptionPopover";
+import IconPopover from "../../../../../../Common/Popover/IconPopover";
 
 function InspectorObjectFieldTemplate({
     title,
@@ -36,7 +36,12 @@ function InspectorObjectFieldTemplate({
                             className={`pb-2 pe-1 object-caret ${open ? "open" : ""}`}
                         />
                         {camelToTitleCase(title)}
-                        <DescriptionPopover id={title} title={title} description={description} />
+                        <IconPopover
+                            icon={<InfoCircle />}
+                            id={title}
+                            title={title}
+                            body={description}
+                        />
                     </h3>
                 )}
                 {schema.additionalProperties && (

@@ -96,13 +96,6 @@ function ReloadItem() {
         }
     };
 
-    window.onbeforeunload = (e) => {
-        if (filesHaveChanged) {
-            e.preventDefault();
-            e.returnValue = "There are unsaved changes. Are you sure?";
-        }
-    };
-
     return (
         <IconDropDownItem
             annotation="Ctrl+R"
