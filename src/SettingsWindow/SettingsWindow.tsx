@@ -9,9 +9,10 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import { blankSettings, SettingsManager } from "../Common/AppData/Settings";
+import { blankSettings, Settings, SettingsManager } from "../Common/AppData/Settings";
 
 import settingsSchema from "../Common/AppData/SettingsSchema.json";
+import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import InspectorBoolean from "../MainWindow/Panels/Editor/Editors/Inspector/Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorArrayFieldTemplate";
 import InspectorFieldTemplate from "../MainWindow/Panels/Editor/Editors/Inspector/FieldTemplates/InspectorFieldTemplate";
@@ -34,15 +35,19 @@ export const openSettingsWindow = () => {
 };
 
 function SettingsWindow() {
-    const [settings, setSettings] = useState(blankSettings);
-    const [initialSettings, setInitialSettings] = useState(blankSettings);
+    const [settings, setSettings] = useState<Settings | null>(blankSettings);
+    const [initialSettings, setInitialSettings] = useState<Settings | null>(blankSettings);
 
     useEffect(() => {
         SettingsManager.get().then((s) => {
             setSettings(s);
             setInitialSettings(s);
         });
-    });
+    }, []);
+
+    if (settings === null || initialSettings === null) {
+        return <CenteredSpinner />;
+    }
 
     const customFields = {
         BooleanField: InspectorBoolean
@@ -78,11 +83,9 @@ function SettingsWindow() {
         await emit("nh://settings-changed", settings);
 
         const themeChanged = settings.theme !== initialSettings.theme;
-        const alwaysUseTextEditorChanged =
-            settings.alwaysUseTextEditor !== initialSettings.alwaysUseTextEditor;
         const schemaBranchChanged = settings.schemaBranch !== initialSettings.schemaBranch;
 
-        if ([themeChanged, alwaysUseTextEditorChanged, schemaBranchChanged].includes(true)) {
+        if ([themeChanged, schemaBranchChanged].includes(true)) {
             const result = await ask(
                 "You need to reload the app to apply these changes. Do you want to reload now? (Any unsaved changes will be lost!)",
                 {
@@ -106,7 +109,7 @@ function SettingsWindow() {
         );
         if (result) {
             await SettingsManager.reset();
-            setSettings(await SettingsManager.get());
+            setSettings(initialSettings);
             close();
             await emit("nh://reload");
         }
@@ -118,7 +121,10 @@ function SettingsWindow() {
                 <Col className="position-relative">
                     <div className="position-absolute top-0 bottom-0 w-100">
                         <Form
-                            onChange={(e) => setSettings(e.formData)}
+                            onChange={(e) => {
+                                console.debug(e.formData);
+                                setSettings(e.formData);
+                            }}
                             formData={settings}
                             uiSchema={uiSchema}
                             schema={settingsSchema as JSONSchema7}

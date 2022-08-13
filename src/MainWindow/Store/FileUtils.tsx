@@ -259,7 +259,8 @@ export const getInitialContent = (rootDir: string) => {
             return JSON.stringify(
                 {
                     $schema:
-                        "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/system_schema.json"
+                        "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/system_schema.json",
+                    Vessel: null
                 },
                 null,
                 4

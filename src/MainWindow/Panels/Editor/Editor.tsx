@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo } from "react";
+import { ReactElement, useEffect, useMemo, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
 import { SchemaStore } from "../../../Common/AppData/SchemaStore";
@@ -9,7 +9,8 @@ import {
     OpenFile,
     readFileData,
     selectOpenFileByRelativePath,
-    selectOpenFileIsSelectedFactory
+    selectOpenFileIsSelectedFactory,
+    validateFile
 } from "../../Store/OpenFilesSlice";
 import { isAudio, isImage, usesInspector } from "../../Store/FileUtils";
 import { RootState } from "../../Store/Store";
@@ -51,6 +52,7 @@ const determineEditor = (
 function Editor(props: EditorProps) {
     const { alwaysUseTextEditor } = useSettings();
     const dispatch = useAppDispatch();
+    const currentValidationPromise = useRef<{ abort: () => void } | null>(null);
 
     const file = useAppSelector((state: RootState) =>
         selectOpenFileByRelativePath(state.openFiles, props.relativePath)
@@ -74,6 +76,8 @@ function Editor(props: EditorProps) {
 
     const onDataChanged = (value: string) => {
         dispatch(fileEdited({ id: file.relativePath, content: value }));
+        currentValidationPromise.current?.abort();
+        currentValidationPromise.current = dispatch(validateFile({ value, file }));
     };
 
     const ChosenEditor = useMemo(

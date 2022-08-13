@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { cloneElement, useMemo } from "react";
 import { X } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import { contextMenu } from "../../Store/ContextMenuSlice";
@@ -41,10 +41,13 @@ function EditorTab(props: EditorTabProps) {
 
     const icon = useMemo(() => determineIcon(file), [props.id]);
 
+    const hasErrors =
+        (file.errors.length > 0 || file.otherErrors) && file.tabIndex !== selectedIndex;
+
     return (
         <Col data-relpath={props.id} onContextMenu={onContext} xs="auto" className={classes}>
             <span onClick={onClick} className="d-flex align-items-center justify-content-center">
-                {icon}
+                {cloneElement(icon, { className: hasErrors ? "text-danger" : "" })}
                 <span className="ms-1">
                     {file.name + (file.memoryData !== file.diskData ? "*" : "")}
                 </span>

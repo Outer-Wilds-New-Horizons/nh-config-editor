@@ -1,18 +1,15 @@
 import { FieldProps } from "@rjsf/core";
-import { useState } from "react";
 import { Form } from "react-bootstrap";
 
 function InspectorBoolean(props: FieldProps) {
-    const [checked, setChecked] = useState((props.formData ?? false) as boolean);
     return (
         <Form.Switch
             className={"my-2"}
             onChange={() => {
-                setChecked(!checked);
-                props.onChange(!checked);
+                props.onChange(!(props.formData ?? false));
             }}
             id={props.id}
-            checked={checked}
+            checked={props.formData ?? false}
         />
     );
 }

@@ -1,4 +1,5 @@
 import { FieldTemplateProps, utils } from "@rjsf/core";
+import { ExclamationTriangleFill, InfoCircle } from "react-bootstrap-icons";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
@@ -6,7 +7,7 @@ import { camelToTitleCase } from "../../../../../../Common/Utils";
 import InspectorColor from "../Fields/InspectorColor";
 import InspectorVector2 from "../Fields/InspectorVector2";
 import InspectorVector3 from "../Fields/InspectorVector3";
-import DescriptionPopover from "./DescriptionPopover";
+import IconPopover from "../../../../../../Common/Popover/IconPopover";
 import DocsLink from "./DocsLink";
 import WrapIfAdditional from "./WrapIfAdditional";
 
@@ -68,21 +69,24 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
         );
     }
 
+    const hasErrors = props.rawErrors && props.rawErrors.length > 0;
+
     return (
         <WrapIfAdditional {...props}>
             <Row className={`${props.classNames}${isAdditional ? "" : " my-2"}`}>
                 {shouldDisplayLabel && (
                     <>
-                        <Col className="d-flex align-items-center">
+                        <Col className="d-flex align-items-center pe-0">
                             <Form.Label className="mb-0 user-select-none" htmlFor={props.id}>
                                 {camelToTitleCase(props.label)}
                             </Form.Label>
                             {props.rawDescription === undefined ||
                                 (props.rawDescription !== "" && (
-                                    <DescriptionPopover
+                                    <IconPopover
+                                        icon={<InfoCircle />}
                                         id={props.id}
                                         title={props.label}
-                                        description={props.rawDescription}
+                                        body={props.rawDescription}
                                     />
                                 ))}
                             {props.formContext?.docsSchemaLink && (
@@ -91,8 +95,24 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
                                     docsSchema={props.formContext.docsSchemaLink}
                                 />
                             )}
+                            {hasErrors && (
+                                <IconPopover
+                                    className="text-danger ms-auto me-1"
+                                    id={`${props.id}-error`}
+                                    placement={"left"}
+                                    title="Errors Found"
+                                    body={props.rawErrors.join("\n")}
+                                    icon={<ExclamationTriangleFill />}
+                                />
+                            )}
                         </Col>
-                        <Col>{elem}</Col>
+                        <Col
+                            className={`rounded p-0 me-1${
+                                hasErrors ? " border border-danger" : ""
+                            }`}
+                        >
+                            {elem}
+                        </Col>
                     </>
                 )}
                 {!shouldDisplayLabel && <Col className={colClass}>{props.children}</Col>}

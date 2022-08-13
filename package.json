@@ -29,6 +29,7 @@
         "@rjsf/core": "^4.2.3",
         "@tauri-apps/api": "^1.0.2",
         "bootstrap": "^5.2.0",
+        "jsonpath-plus": "^7.0.0",
         "monaco-editor": "^0.33.0",
         "react": "^18.2.0",
         "react-bootstrap": "^2.5.0",
@@ -37,7 +38,8 @@
         "react-hotkeys-hook": "^3.4.7",
         "react-jsonschema-form": "^1.8.1",
         "react-redux": "^8.0.2",
-        "sortablejs": "^1.15.0"
+        "sortablejs": "^1.15.0",
+        "vscode-json-languageservice": "^5.1.0"
     },
     "devDependencies": {
         "@tauri-apps/cli": "^1.0.5",
