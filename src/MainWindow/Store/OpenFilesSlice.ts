@@ -101,7 +101,7 @@ export const validateFile = createAsyncThunk(
     async (payload: { value: string; file: OpenFile }) => {
         const { value, file } = payload;
         // Wait a sec in case the user isn't done typing
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         return await validate(value, file);
     }
 );
@@ -285,16 +285,9 @@ const openFilesSlice = createSlice({
                 openFile.loadState.error = action.error.message ?? "Unknown Error";
             }
         });
-        builder.addCase(saveFileData.pending, (state, action) => {
-            const openFile = state.entities[action.meta.arg.file.relativePath];
-            if (openFile !== undefined) {
-                openFile.loadState.status = "loading";
-            }
-        });
         builder.addCase(saveFileData.fulfilled, (state, action) => {
             const openFile = state.entities[action.meta.arg.file.relativePath];
             if (openFile !== undefined) {
-                openFile.loadState.status = "done";
                 if (action.payload.createdNewFile) {
                     openFilesAdapter.updateOne(state, {
                         id: openFile.tabIndex,
@@ -317,16 +310,10 @@ const openFilesSlice = createSlice({
             }
         });
         builder.addCase(saveFileData.rejected, (state, action) => {
-            const openFile = state.entities[action.meta.arg.file.relativePath];
-            if (openFile !== undefined) {
-                message(`Error saving file: ${action.error.message ?? "Unknown Error"}`, {
-                    type: "error",
-                    title: "Save Error"
-                });
-                // We don't want to force them to close the tab in the event of an error,
-                // So we just set the load state to done to redisplay the editor and let them try again
-                openFile.loadState.status = "done";
-            }
+            message(`Error saving file: ${action.error.message ?? "Unknown Error"}`, {
+                type: "error",
+                title: "Save Error"
+            });
         });
         builder.addCase(validateFile.fulfilled, (state, action) => {
             const openFile = state.entities[action.meta.arg.file.relativePath];

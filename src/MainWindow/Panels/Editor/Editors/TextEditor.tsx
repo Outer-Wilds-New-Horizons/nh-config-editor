@@ -7,11 +7,14 @@ import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { getMonacoLanguage } from "../../../Store/FileUtils";
 import { useSettings } from "../../../../Wrapper";
+import { useAppDispatch } from "../../../Store/Hooks";
+import { setOtherErrors } from "../../../Store/OpenFilesSlice";
 import { IEditorProps } from "../Editor";
 import showErrors from "./TextEditorValidator";
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 
 function TextEditor(props: IEditorProps) {
+    const dispatch = useAppDispatch();
     const model = useRef<[Monaco, IStandaloneCodeEditor]>();
     const { theme } = useSettings();
 
@@ -37,6 +40,20 @@ function TextEditor(props: IEditorProps) {
         <Editor
             onChange={(value) => {
                 props.onChange?.(value ?? "");
+            }}
+            onValidate={() => {
+                if (model.current !== undefined) {
+                    const errors = model.current[0].editor.getModelMarkers({});
+                    console.debug(errors);
+                    if (props.file.otherErrors !== errors.length > 0) {
+                        dispatch(
+                            setOtherErrors({
+                                id: props.file.relativePath,
+                                otherErrors: errors.length > 0
+                            })
+                        );
+                    }
+                }
             }}
             loading={<CenteredSpinner />}
             language={getMonacoLanguage(props.file)}

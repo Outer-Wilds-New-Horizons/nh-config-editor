@@ -5,6 +5,6 @@ type Manifest = {
     dllPath: string;
 };
 
-const checkForDLL: ValidationRule<Manifest> = fileMustExistRule<Manifest>("M001", "$.filename");
+const checkForDLL: ValidationRule<Manifest> = fileMustExistRule<Manifest>("$.filename");
 
 export default [checkForDLL];

@@ -70,6 +70,8 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
     }
 
     const hasErrors = props.rawErrors && props.rawErrors.length > 0;
+    // Arrays make the id have a number, so just replace that with "items" so the docs know what to do
+    const docsId = props.id.replace(/\d+/, "items");
 
     return (
         <WrapIfAdditional {...props}>
@@ -91,7 +93,7 @@ function InspectorFieldTemplate(props: FieldTemplateProps) {
                                 ))}
                             {props.formContext?.docsSchemaLink && (
                                 <DocsLink
-                                    id={props.id}
+                                    id={docsId}
                                     docsSchema={props.formContext.docsSchemaLink}
                                 />
                             )}
