@@ -17,7 +17,6 @@ export const validationErrorsToErrorSchema = (errors: ValidationError[]) => {
     return errors.reduce((errorSchema, error) => {
         const message = error.message;
         const path = JSONPath.toPathArray(error.location.slice(1));
-        console.debug(`Adding error ${message} at ${path}`);
         let parent = errorSchema as Record<string, unknown>;
 
         if (path.length > 0 && path[0] === "") {
