@@ -1,0 +1,24 @@
+on:
+    push:
+        paths-ignore:
+            - "*.md"
+            - "LICENSE"
+
+jobs:
+    RunTests:
+        name: "Run Tests"
+        runs-on: "ubuntu-latest"
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup Node
+              uses: actions/setup-node@v3.3.0
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2.0.1
+              with:
+                  version: 6.11.0
+                  run_install: true
+
+            - name: Run Tests
+              run: pnpm test

@@ -141,7 +141,7 @@ function NewProjectWindow() {
                         className="d-flex align-items-center"
                         onClick={() => browseClicked()}
                         variant="outline-primary"
-                        aria-lable="Browse"
+                        aria-label="Browse"
                         type="button"
                     >
                         <Folder2Open />

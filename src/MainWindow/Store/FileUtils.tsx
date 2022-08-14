@@ -56,7 +56,7 @@ export const getRootDirectory = (path: string): string | null => {
 
 /**
  * Gets the parent directory of the given file.
- * If the file is in the root directory, null is returned.
+ * If the file is in the root directory, / is returned.
  * @param path Relative (or absolute, idk) path of the file.
  * @returns Parent directory of the file.
  */

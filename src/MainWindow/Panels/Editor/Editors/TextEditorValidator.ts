@@ -19,26 +19,25 @@ const findPositionOfPath = (
     path: string[]
 ) => {
     let currentNode = jsonDoc.root;
-    if (currentNode !== undefined) {
-        for (const key of path) {
-            if (currentNode!.type === "object") {
-                currentNode = (currentNode as ObjectASTNode).properties.find(
-                    (p) => p.keyNode.value === key
-                );
-            } else if (currentNode!.type === "array") {
-                currentNode = (currentNode as ArrayASTNode).items[JSON.parse(key)];
-            }
+    for (const key of path) {
+        if (currentNode === undefined) {
+            break;
         }
-        if (currentNode?.type === "property") {
-            currentNode = currentNode.valueNode;
+        if (currentNode!.type === "object") {
+            currentNode = (currentNode as ObjectASTNode).properties.find(
+                (p) => p.keyNode.value === key
+            )?.valueNode;
+        } else if (currentNode!.type === "array") {
+            currentNode = (currentNode as ArrayASTNode).items[JSON.parse(key)];
         }
-        return [
-            txtDoc.positionAt(currentNode!.offset),
-            txtDoc.positionAt(currentNode!.offset + currentNode!.length)
-        ];
-    } else {
-        return [txtDoc.positionAt(0), txtDoc.positionAt(0)];
     }
+    if (currentNode !== undefined && currentNode.type === "property") {
+        currentNode = currentNode.valueNode;
+    }
+    return [
+        txtDoc.positionAt(currentNode?.offset ?? 0),
+        txtDoc.positionAt((currentNode?.offset ?? 0) + (currentNode?.length ?? 0))
+    ];
 };
 
 const showErrors = (
