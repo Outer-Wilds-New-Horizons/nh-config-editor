@@ -11,7 +11,7 @@
 
 # New Horizons Config Editor
 
-An application you can use to graphically edit your New Horizons configs!
+An application you can use to graphically edit your [New Horizons](https://nh.outerwildsmods.com) configs!
 
 ## Installation
 
@@ -21,8 +21,9 @@ An application you can use to graphically edit your New Horizons configs!
 
 ## Features
 
--   Form-based editing of planet, system, translation, and manifest configs
--   Build button that minifies your configs and zips them up for you
+-   Form-based editing of planet, system, translation, and manifest configs.
+-   Advanced validation for filepaths, ids, and more.
+-   Build action that minifies your configs and zips them up for you.
 
 ## Contributing
 
@@ -30,8 +31,8 @@ For a guide on how to contribute, see the [contributing guide](CONTRIBUTING.md).
 
 ## Screenshots
 
-![Start Screen](https://user-images.githubusercontent.com/25644444/177099133-84492d08-775c-423d-b7b6-cc9709039498.png)
-![New Project Screen](https://user-images.githubusercontent.com/25644444/177099546-b0e7c0a1-3542-4045-ad0a-eda8ef05eded.png)
-![Editor Screen](https://user-images.githubusercontent.com/25644444/177099295-52a2a622-9c8f-45c4-9054-a05377a2e4d0.png)
-![Settings Screen](https://user-images.githubusercontent.com/25644444/177099412-2e3c711d-1d39-4f01-bc34-c0e2e504a30a.png)
-![About Screen](https://user-images.githubusercontent.com/25644444/177099482-9152ec40-616b-4954-9e38-8c9263a5fdba.png)
+![Start Screen](https://user-images.githubusercontent.com/25644444/184557636-86a2519b-5a85-418f-826a-cc39fb828864.png)
+![New Project Screen](https://user-images.githubusercontent.com/25644444/184557649-9062adb5-e7e1-429e-9296-94859615687e.png)
+![Editor Screen](https://user-images.githubusercontent.com/25644444/184557668-6710d0ab-bcc2-410e-af72-8877270bc5c8.png)
+![Settings Screen](https://user-images.githubusercontent.com/25644444/184557681-0d1aa96b-6bac-4274-888f-f7b9c7832585.png)
+![About Screen](https://user-images.githubusercontent.com/25644444/184557688-356c4def-04b3-4bc8-b4bb-823a3b1b6526.png)
