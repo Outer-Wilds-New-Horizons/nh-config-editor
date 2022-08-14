@@ -24,9 +24,9 @@ jobs:
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v2.0.1
-
-            - name: Install dependencies
-              run: pnpm install
+              with:
+                  version: 6.11.0
+                  run_install: true
 
             - name: Run Tests
               run: pnpm test
