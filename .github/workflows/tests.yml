@@ -1,0 +1,32 @@
+on:
+    push:
+        paths-ignore:
+            - "*.md"
+            - "LICENSE"
+    pull_request:
+        paths-ignore:
+            - "*.md"
+            - "LICENSE"
+        types:
+            - synchronize
+
+jobs:
+    RunTests:
+        name: "Run Tests"
+        runs-on: "ubuntu-latest"
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Setup Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v2.0.1
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Run Tests
+              run: pnpm test
