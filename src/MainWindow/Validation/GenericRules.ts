@@ -3,12 +3,14 @@ import { JSONPath } from "jsonpath-plus";
 import { tauriCommands } from "../../Common/TauriCommands";
 import { ValidationContext, ValidationError, ValidationRule } from "./Validator";
 
+type JSONPathResult = { value: number; path: string }[];
+
 export const fileMustExistRule = <T extends object>(
     propPath: string,
     folders: "allow" | "disallow" | "force" = "disallow"
 ): ValidationRule<T> => ({
     perform: async (config: T, context: ValidationContext) => {
-        const hits = JSONPath<{ value: string; path: string }[]>({
+        const hits = JSONPath<JSONPathResult>({
             path: propPath,
             json: config,
             resultType: "all"
@@ -48,12 +50,12 @@ export const fileMustExistRule = <T extends object>(
 export const minMaxRule = <T extends object>(minPath: string, maxPath: string) => {
     return {
         perform: async (config: T) => {
-            const minHits = JSONPath<{ value: number; path: string }[]>({
+            const minHits = JSONPath<JSONPathResult>({
                 path: minPath,
                 json: config,
                 resultType: "all"
             });
-            const maxHits = JSONPath<{ value: number; path: string }[]>({
+            const maxHits = JSONPath<JSONPathResult>({
                 path: maxPath,
                 json: config,
                 resultType: "all"

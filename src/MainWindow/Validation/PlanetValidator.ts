@@ -67,7 +67,7 @@ const minMaxRules = minMaxPaths.map(([minPath, maxPath]) => minMaxRule<Planet>(m
 
 const quantumGroupRule = {
     perform: async (config: Planet) => {
-        if (config.Props.details === undefined) {
+        if (config.Props?.details === undefined) {
             return { valid: true, errors: [] };
         }
         const ids = (config.Props.quantumGroups ?? []).map((group) => group.id);
