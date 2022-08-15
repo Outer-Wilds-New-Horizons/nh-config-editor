@@ -37,6 +37,10 @@ function MainWindow(props: { testStore?: EnhancedStore<RootState> }) {
         });
     }, []);
 
+    if (schemaStore === null) {
+        return <></>;
+    }
+
     return (
         <Provider store={store}>
             <ProjectContext.Provider value={project}>
@@ -48,16 +52,14 @@ function MainWindow(props: { testStore?: EnhancedStore<RootState> }) {
                     </Row>
                     <Row className="flex-grow-1 border-top lt-border overflow-hidden">
                         <Col className="d-flex flex-column border-end lt-border">
-                            {project.path !== "" && (
-                                <ProjectView
-                                    projectPath={project!.path}
-                                    header={project!.name}
-                                    headerPath={`${project!.path}${sep}subtitle.png`}
-                                />
-                            )}
+                            <ProjectView
+                                projectPath={project!.path}
+                                header={project!.name}
+                                headerPath={`${project!.path}${sep}subtitle.png`}
+                            />
                         </Col>
                         <Col className="p-0 h-100 d-flex flex-column" xs={8}>
-                            {schemaStore && <EditorFrame schemaStore={schemaStore} />}
+                            <EditorFrame schemaStore={schemaStore} />
                         </Col>
                     </Row>
                 </Container>

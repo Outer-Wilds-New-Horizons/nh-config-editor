@@ -2,7 +2,7 @@ import Spinner from "./Spinner";
 
 function CenteredSpinner() {
     return (
-        <div className={"h-100 w-100 d-flex justify-content-center align-items-center"}>
+        <div className="center-items">
             <Spinner />
         </div>
     );

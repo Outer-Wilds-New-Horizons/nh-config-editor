@@ -24,7 +24,6 @@ function ProjectView(props: ProjectViewProps) {
 
     useEffect(() => {
         if (status === "idle") {
-            console.debug("Loading project", props.projectPath);
             dispatch(loadProject(props.projectPath));
         }
     }, [status, dispatch]);
