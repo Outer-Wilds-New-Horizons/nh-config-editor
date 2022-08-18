@@ -41,7 +41,7 @@
                 "relaunch": true
             },
             "shell": {
-                "open": ".*?"
+                "open": ".+"
             },
             "window": {
                 "all": true
