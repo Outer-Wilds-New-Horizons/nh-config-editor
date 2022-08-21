@@ -1,3 +1,4 @@
+import { dialog } from "@tauri-apps/api";
 import { Event, listen } from "@tauri-apps/api/event";
 import React, { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -32,7 +33,14 @@ function Wrapper() {
     });
 
     useEffect(() => {
-        SettingsManager.get().then(setSettings);
+        SettingsManager.get()
+            .then(setSettings)
+            .catch((e) => {
+                dialog.message(`Error loading settings: ${e}`, {
+                    type: "error",
+                    title: "Error"
+                });
+            });
     }, []);
 
     if (settings === null) {

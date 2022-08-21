@@ -8,12 +8,24 @@
         <script src="/src/Main.tsx" type="module" defer></script>
         <%- reactDevTools -%> <%- reduxDevToolsPatch -%>
         <style>
+            body {
+                margin: 0;
+            }
+            main {
+                width: 100vw;
+                height: 100vh;
+            }
+            div.center-items {
+                height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
             .nh-spinner {
                 animation: spin 1s linear infinite;
-                max-width: inherit;
-                max-height: inherit;
+                width: 250px;
+                height: 250px;
             }
-
             @keyframes spin {
                 from {
                     transform: rotateY(0deg) scale(0.3);
@@ -25,14 +37,16 @@
         </style>
     </head>
     <body>
-        <div id="root">
-            <div style="height: 100vh; display: flex; align-items: center; justify-content: center">
+        <main id="root">
+            <div class="center-items">
                 <img
                     alt="Loading..."
                     class="nh-spinner"
+                    width="84"
+                    height="84"
                     src="src/Common/Images/spinner_image.png"
                 />
             </div>
-        </div>
+        </main>
     </body>
 </html>

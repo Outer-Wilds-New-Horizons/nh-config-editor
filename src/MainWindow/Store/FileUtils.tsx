@@ -188,7 +188,9 @@ const inspectorRootDirectories = ["planets", "systems", "translations"];
 export const usesInspector = (file: ProjectFile | OpenFile): boolean => {
     const rootDir = getRootDirectory(file.relativePath);
     return (
-        (rootDir !== null && inspectorRootDirectories.includes(rootDir.toLowerCase())) ||
+        (file.extension === "json" &&
+            rootDir !== null &&
+            inspectorRootDirectories.includes(rootDir.toLowerCase())) ||
         file.name === "addon-manifest.json" ||
         file.name === "manifest.json"
     );

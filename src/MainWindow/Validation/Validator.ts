@@ -2,6 +2,7 @@ import { getFileName, getRootDirectory } from "../Store/FileUtils";
 import { OpenFile } from "../Store/OpenFilesSlice";
 import manifestRules from "./ManifestValidator";
 import planetRules from "./PlanetValidator";
+import systemRules from "./SystemValidator";
 
 export type ValidationResult = {
     valid: boolean;
@@ -30,6 +31,9 @@ const determineValidationRules = (configPath: string): ValidationRule<any>[] => 
     }
     if (rootDir === "planets") {
         return planetRules;
+    }
+    if (rootDir === "systems") {
+        return systemRules;
     }
     return [];
 };

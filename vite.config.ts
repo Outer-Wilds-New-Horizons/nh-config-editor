@@ -43,6 +43,9 @@ export default defineConfig({
             })
     ],
     envPrefix: "NODE_",
+    // Im going gorbo mode
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     test: {
         setupFiles: ["./test/Setup.ts"],
         environment: "jsdom",
