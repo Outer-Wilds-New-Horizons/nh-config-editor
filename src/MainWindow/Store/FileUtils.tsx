@@ -251,7 +251,7 @@ export const getInitialContent = (rootDir: string) => {
             return JSON.stringify(
                 {
                     $schema:
-                        "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/body_schema.json",
+                        "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/main/NewHorizons/Schemas/body_schema.json",
                     name: "New Planet"
                 },
                 null,
@@ -261,7 +261,7 @@ export const getInitialContent = (rootDir: string) => {
             return JSON.stringify(
                 {
                     $schema:
-                        "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/system_schema.json",
+                        "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/main/NewHorizons/Schemas/system_schema.json",
                     Vessel: null
                 },
                 null,
@@ -271,7 +271,7 @@ export const getInitialContent = (rootDir: string) => {
             return JSON.stringify(
                 {
                     $schema:
-                        "https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/main/NewHorizons/Schemas/translation_schema.json"
+                        "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/main/NewHorizons/Schemas/translation_schema.json"
                 },
                 null,
                 4
@@ -303,7 +303,7 @@ export const getSchemaName = (file: ProjectFile | OpenFile): string => {
 };
 
 export const getSchemaLinkForNHConfig = (type: string, branch: string) =>
-    `https://raw.githubusercontent.com/xen-42/outer-wilds-new-horizons/${branch}/NewHorizons/Schemas/${type}`;
+    `https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/${branch}/NewHorizons/Schemas/${type}`;
 
 export const getDocsLinkForNHConfig = (type: string) =>
     `https://nh.outerwildsmods.com/Schemas/${type.split(".")[0]}.html`;

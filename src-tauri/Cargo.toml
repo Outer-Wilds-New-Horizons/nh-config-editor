@@ -1,10 +1,10 @@
 [package]
 name = "nh-editor"
-version = "0.6.1"
+version = "0.6.3"
 description = "An editor for New Horizons planets, systems, and more"
 authors = ["Bwc9876"]
 license = "MIT"
-repository = "https://github.com/Bwc9876/nh-config-editor"
+repository = "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor"
 default-run = "nh-editor"
 edition = "2021"
 rust-version = "1.57"
