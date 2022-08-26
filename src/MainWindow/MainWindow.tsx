@@ -10,6 +10,7 @@ import SchemaStoreManager, { SchemaStore } from "../Common/AppData/SchemaStore";
 import { loadProjectFromURLParams, Project } from "../Common/Project";
 
 import "./main_window.css";
+import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import MainWindowContextMenu from "./ContextMenu/MainWindowContextMenu";
 import { windowBlur } from "./Store/BlurSlice";
 import { RootState, setupStore } from "./Store/Store";
@@ -38,7 +39,7 @@ function MainWindow(props: { testStore?: EnhancedStore<RootState> }) {
     }, []);
 
     if (schemaStore === null) {
-        return <></>;
+        return <CenteredSpinner/>;
     }
 
     return (
