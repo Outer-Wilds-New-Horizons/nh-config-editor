@@ -39,7 +39,7 @@ function MainWindow(props: { testStore?: EnhancedStore<RootState> }) {
     }, []);
 
     if (schemaStore === null) {
-        return <CenteredSpinner/>;
+        return <CenteredSpinner />;
     }
 
     return (
