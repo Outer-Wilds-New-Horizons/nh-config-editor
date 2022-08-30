@@ -14,7 +14,7 @@ $ pnpm install
 
 ## Development Runtime
 
-To run the development runtime, run `tauri dev` through npm.
+To run the development runtime, run `tauri dev` through pnpm.
 
 ```bash
 $ pnpm run tauri dev
@@ -22,7 +22,7 @@ $ pnpm run tauri dev
 
 ## Building
 
-To build a production version of the app, run `tauri build` though npm.
+To build a production version of the app, run `tauri build` through pnpm.
 
 ```bash
 $ pnpm run tauri build
