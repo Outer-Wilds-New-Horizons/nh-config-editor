@@ -15,15 +15,16 @@
 An application you can use to graphically edit your [New Horizons](https://nh.outerwildsmods.com) configs!
 
 ## Installation
-- Head to the [releases](https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases) page
-- Select the file for your OS
-- Download and open!
+
+-   Head to the [releases](https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases) page
+-   Select the file for your OS
+-   Download and open!
 
 ## Features
 
-- Form-based editing of planet, system, translation, and manifest configs.
-- Advanced validation for filepaths, ids, and more.
-- Build action that minifies your configs and zips them up for you.
+-   Form-based editing of planet, system, translation, and manifest configs.
+-   Advanced validation for filepaths, ids, and more.
+-   Build action that minifies your configs and zips them up for you.
 
 ## Contributing
 
