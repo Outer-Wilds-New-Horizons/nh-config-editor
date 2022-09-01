@@ -77,7 +77,7 @@ export class Project {
             center: true,
             minWidth: 1000,
             width: 1000,
-            minHeight: 800,
+            minHeight: 300,
             height: 800,
             resizable: true,
             maximized: true,
