@@ -22,7 +22,7 @@ const updateObj = {
         },
         "windows-x86_64": {
             signature: "",
-            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_0.6.3_x64_en-US.msi`
+            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi`
         }
     }
 };
