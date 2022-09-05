@@ -42,6 +42,7 @@
         "vscode-json-languageservice": "^5.1.0"
     },
     "devDependencies": {
+        "@redux-devtools/cli": "^1.0.7",
         "@tauri-apps/cli": "^1.0.5",
         "@testing-library/react": "^13.3.0",
         "@types/json-schema": "^7.0.11",
@@ -60,6 +61,7 @@
         "jsdom": "^20.0.0",
         "lint-staged": "^13.0.3",
         "prettier": "^2.7.1",
+        "react-devtools": "^4.25.0",
         "remote-redux-devtools": "^0.5.16",
         "sass": "^1.54.4",
         "ts-json-schema-generator": "^1.0.0",
