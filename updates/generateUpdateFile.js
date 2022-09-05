@@ -13,16 +13,16 @@ const updateObj = {
     pub_date: new Date().toISOString(),
     platforms: {
         "darwin-x86_64": {
-            signature: "",
+            signature: "${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz.sig",
             url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz`
         },
         "linux-x86_64": {
-            signature: "",
-            url: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage`
+            signature: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz.sig`,
+            url: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz`
         },
         "windows-x86_64": {
-            signature: "",
-            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi`
+            signature: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip.sig`,
+            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip`
         }
     }
 };
