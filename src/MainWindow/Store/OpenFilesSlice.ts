@@ -289,17 +289,25 @@ const openFilesSlice = createSlice({
             const openFile = state.entities[action.meta.arg.file.relativePath];
             if (openFile !== undefined) {
                 if (action.payload.createdNewFile) {
-                    openFilesAdapter.updateOne(state, {
-                        id: openFile.tabIndex,
-                        changes: {
-                            name: getFileName(action.payload.newPath),
-                            relativePath: action.payload.newPath.slice(
-                                action.meta.arg.projectPath.length + 1
-                            ),
-                            absolutePath: action.payload.newPath,
-                            diskData: openFile.memoryData
-                        }
+                    openFilesAdapter.removeOne(state, action.meta.arg.file.relativePath);
+                    openFilesAdapter.upsertOne(state, {
+                        ...openFile,
+                        name: getFileName(action.payload.newPath),
+                        relativePath: action.payload.newPath.slice(
+                            action.meta.arg.projectPath.length + 1
+                        ),
+                        absolutePath: action.payload.newPath,
+                        diskData: openFile.memoryData
                     });
+                    state.tabs = state.tabs.map((p) => {
+                        if (p === action.meta.arg.file.relativePath) {
+                            return action.payload.newPath.slice(
+                                action.meta.arg.projectPath.length + 1
+                            );
+                        }
+                        return p;
+                    });
+                    return;
                 }
                 openFilesAdapter.updateOne(state, {
                     id: openFile.relativePath,
