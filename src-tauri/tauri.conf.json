@@ -84,7 +84,12 @@
             "csp": null
         },
         "updater": {
-            "active": false
+            "active": true,
+            "endpoints": [
+                "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/nh-config-editor/main/updates/latest-version.json"
+            ],
+            "dialog": true,
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IENDNDIzQzM0NjQ1QzhBRDgKUldUWWlseGtORHhDekVYRzE4bE9EYkgrOUxxTE10bG4xcmpxN3Fwbk92NEFHWGNHVmcxL0hKSmUK"
         },
         "windows": [
             {

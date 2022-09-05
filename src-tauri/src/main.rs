@@ -26,14 +26,6 @@ fn main() {
             commands::delete_dir,
             commands::delete_file,
             commands::run_game,])
-        .on_menu_event(|event| {
-            match event.menu_item_id() {
-                "quit" => {
-                    std::process::exit(0);
-                }
-                _ => {}
-            }
-        })
         .run(context)
         .expect("error while running tauri application");
 }

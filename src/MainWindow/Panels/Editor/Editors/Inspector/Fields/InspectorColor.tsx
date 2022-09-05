@@ -33,6 +33,7 @@ function InspectorColor(props: FieldProps) {
             <Col>
                 <Form.Control
                     type={"number"}
+                    min={0}
                     value={r}
                     onChange={(e) => onUpdate(e.target.value, "r")}
                 />
@@ -40,6 +41,7 @@ function InspectorColor(props: FieldProps) {
             <Col>
                 <Form.Control
                     type={"number"}
+                    min={0}
                     value={g}
                     onChange={(e) => onUpdate(e.target.value, "g")}
                 />
@@ -47,6 +49,7 @@ function InspectorColor(props: FieldProps) {
             <Col>
                 <Form.Control
                     type={"number"}
+                    min={0}
                     value={b}
                     onChange={(e) => onUpdate(e.target.value, "b")}
                 />
@@ -54,6 +57,8 @@ function InspectorColor(props: FieldProps) {
             <Col>
                 <Form.Control
                     type={"number"}
+                    min={0}
+                    max={255}
                     value={a}
                     onChange={(e) => onUpdate(e.target.value, "a")}
                 />

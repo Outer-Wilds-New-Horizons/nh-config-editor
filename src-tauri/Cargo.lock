@@ -1518,6 +1518,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e93bacfc6ce0cf3e41da4d9415904090e1f7ca8d105c1396907f78d8fee42635"
 
 [[package]]
+name = "minisign-verify"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "933dca44d65cdd53b355d0b73d380a2ff5da71f87f036053188bf1eab6a19881"
+
+[[package]]
 name = "miniz_oxide"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1580,7 +1586,7 @@ checksum = "e4a24736216ec316047a1fc4252e27dabb04218aa4a3f37c6e7ddbf1f9782b54"
 
 [[package]]
 name = "nh-editor"
-version = "0.6.1"
+version = "0.6.3"
 dependencies = [
  "base64",
  "fs_extra",
@@ -2777,6 +2783,7 @@ checksum = "e1a56a8b125069c2682bd31610109b4436c050c74447bee1078217a0325c1add"
 dependencies = [
  "anyhow",
  "attohttpc",
+ "base64",
  "cocoa",
  "dirs-next",
  "embed_plist",
@@ -2789,6 +2796,7 @@ dependencies = [
  "heck 0.4.0",
  "http",
  "ignore",
+ "minisign-verify",
  "objc",
  "once_cell",
  "open",
@@ -2811,12 +2819,14 @@ dependencies = [
  "tauri-utils",
  "tempfile",
  "thiserror",
+ "time",
  "tokio",
  "url",
  "uuid 1.1.2",
  "webkit2gtk",
  "webview2-com",
  "windows 0.37.0",
+ "zip",
 ]
 
 [[package]]

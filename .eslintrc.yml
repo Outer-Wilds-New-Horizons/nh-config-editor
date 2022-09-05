@@ -19,6 +19,8 @@ parserOptions:
 plugins:
     - react
     - "@typescript-eslint"
+ignorePatterns:
+    - "updates/*.js"
 rules:
     quotes:
         - error
