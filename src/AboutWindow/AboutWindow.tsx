@@ -95,7 +95,9 @@ function AboutWindow() {
             <Row className="mb-1">
                 <Col>
                     <a
-                        onClick={() => open("https://github.com/Bwc9876/nh-config-editor")}
+                        onClick={() =>
+                            open("https://github.com/Outer-Wilds-New-Horizons/nh-config-editor")
+                        }
                         className="d-flex align-items-center interactable text-decoration-none"
                     >
                         <Github className="me-1" /> GitHub
@@ -110,18 +112,7 @@ function AboutWindow() {
             </Row>
             <Row>
                 <Col>
-                    Platform: {aboutData.platformName}_{aboutData.architecture}
-                </Col>
-            </Row>
-            <Row className="mt-3">
-                <Col>
-                    {/* Until I actually add an updating thing, this is all it will do */}
-                    <Button
-                        variant="outline-primary"
-                        onClick={() => message("No Updates Available", { title: "Update Check" })}
-                    >
-                        Check For Updates
-                    </Button>
+                    Platform: {aboutData.platformName}-{aboutData.architecture}
                 </Col>
             </Row>
             <Row className="mt-2">
