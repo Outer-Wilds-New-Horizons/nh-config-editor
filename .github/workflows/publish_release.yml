@@ -3,7 +3,7 @@ name: Publish Release
 on:
     workflow_dispatch:
     release:
-        types: [released, edited]
+        types: [released]
 
 jobs:
     UpdateVersionFile:
@@ -39,7 +39,7 @@ jobs:
                   git add updates/latest-version.json
                   git commit -m "Updated Version File"
 
-            - name: Push Schemas
+            - name: Push File
               uses: ad-m/github-push-action@master
               with:
                   github_token: ${{ secrets.github_token }}

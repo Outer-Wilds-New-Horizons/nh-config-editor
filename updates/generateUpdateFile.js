@@ -9,7 +9,7 @@ const BASE_STR = `https://github.com/${OWNER}/${REPO}/releases`;
 
 const updateObj = {
     version,
-    notes: `View changelog at: ${BASE_STR}/tags/v${version}`,
+    notes: `View changelog at: ${BASE_STR}/tags/${version}`,
     pub_date: new Date().toISOString(),
     platforms: {
         "darwin-x86_64": {
