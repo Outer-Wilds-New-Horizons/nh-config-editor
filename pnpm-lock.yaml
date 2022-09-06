@@ -6907,6 +6907,7 @@ packages:
             chalk: 2.4.2
             diff-match-patch: 1.0.5
         dev: true
+        bundledDependencies: []
 
     /jsonfile/4.0.0:
         resolution:

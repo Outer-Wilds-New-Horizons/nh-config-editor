@@ -1,4 +1,5 @@
-fs = require("fs");
+const fs = require("fs");
+const dl = require("download");
 
 const version = JSON.parse(fs.readFileSync("../package.json", "utf8")).version;
 
@@ -13,18 +14,24 @@ const updateObj = {
     pub_date: new Date().toISOString(),
     platforms: {
         "darwin-x86_64": {
-            signature: "${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz.sig",
+            signature: fs.readFileSync(`New.Horizons.Config.Editor.app.tar.gz.sig`, "utf8"),
             url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz`
         },
         "linux-x86_64": {
-            signature: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz.sig`,
+            signature: fs.readFileSync(
+                `new-horizons-config-editor_${version}_amd64.AppImage.tar.gz.sig`,
+                "utf8"
+            ),
             url: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz`
         },
         "windows-x86_64": {
-            signature: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip.sig`,
+            signature: fs.readFileSync(
+                `New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip.sig`,
+                "utf8"
+            ),
             url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip`
         }
     }
 };
 
-fs.writeFileSync("latest-version.json", JSON.stringify(updateObj));
+fs.writeFileSync("latest-version.json", JSON.stringify(updateObj, null, 4));
