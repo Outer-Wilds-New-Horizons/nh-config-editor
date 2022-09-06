@@ -15,21 +15,21 @@ const updateObj = {
     platforms: {
         "darwin-x86_64": {
             signature: fs.readFileSync(`New.Horizons.Config.Editor.app.tar.gz.sig`, "utf8"),
-            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz`
+            url: `${BASE_STR}/download/${version}/New.Horizons.Config.Editor.app.tar.gz`
         },
         "linux-x86_64": {
             signature: fs.readFileSync(
                 `new-horizons-config-editor_${version}_amd64.AppImage.tar.gz.sig`,
                 "utf8"
             ),
-            url: `${BASE_STR}/download/v${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz`
+            url: `${BASE_STR}/download/${version}/new-horizons-config-editor_${version}_amd64.AppImage.tar.gz`
         },
         "windows-x86_64": {
             signature: fs.readFileSync(
                 `New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip.sig`,
                 "utf8"
             ),
-            url: `${BASE_STR}/download/v${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip`
+            url: `${BASE_STR}/download/${version}/New.Horizons.Config.Editor_${version}_x64_en-US.msi.zip`
         }
     }
 };
