@@ -62,12 +62,12 @@ dependencies:
     react-dom: 18.2.0_react@18.2.0
     react-hotkeys-hook: 3.4.7_biqbaboplfbrettd7655fr4n2y
     react-jsonschema-form: 1.8.1_react@18.2.0
-    react-redux: 8.0.2_5d4wf3yo6k5smpa3kasqkeetaq
+    react-redux: 8.0.2_yjtsim5uvgjttslbpqb5so5y3m
     sortablejs: 1.15.0
     vscode-json-languageservice: 5.1.0
 
 devDependencies:
-    "@redux-devtools/cli": 1.0.7_@types+react-dom@18.0.6
+    "@redux-devtools/cli": 1.0.7_4626fufwkwytswt2pfbx3r644m
     "@tauri-apps/cli": 1.0.5
     "@testing-library/react": 13.4.0_biqbaboplfbrettd7655fr4n2y
     "@types/json-schema": 7.0.11
@@ -87,7 +87,7 @@ devDependencies:
     lint-staged: 13.0.3
     prettier: 2.7.1
     react-devtools: 4.25.0
-    remote-redux-devtools: 0.5.16
+    remote-redux-devtools: 0.5.16_redux@4.2.0
     sass: 1.54.8
     ts-json-schema-generator: 1.0.0
     typescript: 4.8.2
@@ -477,18 +477,6 @@ packages:
             "@babel/types": 7.19.0
         dev: true
 
-    /@babel/plugin-syntax-jsx/7.18.6:
-        resolution:
-            {
-                integrity: sha512-6mmljtAedFGTWu2p/8WIORGwy+61PLgOMPOdazc7YoJ9ZCWUyFy3A6CpPkRKLKD1ToAesxX8KGEViAiLo9N+7Q==
-            }
-        engines: { node: ">=6.9.0" }
-        peerDependencies:
-            "@babel/core": ^7.0.0-0
-        dependencies:
-            "@babel/helper-plugin-utils": 7.19.0
-        dev: true
-
     /@babel/plugin-syntax-jsx/7.18.6_@babel+core@7.19.0:
         resolution:
             {
@@ -665,7 +653,7 @@ packages:
             - supports-color
         dev: true
 
-    /@emotion/babel-plugin/11.10.2:
+    /@emotion/babel-plugin/11.10.2_@babel+core@7.19.0:
         resolution:
             {
                 integrity: sha512-xNQ57njWTFVfPAc3cjfuaPdsgLp5QOSuRsj9MA6ndEhH/AzuZM86qIQzt6rq+aGBwj3n5/TkLmU5lhAfdRmogA==
@@ -673,8 +661,9 @@ packages:
         peerDependencies:
             "@babel/core": ^7.0.0
         dependencies:
+            "@babel/core": 7.19.0
             "@babel/helper-module-imports": 7.18.6
-            "@babel/plugin-syntax-jsx": 7.18.6
+            "@babel/plugin-syntax-jsx": 7.18.6_@babel+core@7.19.0
             "@babel/runtime": 7.19.0
             "@emotion/hash": 0.9.0
             "@emotion/memoize": 0.8.0
@@ -723,7 +712,7 @@ packages:
             }
         dev: true
 
-    /@emotion/react/11.10.4_t4v2ig6j532zggk4vxuuplsqcq:
+    /@emotion/react/11.10.4_la3xqlsnhg2vupm5bldapjqfqq:
         resolution:
             {
                 integrity: sha512-j0AkMpr6BL8gldJZ6XQsQ8DnS9TxEQu1R+OGmDZiWjBAJtCcbt0tS3I/YffoqHXxH6MjgI7KdMbYKw3MEiU9eA==
@@ -738,8 +727,9 @@ packages:
             "@types/react":
                 optional: true
         dependencies:
+            "@babel/core": 7.19.0
             "@babel/runtime": 7.19.0
-            "@emotion/babel-plugin": 11.10.2
+            "@emotion/babel-plugin": 11.10.2_@babel+core@7.19.0
             "@emotion/cache": 11.10.3
             "@emotion/serialize": 1.1.0
             "@emotion/use-insertion-effect-with-fallbacks": 1.0.0_react@17.0.2
@@ -1262,7 +1252,7 @@ packages:
             react: 18.2.0
         dev: false
 
-    /@redux-devtools/app/2.2.0_gj3uvftlqh5uwsaflzf5e2pi5e:
+    /@redux-devtools/app/2.2.0_reydhn24xijh4dibz5lstifrvu:
         resolution:
             {
                 integrity: sha512-qynxsgo2pwsrAKP1GM+hEYADLRZheMFshH5+MSVYXSVH8ccNdU2IWno4cpoMh7KlneMHDRzh4Tl1E/nKTUo18Q==
@@ -1277,15 +1267,16 @@ packages:
             "@redux-devtools/chart-monitor": 3.0.1_cszg5tkq3uz34i6ctag4hgtw7i
             "@redux-devtools/core": 3.13.1_vjklmlpsh34y2dcctv6xyvomt4
             "@redux-devtools/inspector-monitor": 3.0.1_cszg5tkq3uz34i6ctag4hgtw7i
-            "@redux-devtools/inspector-monitor-test-tab": 1.0.0_h6d62df6uaokde27zgnyohj54i
+            "@redux-devtools/inspector-monitor-test-tab": 1.0.0_xzheh4vep2rsogr47klohwjl7y
             "@redux-devtools/inspector-monitor-trace-tab": 1.0.0_7lfpthmvnpjxr7h6sblnv5uxce
             "@redux-devtools/log-monitor": 4.0.1_cszg5tkq3uz34i6ctag4hgtw7i
-            "@redux-devtools/rtk-query-monitor": 3.1.0_fqii2crguktx3cp6ce5aoihntu
-            "@redux-devtools/slider-monitor": 4.0.1_ihes4y6qpw4mrtdb24sbkviqna
-            "@redux-devtools/ui": 1.3.0_l4peulltxnbub4xbyd4765klfe
+            "@redux-devtools/rtk-query-monitor": 3.1.0_6xtcakp6qxxcjf2bocln52teae
+            "@redux-devtools/slider-monitor": 4.0.1_zvb7fq4gxstlsbiagdlq7auzji
+            "@redux-devtools/ui": 1.3.0_dr3xrio2kmfnmvh73jrh5i7chm
             "@reduxjs/toolkit": 1.8.5_thunyjspsylz6iliyoygaytnnq
             "@types/prop-types": 15.7.5
             "@types/react": 17.0.49
+            "@types/styled-components": 5.1.26
             d3-state-visualizer: 1.6.0
             javascript-stringify: 2.1.0
             jsan: 3.1.14
@@ -1334,7 +1325,7 @@ packages:
             redux-devtools-themes: 1.0.0
         dev: true
 
-    /@redux-devtools/cli/1.0.7_@types+react-dom@18.0.6:
+    /@redux-devtools/cli/1.0.7_4626fufwkwytswt2pfbx3r644m:
         resolution:
             {
                 integrity: sha512-GJbOcqWWfYxeGdMfRp9x4UJa5aihjbzD6PTeStu3BpjSjoKV39R2kt+2e+zHV1viM3+mjurYQlqgXVbgac5GeQ==
@@ -1342,7 +1333,7 @@ packages:
         engines: { node: ">=14.15.0" }
         hasBin: true
         dependencies:
-            "@redux-devtools/app": 2.2.0_gj3uvftlqh5uwsaflzf5e2pi5e
+            "@redux-devtools/app": 2.2.0_reydhn24xijh4dibz5lstifrvu
             "@types/react": 17.0.49
             apollo-server-express: 3.10.2_ikriz6xqtzcvohrhb2pcry7o6y
             body-parser: 1.20.0
@@ -1403,7 +1394,7 @@ packages:
             redux: 4.2.0
         dev: true
 
-    /@redux-devtools/inspector-monitor-test-tab/1.0.0_h6d62df6uaokde27zgnyohj54i:
+    /@redux-devtools/inspector-monitor-test-tab/1.0.0_xzheh4vep2rsogr47klohwjl7y:
         resolution:
             {
                 integrity: sha512-+MM7B1PEXf3vDQvvY9ssA4zKWw1meqRUxnz7RWfs/tpRmh6OAeJZ527B+eaJNnF4qadN0GM1QupATp/WG5GPpg==
@@ -1418,9 +1409,10 @@ packages:
         dependencies:
             "@babel/runtime": 7.19.0
             "@redux-devtools/inspector-monitor": 3.0.1_cszg5tkq3uz34i6ctag4hgtw7i
-            "@redux-devtools/ui": 1.3.0_l4peulltxnbub4xbyd4765klfe
+            "@redux-devtools/ui": 1.3.0_dr3xrio2kmfnmvh73jrh5i7chm
             "@types/prop-types": 15.7.5
             "@types/react": 17.0.49
+            "@types/styled-components": 5.1.26
             es6template: 1.0.5
             javascript-stringify: 2.1.0
             jsan: 3.1.14
@@ -1533,7 +1525,7 @@ packages:
             redux-devtools-themes: 1.0.0
         dev: true
 
-    /@redux-devtools/rtk-query-monitor/3.1.0_fqii2crguktx3cp6ce5aoihntu:
+    /@redux-devtools/rtk-query-monitor/3.1.0_6xtcakp6qxxcjf2bocln52teae:
         resolution:
             {
                 integrity: sha512-U+rx3uKK9lmlg8+9p+nu5+OF+yiXXkHj2QpCKFlyhjzCbvXN9aaEGaDisdAphZpwnSLv52VKXXfNBKNzrclHHw==
@@ -1549,12 +1541,13 @@ packages:
         dependencies:
             "@babel/runtime": 7.19.0
             "@redux-devtools/core": 3.13.1_vjklmlpsh34y2dcctv6xyvomt4
-            "@redux-devtools/ui": 1.3.0_l4peulltxnbub4xbyd4765klfe
+            "@redux-devtools/ui": 1.3.0_dr3xrio2kmfnmvh73jrh5i7chm
             "@reduxjs/toolkit": 1.8.5_thunyjspsylz6iliyoygaytnnq
             "@types/lodash": 4.14.184
             "@types/prop-types": 15.7.5
             "@types/react": 17.0.49
             "@types/redux-devtools-themes": 1.0.0
+            "@types/styled-components": 5.1.26
             hex-rgba: 1.0.2
             immutable: 4.1.0
             jss: 10.9.2
@@ -1572,7 +1565,7 @@ packages:
             - react-dom
         dev: true
 
-    /@redux-devtools/slider-monitor/4.0.1_ihes4y6qpw4mrtdb24sbkviqna:
+    /@redux-devtools/slider-monitor/4.0.1_zvb7fq4gxstlsbiagdlq7auzji:
         resolution:
             {
                 integrity: sha512-pjHPYLG91GLRQVcNAIu3Colc6nIqR4mSQYN1MWUqP8nTAlkP1ihEN44KXxcnTUEzuSLRYm1YW3jsI5p4q3aXZA==
@@ -1587,10 +1580,11 @@ packages:
         dependencies:
             "@babel/runtime": 7.19.0
             "@redux-devtools/core": 3.13.1_vjklmlpsh34y2dcctv6xyvomt4
-            "@redux-devtools/ui": 1.3.0_l4peulltxnbub4xbyd4765klfe
+            "@redux-devtools/ui": 1.3.0_dr3xrio2kmfnmvh73jrh5i7chm
             "@types/prop-types": 15.7.5
             "@types/react": 17.0.49
             "@types/redux-devtools-themes": 1.0.0
+            "@types/styled-components": 5.1.26
             prop-types: 15.8.1
             react: 17.0.2
             redux: 4.2.0
@@ -1601,7 +1595,7 @@ packages:
             - react-dom
         dev: true
 
-    /@redux-devtools/ui/1.3.0_l4peulltxnbub4xbyd4765klfe:
+    /@redux-devtools/ui/1.3.0_dr3xrio2kmfnmvh73jrh5i7chm:
         resolution:
             {
                 integrity: sha512-fj4zyQ08U2DnJAGL7xa1mqlQnBMbrlS1P/HI10Wz57+dgqP9fIzfKymtLEGOnJHZNkPpPNXG04FH4+AQQ1v3kw==
@@ -1621,13 +1615,14 @@ packages:
             "@types/react": 17.0.49
             "@types/redux-devtools-themes": 1.0.0
             "@types/simple-element-resize-detector": 1.3.0
+            "@types/styled-components": 5.1.26
             base16: 1.0.0
             codemirror: 5.65.8
             color: 4.2.3
             prop-types: 15.8.1
             react: 17.0.2
             react-icons: 4.4.0_react@17.0.2
-            react-select: 5.4.0_j6sw2p2tdbh6crpcmkxtmmhma4
+            react-select: 5.4.0_5rlqu63agk5s3qzp36k4sf265u
             redux-devtools-themes: 1.0.0
             simple-element-resize-detector: 1.3.0
             styled-components: 5.3.5_fane7jikarojcev26y27hpbhu4
@@ -1652,7 +1647,7 @@ packages:
         dependencies:
             immer: 9.0.15
             react: 18.2.0
-            react-redux: 8.0.2_5d4wf3yo6k5smpa3kasqkeetaq
+            react-redux: 8.0.2_yjtsim5uvgjttslbpqb5so5y3m
             redux: 4.2.0
             redux-thunk: 2.4.1_redux@4.2.0
             reselect: 4.1.6
@@ -2145,7 +2140,7 @@ packages:
                 integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==
             }
         dependencies:
-            "@types/node": 16.11.57
+            "@types/node": 12.20.55
         dev: true
 
     /@types/lodash.debounce/4.0.7:
@@ -2294,7 +2289,7 @@ packages:
                 integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==
             }
         dependencies:
-            "@types/node": 16.11.57
+            "@types/node": 12.20.55
         dev: true
 
     /@types/scheduler/0.16.2:
@@ -2325,6 +2320,17 @@ packages:
             {
                 integrity: sha512-C3064MH72iEfeGCYEGCt7FCxXoAXaMPG0QPnstcxvPmbl54erpISu06d++FY37Smja64iWy5L8wOyHHBghWbJQ==
             }
+        dev: true
+
+    /@types/styled-components/5.1.26:
+        resolution:
+            {
+                integrity: sha512-KuKJ9Z6xb93uJiIyxo/+ksS7yLjS1KzG6iv5i78dhVg/X3u5t1H7juRWqVmodIdz6wGVaIApo1u01kmFRdJHVw==
+            }
+        dependencies:
+            "@types/hoist-non-react-statics": 3.3.1
+            "@types/react": 18.0.18
+            csstype: 3.1.0
         dev: true
 
     /@types/tern/0.23.4:
@@ -3081,7 +3087,7 @@ packages:
             babel-plugin-syntax-jsx: 6.18.0
             lodash: 4.17.21
             picomatch: 2.3.1
-            styled-components: 5.3.5_fane7jikarojcev26y27hpbhu4
+            styled-components: 5.3.5_7i5myeigehqah43i5u7wbekgba
         dev: true
 
     /babel-plugin-syntax-jsx/6.18.0:
@@ -9100,42 +9106,6 @@ packages:
             }
         dev: false
 
-    /react-redux/8.0.2_5d4wf3yo6k5smpa3kasqkeetaq:
-        resolution:
-            {
-                integrity: sha512-nBwiscMw3NoP59NFCXFf02f8xdo+vSHT/uZ1ldDwF7XaTpzm+Phk97VT4urYBl5TYAPNVaFm12UHAEyzkpNzRA==
-            }
-        peerDependencies:
-            "@types/react": ^16.8 || ^17.0 || ^18.0
-            "@types/react-dom": ^16.8 || ^17.0 || ^18.0
-            react: ^16.8 || ^17.0 || ^18.0
-            react-dom: ^16.8 || ^17.0 || ^18.0
-            react-native: ">=0.59"
-            redux: ^4
-        peerDependenciesMeta:
-            "@types/react":
-                optional: true
-            "@types/react-dom":
-                optional: true
-            react-dom:
-                optional: true
-            react-native:
-                optional: true
-            redux:
-                optional: true
-        dependencies:
-            "@babel/runtime": 7.19.0
-            "@types/hoist-non-react-statics": 3.3.1
-            "@types/react": 18.0.18
-            "@types/react-dom": 18.0.6
-            "@types/use-sync-external-store": 0.0.3
-            hoist-non-react-statics: 3.3.2
-            react: 18.2.0
-            react-dom: 18.2.0_react@18.2.0
-            react-is: 18.2.0
-            use-sync-external-store: 1.2.0_react@18.2.0
-        dev: false
-
     /react-redux/8.0.2_oym52sksees6jdg3usoj4d3ek4:
         resolution:
             {
@@ -9173,6 +9143,43 @@ packages:
             use-sync-external-store: 1.2.0_react@17.0.2
         dev: true
 
+    /react-redux/8.0.2_yjtsim5uvgjttslbpqb5so5y3m:
+        resolution:
+            {
+                integrity: sha512-nBwiscMw3NoP59NFCXFf02f8xdo+vSHT/uZ1ldDwF7XaTpzm+Phk97VT4urYBl5TYAPNVaFm12UHAEyzkpNzRA==
+            }
+        peerDependencies:
+            "@types/react": ^16.8 || ^17.0 || ^18.0
+            "@types/react-dom": ^16.8 || ^17.0 || ^18.0
+            react: ^16.8 || ^17.0 || ^18.0
+            react-dom: ^16.8 || ^17.0 || ^18.0
+            react-native: ">=0.59"
+            redux: ^4
+        peerDependenciesMeta:
+            "@types/react":
+                optional: true
+            "@types/react-dom":
+                optional: true
+            react-dom:
+                optional: true
+            react-native:
+                optional: true
+            redux:
+                optional: true
+        dependencies:
+            "@babel/runtime": 7.19.0
+            "@types/hoist-non-react-statics": 3.3.1
+            "@types/react": 18.0.18
+            "@types/react-dom": 18.0.6
+            "@types/use-sync-external-store": 0.0.3
+            hoist-non-react-statics: 3.3.2
+            react: 18.2.0
+            react-dom: 18.2.0_react@18.2.0
+            react-is: 18.2.0
+            redux: 4.2.0
+            use-sync-external-store: 1.2.0_react@18.2.0
+        dev: false
+
     /react-refresh/0.13.0:
         resolution:
             {
@@ -9181,7 +9188,7 @@ packages:
         engines: { node: ">=0.10.0" }
         dev: true
 
-    /react-select/5.4.0_j6sw2p2tdbh6crpcmkxtmmhma4:
+    /react-select/5.4.0_5rlqu63agk5s3qzp36k4sf265u:
         resolution:
             {
                 integrity: sha512-CjE9RFLUvChd5SdlfG4vqxZd55AZJRrLrHzkQyTYeHlpOztqcgnyftYAolJ0SGsBev6zAs6qFrjm6KU3eo2hzg==
@@ -9192,7 +9199,7 @@ packages:
         dependencies:
             "@babel/runtime": 7.19.0
             "@emotion/cache": 11.10.3
-            "@emotion/react": 11.10.4_t4v2ig6j532zggk4vxuuplsqcq
+            "@emotion/react": 11.10.4_la3xqlsnhg2vupm5bldapjqfqq
             "@types/react-transition-group": 4.4.5
             memoize-one: 5.2.1
             prop-types: 15.8.1
@@ -9319,7 +9326,7 @@ packages:
             remotedev-serialize: 0.1.9
         dev: true
 
-    /redux-devtools-instrument/1.10.0:
+    /redux-devtools-instrument/1.10.0_redux@4.2.0:
         resolution:
             {
                 integrity: sha512-X8JRBCzX2ADSMp+iiV7YQ8uoTNyEm0VPFPd4T854coz6lvRiBrFSqAr9YAS2n8Kzxx8CJQotR0QF9wsMM+3DvA==
@@ -9329,6 +9336,7 @@ packages:
             redux: ^3.4.0 || ^4.0.0
         dependencies:
             lodash: 4.17.21
+            redux: 4.2.0
             symbol-observable: 1.2.0
         dev: true
 
@@ -9429,7 +9437,7 @@ packages:
         engines: { node: ">= 0.10" }
         dev: true
 
-    /remote-redux-devtools/0.5.16:
+    /remote-redux-devtools/0.5.16_redux@4.2.0:
         resolution:
             {
                 integrity: sha512-xZ2D1VRIWzat5nsvcraT6fKEX9Cfi+HbQBCwzNnUAM8Uicm/anOc60XGalcaDPrVmLug7nhDl2nimEa3bL3K9w==
@@ -9438,7 +9446,7 @@ packages:
             jsan: 3.1.14
             querystring: 0.2.1
             redux-devtools-core: 0.2.1
-            redux-devtools-instrument: 1.10.0
+            redux-devtools-instrument: 1.10.0_redux@4.2.0
             rn-host-detect: 1.2.0
             socketcluster-client: 14.3.2
         transitivePeerDependencies:
@@ -10445,6 +10453,33 @@ packages:
                 integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
             }
         engines: { node: ">=8" }
+        dev: true
+
+    /styled-components/5.3.5_7i5myeigehqah43i5u7wbekgba:
+        resolution:
+            {
+                integrity: sha512-ndETJ9RKaaL6q41B69WudeqLzOpY1A/ET/glXkNZ2T7dPjPqpPCXXQjDFYZWwNnE5co0wX+gTCqx9mfxTmSIPg==
+            }
+        engines: { node: ">=10" }
+        requiresBuild: true
+        peerDependencies:
+            react: ">= 16.8.0"
+            react-dom: ">= 16.8.0"
+            react-is: ">= 16.8.0"
+        dependencies:
+            "@babel/helper-module-imports": 7.18.6
+            "@babel/traverse": 7.19.0_supports-color@5.5.0
+            "@emotion/is-prop-valid": 1.2.0
+            "@emotion/stylis": 0.8.5
+            "@emotion/unitless": 0.7.5
+            babel-plugin-styled-components: 2.0.7_styled-components@5.3.5
+            css-to-react-native: 3.0.0
+            hoist-non-react-statics: 3.3.2
+            react: 18.2.0
+            react-dom: 18.2.0_react@18.2.0
+            react-is: 18.2.0
+            shallowequal: 1.1.0
+            supports-color: 5.5.0
         dev: true
 
     /styled-components/5.3.5_fane7jikarojcev26y27hpbhu4:
