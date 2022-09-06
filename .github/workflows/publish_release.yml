@@ -21,9 +21,9 @@ jobs:
             - name: Get Signatures
               run: |
                   cd updates
-                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v${{ github.event.release.tag_name }}/New.Horizons.Config.Editor_${{ github.event.release.tag_name }}_x64_en-US.msi.zip.sig
-                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v${{ github.event.release.tag_name }}/new-horizons-config-editor_${{ github.event.release.tag_name }}_amd64.AppImage.tar.gz.sig
-                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v${{ github.event.release.tag_name }}/New.Horizons.Config.Editor.app.tar.gz.sig
+                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/${{ github.event.release.tag_name }}/New.Horizons.Config.Editor_${{ github.event.release.tag_name }}_x64_en-US.msi.zip.sig
+                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/${{ github.event.release.tag_name }}/new-horizons-config-editor_${{ github.event.release.tag_name }}_amd64.AppImage.tar.gz.sig
+                  wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/${{ github.event.release.tag_name }}/New.Horizons.Config.Editor.app.tar.gz.sig
                   cd ..
 
             - name: Install pnpm
