@@ -24,6 +24,16 @@ jobs:
                   wget https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v${{ github.event.release.tag_name }}/New.Horizons.Config.Editor.app.tar.gz.sig
                   cd ..
 
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2.0.1
+              id: pnpm-install
+              with:
+                  version: 6.11.0
+                  run_install: false
+
+            - name: Install pnpm Dependencies
+              run: pnpm install
+
             - name: Update File
               run: |
                   cd updates
