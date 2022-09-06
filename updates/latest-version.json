@@ -1,19 +1,19 @@
 {
     "version": "0.6.5",
     "notes": "View changelog at: https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/tags/v0.6.5",
-    "pub_date": "2022-09-06T00:23:06.709Z",
+    "pub_date": "2022-09-06T01:08:54.572Z",
     "platforms": {
         "darwin-x86_64": {
-            "signature": "${BASE_STR}/download/v${version}/New.Horizons.Config.Editor.app.tar.gz.sig",
-            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v0.6.5/New.Horizons.Config.Editor.app.tar.gz"
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUWWlseGtORHhDekNuTkxhNXUvNm5jZ291R0o5OTh2RUlIRlU5Qy8veFREZ0dNWFZhNXpETGRjdW5rdkliNEM1OFJ4Y3FTdDZ0b3hGTld0YTFpTm10VEpwUWRvRVpYRXdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjYyNDIxNDMwCWZpbGU6TmV3IEhvcml6b25zIENvbmZpZyBFZGl0b3IuYXBwLnRhci5negplQVdNZDRtVDJ4TFhpYmpUbzREV1JJSWJ4eGgyZGNpYUg1L3Z3NHE5UmFiZ3l1LzJqQ0ZxK0FqWlpHWmlOMXJ3YkppZi9EL2VoenphRjc0ei9pc1BCQT09Cg==",
+            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/0.6.5/New.Horizons.Config.Editor.app.tar.gz"
         },
         "linux-x86_64": {
-            "signature": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v0.6.5/new-horizons-config-editor_0.6.5_amd64.AppImage.tar.gz.sig",
-            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v0.6.5/new-horizons-config-editor_0.6.5_amd64.AppImage.tar.gz"
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUWWlseGtORHhDekRKdzNiSTFCZkNZUUltamMwcWEvTWF5bnpWaGY3blVPMFB4R1JKYUpwL3p0ZzB0b2hhZTlDZUlLQzQyelpJWDkzMHlCdFFRYW1rZXV3WUVaMFlSc2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjYyNDIxNDY3CWZpbGU6bmV3LWhvcml6b25zLWNvbmZpZy1lZGl0b3JfMC42LjVfYW1kNjQuQXBwSW1hZ2UudGFyLmd6CjBRS0swSWkzNFhHWFJtVXZXQ3VZRW4vQkx3MFBPOHV2NXF5V1hYNjFMZm1MTUNZMis3b1JocVdFWEN0ODVuaTFYbWlqbk01cUZrQWdUcGx1OEgvbkFRPT0K",
+            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/0.6.5/new-horizons-config-editor_0.6.5_amd64.AppImage.tar.gz"
         },
         "windows-x86_64": {
-            "signature": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v0.6.5/New.Horizons.Config.Editor_0.6.5_x64_en-US.msi.zip.sig",
-            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/v0.6.5/New.Horizons.Config.Editor_0.6.5_x64_en-US.msi.zip"
+            "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUWWlseGtORHhDektyVDczY0lpdVJ1NjcrWmVGeDJNWVhtZTFjNFQ0amIvUHc2MVRoMXZwZzBOKzBMV1dyRXV0cnB5cE1HVEc3N21VTDJyLzUrQXZUVEhrVFpIaUZqM3d3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjYyNDIxNDUxCWZpbGU6TmV3IEhvcml6b25zIENvbmZpZyBFZGl0b3JfMC42LjVfeDY0X2VuLVVTLm1zaS56aXAKdWUwbXkxWEYrOW1UYThIZDFranVhTUREZEtUWEUyUi9FVEJFK2RiZVZpNnV2Z1pTWFNvcWc3R1JmNE1tZWt2dGhNQ0t6NGdxcVEvQmxBZ3dwbzUvQXc9PQo=",
+            "url": "https://github.com/Outer-Wilds-New-Horizons/nh-config-editor/releases/download/0.6.5/New.Horizons.Config.Editor_0.6.5_x64_en-US.msi.zip"
         }
     }
 }
