@@ -1,5 +1,4 @@
 const fs = require("fs");
-const dl = require("download");
 
 const version = JSON.parse(fs.readFileSync("../package.json", "utf8")).version;
 
