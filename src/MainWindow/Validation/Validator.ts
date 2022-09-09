@@ -1,8 +1,9 @@
 import { getFileName, getRootDirectory } from "../Store/FileUtils";
-import { OpenFile } from "../Store/OpenFilesSlice";
 import manifestRules from "./ManifestValidator";
 import planetRules from "./PlanetValidator";
 import systemRules from "./SystemValidator";
+
+import type { OpenFile } from "../Store/OpenFilesSlice";
 
 export type ValidationResult = {
     valid: boolean;

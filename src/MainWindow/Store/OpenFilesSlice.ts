@@ -205,18 +205,19 @@ const openFilesSlice = createSlice({
                 state.selectedTabIndex = newOpenFile.tabIndex;
             }
         },
-        createVoidFile: (state, action: PayloadAction<{ name: string; rootDir: string }>) => {
+        createVoidFile: (state, action: PayloadAction<{ name: string; rootDir: string, projectPath: string }>) => {
             const currentNum =
                 state.ids.filter((p) =>
                     (p as string).startsWith(`@@void@@${sep}${action.payload.rootDir}`)
                 ).length + 1;
             const newIndex = state.tabs.length;
             const newName = `new_${action.payload.name}_${currentNum}.json`;
+            const newPath = `@@void@@${sep}${action.payload.rootDir}${sep}${newName}`;
             const newFile: OpenFile = {
                 tabIndex: newIndex,
                 name: newName,
-                relativePath: `@@void@@${sep}${action.payload.rootDir}${sep}${newName}`,
-                absolutePath: "@@void@@",
+                relativePath: newPath,
+                absolutePath: `${action.projectPath}${sep}${newPath}`,
                 extension: "json",
                 diskData: null,
                 errors: [],
