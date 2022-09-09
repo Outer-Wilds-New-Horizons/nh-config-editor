@@ -1,4 +1,5 @@
 import { dialog } from "@tauri-apps/api";
+import { open } from "@tauri-apps/api/shell";
 import {
     ArrowRepeat,
     FileEarmarkArrowDownFill,
@@ -14,7 +15,7 @@ import MenuBarGroup from "./MenuBarGroup";
 
 function HelpItem() {
     const onClick = () => {
-        dialog.message("No");
+        open("https://nh.outerwildsmods.com/editor.html");
     };
     return (
         <IconDropDownItem
