@@ -220,7 +220,7 @@ const openFilesSlice = createSlice({
                 tabIndex: newIndex,
                 name: newName,
                 relativePath: newPath,
-                absolutePath: `${action.projectPath}${sep}${newPath}`,
+                absolutePath: `${action.payload.projectPath}${sep}${newPath}`,
                 extension: "json",
                 diskData: null,
                 errors: [],

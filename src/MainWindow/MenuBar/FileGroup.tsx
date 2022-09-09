@@ -35,6 +35,7 @@ function NewFileItem(props: {
     name: string;
     shortcutLetter: string;
 }) {
+    const project = useProject();
     const dispatch = useAppDispatch();
 
     return (
@@ -42,7 +43,13 @@ function NewFileItem(props: {
             annotation={`Ctrl+N+${props.shortcutLetter.toUpperCase()}`}
             shortcut={`ctrl+n+${props.shortcutLetter},command+n+${props.shortcutLetter}`}
             onClick={() =>
-                dispatch(createVoidFile({ name: props.name, rootDir: `${props.name}s` }))
+                dispatch(
+                    createVoidFile({
+                        name: props.name,
+                        rootDir: `${props.name}s`,
+                        projectPath: project.path
+                    })
+                )
             }
             id={`new_${props.name}`}
             label={`New ${props.label}`}
