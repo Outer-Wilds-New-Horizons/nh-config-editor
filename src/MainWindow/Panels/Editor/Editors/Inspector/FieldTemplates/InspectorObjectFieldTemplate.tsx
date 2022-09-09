@@ -1,4 +1,4 @@
-import { ObjectFieldTemplateProps } from "@rjsf/core";
+import type { ObjectFieldTemplateProps } from "@rjsf/core";
 import { useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
 import { CaretRightFill, InfoCircle } from "react-bootstrap-icons";
@@ -19,6 +19,7 @@ function InspectorObjectFieldTemplate({
     const [open, setOpen] = useState(!shouldRenderLabel);
 
     const onAddKey = () => {
+        if (!open) setOpen(true);
         if (schema.additionalProperties && schema.additionalProperties !== true) {
             onAddClick(schema)();
         }

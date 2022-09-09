@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps } from "@rjsf/core";
+import type { ArrayFieldTemplateProps } from "@rjsf/core";
 import { cloneElement, useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
 import { CaretRightFill, InfoCircle } from "react-bootstrap-icons";
@@ -22,6 +22,11 @@ function InspectorArrayFieldTemplate({
             title: str,
             name: str
         });
+    }
+
+    const onAddClickedLocal = () => {
+        if (!open) setOpen(true);
+        onAddClick();
     }
 
     return (
@@ -48,7 +53,7 @@ function InspectorArrayFieldTemplate({
                         className="float-end fw-bold rounded-pill d-block my-auto py-0 px-2"
                         size="sm"
                         aria-label="Add Item"
-                        onClick={onAddClick}
+                        onClick={onAddClickedLocal}
                         variant="outline-success"
                     >
                         Add Item
