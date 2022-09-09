@@ -27,7 +27,7 @@ function InspectorArrayFieldTemplate({
     const onAddClickedLocal = () => {
         if (!open) setOpen(true);
         onAddClick();
-    }
+    };
 
     return (
         <div className="border lt-border rounded">

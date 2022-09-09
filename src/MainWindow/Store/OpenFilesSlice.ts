@@ -205,7 +205,10 @@ const openFilesSlice = createSlice({
                 state.selectedTabIndex = newOpenFile.tabIndex;
             }
         },
-        createVoidFile: (state, action: PayloadAction<{ name: string; rootDir: string, projectPath: string }>) => {
+        createVoidFile: (
+            state,
+            action: PayloadAction<{ name: string; rootDir: string; projectPath: string }>
+        ) => {
             const currentNum =
                 state.ids.filter((p) =>
                     (p as string).startsWith(`@@void@@${sep}${action.payload.rootDir}`)
