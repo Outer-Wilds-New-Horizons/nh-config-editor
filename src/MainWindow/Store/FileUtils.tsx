@@ -261,7 +261,7 @@ export const getInitialContent = (rootDir: string) => {
             return JSON.stringify(
                 {
                     $schema:
-                        "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/main/NewHorizons/Schemas/system_schema.json",
+                        "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/main/NewHorizons/Schemas/star_system_schema.json",
                     Vessel: null
                 },
                 null,
