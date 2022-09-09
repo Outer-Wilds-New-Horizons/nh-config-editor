@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Trash3 } from "react-bootstrap-icons";
+import { X } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Project } from "../Common/Project";
@@ -38,7 +38,7 @@ function RecentProject(props: RecentProjectProps) {
                 variant="outline-danger"
                 size="sm"
             >
-                <Trash3 />
+                <X />
             </Button>
             <span
                 className={`user-select-none${props.project.valid ? "" : " text-muted fw-light"}`}
