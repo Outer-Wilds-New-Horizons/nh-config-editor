@@ -77,7 +77,12 @@
             "windows": {
                 "certificateThumbprint": null,
                 "digestAlgorithm": "sha256",
-                "timestampUrl": ""
+                "timestampUrl": "",
+                "wix": {
+                    "license": "../LICENSE",
+                    "bannerPath": "installer-images/TopBanner.png",
+                    "dialogImagePath": "installer-images/Background.png"
+                }
             }
         },
         "security": {
