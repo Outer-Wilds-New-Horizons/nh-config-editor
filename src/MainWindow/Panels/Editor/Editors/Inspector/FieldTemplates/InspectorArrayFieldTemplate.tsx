@@ -40,7 +40,6 @@ function InspectorArrayFieldTemplate({
         onAddClick();
     };
 
-    console.debug(title);
     const tutorialLink = tutorialMap[title];
 
     return (

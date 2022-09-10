@@ -12,6 +12,7 @@ specifiers:
     "@types/json-schema": ^7.0.11
     "@types/react": ^18.0.18
     "@types/react-bootstrap": ^0.32.30
+    "@types/react-color": ^3.0.6
     "@types/react-dom": ^18.0.6
     "@types/sortablejs": ^1.13.0
     "@typescript-eslint/eslint-plugin": ^5.36.2
@@ -31,6 +32,7 @@ specifiers:
     react: ^18.2.0
     react-bootstrap: ^2.5.0
     react-bootstrap-icons: ^1.8.4
+    react-color: ^2.19.3
     react-devtools: ^4.25.0
     react-dom: ^18.2.0
     react-hotkeys-hook: ^3.4.7
@@ -59,6 +61,7 @@ dependencies:
     react: 18.2.0
     react-bootstrap: 2.5.0_63dfw6rfgd64rl77ptfma4cvt4
     react-bootstrap-icons: 1.8.4_react@18.2.0
+    react-color: 2.19.3_react@18.2.0
     react-dom: 18.2.0_react@18.2.0
     react-hotkeys-hook: 3.4.7_biqbaboplfbrettd7655fr4n2y
     react-jsonschema-form: 1.8.1_react@18.2.0
@@ -73,6 +76,7 @@ devDependencies:
     "@types/json-schema": 7.0.11
     "@types/react": 18.0.18
     "@types/react-bootstrap": 0.32.30
+    "@types/react-color": 3.0.6
     "@types/react-dom": 18.0.6
     "@types/sortablejs": 1.13.0
     "@typescript-eslint/eslint-plugin": 5.36.2_2l2r3i3lm6jysqd4ac3ql4n2mm
@@ -976,6 +980,17 @@ packages:
                 integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
             }
         dev: true
+
+    /@icons/material/0.2.4_react@18.2.0:
+        resolution:
+            {
+                integrity: sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
+            }
+        peerDependencies:
+            react: "*"
+        dependencies:
+            react: 18.2.0
+        dev: false
 
     /@josephg/resolvable/1.0.1:
         resolution:
@@ -2237,6 +2252,16 @@ packages:
             "@types/react": 18.0.18
         dev: true
 
+    /@types/react-color/3.0.6:
+        resolution:
+            {
+                integrity: sha512-OzPIO5AyRmLA7PlOyISlgabpYUa3En74LP8mTMa0veCA719SvYQov4WLMsHvCgXP+L+KI9yGhYnqZafVGG0P4w==
+            }
+        dependencies:
+            "@types/react": 18.0.18
+            "@types/reactcss": 1.2.6
+        dev: true
+
     /@types/react-dom/18.0.6:
         resolution:
             {
@@ -2273,6 +2298,15 @@ packages:
             "@types/prop-types": 15.7.5
             "@types/scheduler": 0.16.2
             csstype: 3.1.0
+
+    /@types/reactcss/1.2.6:
+        resolution:
+            {
+                integrity: sha512-qaIzpCuXNWomGR1Xq8SCFTtF4v8V27Y6f+b9+bzHiv087MylI/nTCqqdChNeWS7tslgROmYB7yeiruWX7WnqNg==
+            }
+        dependencies:
+            "@types/react": 18.0.18
+        dev: true
 
     /@types/redux-devtools-themes/1.0.0:
         resolution:
@@ -6922,6 +6956,7 @@ packages:
             chalk: 2.4.2
             diff-match-patch: 1.0.5
         dev: true
+        bundledDependencies: []
 
     /jsonfile/4.0.0:
         resolution:
@@ -7636,6 +7671,13 @@ packages:
             escape-string-regexp: 4.0.0
         dev: true
         optional: true
+
+    /material-colors/1.2.6:
+        resolution:
+            {
+                integrity: sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
+            }
+        dev: false
 
     /media-typer/0.3.0:
         resolution:
@@ -8943,6 +8985,24 @@ packages:
             warning: 4.0.3
         dev: false
 
+    /react-color/2.19.3_react@18.2.0:
+        resolution:
+            {
+                integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==
+            }
+        peerDependencies:
+            react: "*"
+        dependencies:
+            "@icons/material": 0.2.4_react@18.2.0
+            lodash: 4.17.21
+            lodash-es: 4.17.21
+            material-colors: 1.2.6
+            prop-types: 15.8.1
+            react: 18.2.0
+            reactcss: 1.2.3_react@18.2.0
+            tinycolor2: 1.4.2
+        dev: false
+
     /react-devtools-core/4.25.0:
         resolution:
             {
@@ -9264,6 +9324,18 @@ packages:
         engines: { node: ">=0.10.0" }
         dependencies:
             loose-envify: 1.4.0
+
+    /reactcss/1.2.3_react@18.2.0:
+        resolution:
+            {
+                integrity: sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
+            }
+        peerDependencies:
+            react: "*"
+        dependencies:
+            lodash: 4.17.21
+            react: 18.2.0
+        dev: false
 
     /readable-stream/2.3.7:
         resolution:
@@ -10669,6 +10741,13 @@ packages:
                 integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
             }
         dev: true
+
+    /tinycolor2/1.4.2:
+        resolution:
+            {
+                integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
+            }
+        dev: false
 
     /tinypool/0.2.4:
         resolution:

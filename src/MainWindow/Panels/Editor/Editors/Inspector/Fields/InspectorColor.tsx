@@ -1,69 +1,62 @@
 import { FieldProps } from "@rjsf/core";
 import { useState } from "react";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
+import { OverlayTrigger, Popover } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
+import { ChromePicker } from "react-color";
+import { Checkboard } from "react-color/lib/components/common";
+import { ThemeMonacoMap } from "../../../../../../Common/Theme/ThemeManager";
+import { useSettings } from "../../../../../../Wrapper";
 
 function InspectorColor(props: FieldProps) {
-    const [r, setCurrentRed] = useState(props.formData?.r ?? 0);
-    const [g, setCurrentGreen] = useState(props.formData?.g ?? 0);
-    const [b, setCurrentBlue] = useState(props.formData?.b ?? 0);
-    const [a, setAlpha] = useState(props.formData?.a ?? 255);
+    const { theme } = useSettings();
+    const [showPicker, setShowPicker] = useState(false);
 
-    const onUpdate = (rawVal: string, name: string) => {
-        let newVal = Number.parseFloat(rawVal);
-        newVal = Number.isNaN(newVal) ? 0 : newVal;
-        if (name === "r") {
-            setCurrentRed(newVal);
-            props.onChange({ r: newVal, g, b, a });
-        } else if (name === "g") {
-            setCurrentGreen(newVal);
-            props.onChange({ r, g: newVal, b, a });
-        } else if (name === "b") {
-            setCurrentBlue(newVal);
-            props.onChange({ r, g, b: newVal, a });
-        } else {
-            setAlpha(newVal);
-            props.onChange({ r, g, b, a: newVal });
-        }
-    };
+    const currentColor = { ...props.formData, a: props.formData.a / 255 };
+
+    const picker = (
+        <Popover>
+            <Popover.Body className="p-2">
+                <ChromePicker
+                    className="color-picker"
+                    color={currentColor}
+                    onChange={(c) => {
+                        if (
+                            c.rgb.r !== undefined &&
+                            c.rgb.g !== undefined &&
+                            c.rgb.b !== undefined &&
+                            c.rgb.a !== undefined
+                        ) {
+                            props.onChange({ ...c.rgb, a: c.rgb.a! * 255 });
+                        }
+                    }}
+                />
+            </Popover.Body>
+        </Popover>
+    );
+
+    const boardColors = ThemeMonacoMap[theme] === "vs" ? ["#fff", "#aaa"] : ["#111", "#222"];
 
     return (
-        <Row className="gx-1">
-            <Col>
-                <Form.Control
-                    type={"number"}
-                    min={0}
-                    value={r}
-                    onChange={(e) => onUpdate(e.target.value, "r")}
+        <OverlayTrigger
+            rootClose
+            trigger="click"
+            onToggle={(nextShow) => setShowPicker(nextShow)}
+            placement="auto"
+            show={showPicker}
+            overlay={picker}
+        >
+            <Button className="w-100 position-relative py-3 border-0">
+                <Checkboard white={boardColors[0]} grey={boardColors[1]} />
+                <div
+                    className="position-absolute top-0 start-0 end-0 bottom-0"
+                    style={{
+                        backgroundColor: `rgba(${props.formData.r}, ${props.formData.g}, ${
+                            props.formData.b
+                        }, ${props.formData.a / 255})`
+                    }}
                 />
-            </Col>
-            <Col>
-                <Form.Control
-                    type={"number"}
-                    min={0}
-                    value={g}
-                    onChange={(e) => onUpdate(e.target.value, "g")}
-                />
-            </Col>
-            <Col>
-                <Form.Control
-                    type={"number"}
-                    min={0}
-                    value={b}
-                    onChange={(e) => onUpdate(e.target.value, "b")}
-                />
-            </Col>
-            <Col>
-                <Form.Control
-                    type={"number"}
-                    min={0}
-                    max={255}
-                    value={a}
-                    onChange={(e) => onUpdate(e.target.value, "a")}
-                />
-            </Col>
-        </Row>
+            </Button>
+        </OverlayTrigger>
     );
 }
 

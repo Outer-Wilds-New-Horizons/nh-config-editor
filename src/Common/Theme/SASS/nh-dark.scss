@@ -45,6 +45,34 @@ $dropdown-bg: $body-bg;
     color: $body-color !important;
 }
 
+.color-picker {
+    background-color: $gray-800 !important;
+    font-family: $font-family-base !important;
+}
+
+.color-picker label {
+    color: $body-color !important;
+}
+
+.color-picker svg {
+    fill: $text-muted !important;
+}
+
+.color-picker svg:hover {
+    fill: $body-bg !important;
+}
+
+.color-picker input {
+    background-color: $body-bg !important;
+    color: $input-color !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.color-picker input:focus {
+    border: none;
+}
+
 .lt-border {
     border-color: $gray-700 !important;
 }
