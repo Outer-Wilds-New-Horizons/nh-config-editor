@@ -14,7 +14,8 @@ import WrapIfAdditional from "./WrapIfAdditional";
 const { ADDITIONAL_PROPERTY_FLAG } = utils;
 
 function InspectorFieldTemplate(props: FieldTemplateProps) {
-    if (props.label !== undefined && props.label.startsWith("$")) return <></>;
+    if (props.label !== undefined && (props.label.startsWith("$") || props.label === "extras"))
+        return <></>;
 
     const isAdditional = Object.prototype.hasOwnProperty.call(
         props.schema,

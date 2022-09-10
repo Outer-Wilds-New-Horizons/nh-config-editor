@@ -309,9 +309,7 @@ export const getDocsLinkForNHConfig = (type: string) =>
     `https://nh.outerwildsmods.com/Schemas/${type.split(".")[0]}.html`;
 
 export const getModManifestSchemaLink = (branch: string) =>
-    `https://raw.githubusercontent.com/amazingalek/owml/${
-        branch === "main" ? "master" : branch
-    }/schemas/manifest_schema.json`;
+    "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json";
 
 // SAVING
 

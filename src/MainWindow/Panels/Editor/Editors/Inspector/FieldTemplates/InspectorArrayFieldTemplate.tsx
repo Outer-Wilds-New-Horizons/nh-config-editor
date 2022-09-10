@@ -1,9 +1,20 @@
 import type { ArrayFieldTemplateProps } from "@rjsf/core";
+import { shell } from "@tauri-apps/api";
 import { cloneElement, useState } from "react";
 import { Button, Collapse } from "react-bootstrap";
-import { CaretRightFill, InfoCircle } from "react-bootstrap-icons";
+import { BoxArrowUpRight, CaretRightFill, InfoCircle } from "react-bootstrap-icons";
 import { camelToTitleCase } from "../../../../../../Common/Utils";
 import IconPopover from "../../../../../../Common/Popover/IconPopover";
+
+const baseLink = "https://nh.outerwildsmods.com/tutorials/";
+
+const tutorialMap: { [key: string]: string } = {
+    dialogue: `${baseLink}dialogue.html`,
+    entryPositions: `${baseLink}ship_log.html#entry-layout`,
+    initialReveal: `${baseLink}ship_log.html#initial-reveal`,
+    curiosities: `${baseLink}ship_log.html#curiosity-colors`,
+    curve: `${baseLink}planet_gen.html#variable-size-modules`
+};
 
 function InspectorArrayFieldTemplate({
     canAdd,
@@ -29,6 +40,9 @@ function InspectorArrayFieldTemplate({
         onAddClick();
     };
 
+    console.debug(title);
+    const tutorialLink = tutorialMap[title];
+
     return (
         <div className="border lt-border rounded">
             <div className="d-flex justify-content-between p-2">
@@ -46,6 +60,19 @@ function InspectorArrayFieldTemplate({
                             title={title}
                             body={schema.description}
                         />
+                    )}
+                    {tutorialLink !== undefined && (
+                        <a
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                shell.open(tutorialLink);
+                            }}
+                            className="link-secondary ms-2"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <BoxArrowUpRight className="fs-6" />
+                        </a>
                     )}
                 </h4>
                 {canAdd && (
