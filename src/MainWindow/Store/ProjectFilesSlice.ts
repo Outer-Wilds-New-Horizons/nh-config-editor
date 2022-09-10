@@ -87,17 +87,18 @@ const projectFilesSlice = createSlice({
     initialState: initialState as ProjectFilesSliceState,
     reducers: {
         invalidate: (state) => {
-            projectFilesAdapter.removeAll(state);
+            // projectFilesAdapter.removeAll(state);
             state.status = "idle";
         }
     },
     extraReducers: (builder) => {
         builder.addCase(loadProject.fulfilled, (state, action) => {
-            projectFilesAdapter.upsertMany(state, action.payload);
+            projectFilesAdapter.setMany(state, action.payload);
+            const filesToRemove = state.ids.filter(
+                (id) => !action.payload.some((file) => file.relativePath === id)
+            );
+            projectFilesAdapter.removeMany(state, filesToRemove);
             state.status = "done";
-        });
-        builder.addCase(loadProject.pending, (state) => {
-            state.status = "loading";
         });
         builder.addCase(loadProject.rejected, (state, action) => {
             state.status = "error";
