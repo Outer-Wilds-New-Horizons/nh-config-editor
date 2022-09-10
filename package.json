@@ -2,7 +2,7 @@
     "name": "nh-config-editor",
     "private": true,
     "packageManager": "pnpm@6.11.0",
-    "version": "0.6.6",
+    "version": "0.7.0",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "schema": "ts-json-schema-generator -f tsconfig.json -p src/Common/AppData/Settings.ts -t Settings -o src/Common/AppData/SettingsSchema.json --no-type-check --minify true && prettier --write ./src/Common/AppData/SettingsSchema.json",
