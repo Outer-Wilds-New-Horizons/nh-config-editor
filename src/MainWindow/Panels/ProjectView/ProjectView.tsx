@@ -22,7 +22,7 @@ function ProjectView(props: ProjectViewProps) {
 
     const projectLoaded = useAppSelector((state) => state.project.status === "done");
     const projectPath = useAppSelector((state) => state.project.path);
-    const projectUniqueName = useAppSelector((state) => state.project.uniqueName);
+    const projectName = useAppSelector((state) => state.project.name);
 
     const status = useAppSelector((state) => state.projectFiles.status);
     const error = useAppSelector((state) => state.projectFiles.error);
@@ -44,7 +44,7 @@ function ProjectView(props: ProjectViewProps) {
                     <Col className="d-flex align-items-center justify-content-center my-1 p-0">
                         <ProjectViewHeader
                             headerPath={`${projectPath}${sep}subtitle.png`}
-                            headerFallback={projectUniqueName}
+                            headerFallback={projectName}
                         />
                     </Col>
                 </Row>
