@@ -1,34 +1,39 @@
+import { sep } from "@tauri-apps/api/path";
 import { useEffect } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { connect } from "react-redux";
 import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
 import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
-import { loadProject, selectProjectFileByParentDirFactory } from "../../Store/ProjectFilesSlice";
+import {
+    loadProjectFiles,
+    selectProjectFileByParentDirFactory
+} from "../../Store/ProjectFilesSlice";
 import { RootState } from "../../Store/Store";
 import ProjectItemView from "./ProjectItemView";
 import ProjectViewHeader from "./ProjectViewHeader";
 
 type ProjectViewProps = {
-    header: string;
-    headerPath: string;
-    projectPath: string;
     paths: string[];
 };
 
 function ProjectView(props: ProjectViewProps) {
     const dispatch = useAppDispatch();
 
+    const projectLoaded = useAppSelector((state) => state.project.status === "done");
+    const projectPath = useAppSelector((state) => state.project.path);
+    const projectUniqueName = useAppSelector((state) => state.project.uniqueName);
+
     const status = useAppSelector((state) => state.projectFiles.status);
     const error = useAppSelector((state) => state.projectFiles.error);
 
     useEffect(() => {
-        if (status === "idle") {
-            dispatch(loadProject(props.projectPath));
+        if (status === "idle" && projectLoaded) {
+            dispatch(loadProjectFiles(projectPath));
         }
-    }, [status, dispatch]);
+    }, [status, dispatch, projectLoaded]);
 
-    if (status === "loading") {
+    if (status === "loading" || status === "idle") {
         return <CenteredSpinner />;
     } else if (status === "error") {
         return <div>{error ?? "Unknown Error"}</div>;
@@ -38,8 +43,8 @@ function ProjectView(props: ProjectViewProps) {
                 <Row className="border-bottom lt-border">
                     <Col className="d-flex align-items-center justify-content-center my-1 p-0">
                         <ProjectViewHeader
-                            headerPath={props.headerPath}
-                            headerFallback={props.header}
+                            headerPath={`${projectPath}${sep}subtitle.png`}
+                            headerFallback={projectUniqueName}
                         />
                     </Col>
                 </Row>

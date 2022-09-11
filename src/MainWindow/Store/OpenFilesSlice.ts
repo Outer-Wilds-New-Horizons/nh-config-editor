@@ -8,6 +8,7 @@ import {
 } from "@reduxjs/toolkit";
 import { dialog } from "@tauri-apps/api";
 import { ask, message } from "@tauri-apps/api/dialog";
+import { emit } from "@tauri-apps/api/event";
 import { sep } from "@tauri-apps/api/path";
 import { tauriCommands } from "../../Common/TauriCommands";
 import validate, { ValidationError } from "../Validation/Validator";
@@ -74,6 +75,17 @@ export const saveFileData = createAsyncThunk(
             }
         } else {
             await tauriCommands.writeFileText(file.absolutePath, await getContentToSave(file));
+            if (file.name === "nh_proj.json") {
+                const restart = await dialog.ask(
+                    "Changing the project settings requires a reload, would you like to reload now?",
+                    {
+                        title: "Restart required"
+                    }
+                );
+                if (restart) {
+                    await emit("nh://reload");
+                }
+            }
             return { createdNewFile: false, newPath: file.absolutePath };
         }
     }

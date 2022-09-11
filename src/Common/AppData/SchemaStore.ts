@@ -11,12 +11,12 @@ import shiplogSchema from "../../MainWindow/Schemas/shiplog_schema.xsd";
 import starSystemSchema from "../../MainWindow/Schemas/star_system_schema.json";
 import text_schema from "../../MainWindow/Schemas/text_schema.xsd";
 import translationSchema from "../../MainWindow/Schemas/translation_schema.json";
+import projectSettingsSchema from "../ProjectSettingsSchema.json";
 import {
     getModManifestSchemaLink,
     getSchemaLinkForNHConfig
 } from "../../MainWindow/Store/FileUtils";
 import AppData from "./AppData";
-import { SettingsManager } from "./Settings";
 import DiagnosticsOptions = monaco.languages.json.DiagnosticsOptions;
 
 const schemaTypes = [
@@ -27,7 +27,8 @@ const schemaTypes = [
     "manifest_schema.json",
     "shiplog_schema.xsd",
     "text_schema.xsd",
-    "dialogue_schema.xsd"
+    "dialogue_schema.xsd",
+    "project_settings_schema.json"
 ];
 
 export const fallbackSchemas: { [key: string]: JSONSchema7 | string } = {
@@ -41,21 +42,23 @@ export const fallbackSchemas: { [key: string]: JSONSchema7 | string } = {
     "text_schema.xsd": text_schema
 };
 
-export type SchemaStore = {
-    lastBranch: string;
+export type SchemaEntry = JSONSchema7 | string;
+
+export type SchemaRegistry = { [key: string]: SchemaEntry };
+
+export type SchemaBranch = {
     lastUpdated: Date;
-    schemas: { [key: string]: JSONSchema7 | string };
+    schemas: SchemaRegistry;
 };
 
-const manager = new AppData<SchemaStore>("schema_store.json", async () => ({
-    lastUpdated: new Date(),
-    schemas: {},
-    lastBranch: (await SettingsManager.get()).schemaBranch
-}));
+export type SchemaStore = {
+    branches: { [key: string]: SchemaBranch };
+};
 
-export const getMonacoJsonDiagnostics = async (): Promise<DiagnosticsOptions> => {
-    const store = await SchemaStoreManager.get();
-    const branch = (await SettingsManager.get()).schemaBranch;
+const manager = new AppData<SchemaStore>("schema_store.json", { branches: {} });
+
+export const getMonacoJsonDiagnostics = async (branch: string): Promise<DiagnosticsOptions> => {
+    const schemas = await SchemaStoreManager.getBranch(branch);
     return {
         schemaRequest: "ignore",
         schemaValidation: "error",
@@ -63,40 +66,48 @@ export const getMonacoJsonDiagnostics = async (): Promise<DiagnosticsOptions> =>
         trailingCommas: "error",
         schemas: [
             {
-                uri: getSchemaLinkForNHConfig("planet_schema.json", branch),
+                uri: getSchemaLinkForNHConfig("body_schema.json", branch),
                 fileMatch: ["planets/**/*.json", "@@void@@/planets/*.json"],
-                schema: store.schemas["planet"]
+                schema: schemas["body_schema.json"]
             },
             {
                 uri: getSchemaLinkForNHConfig("star_system_schema.json", branch),
                 fileMatch: ["systems/**/*.json", "@@void@@/systems/*.json"],
-                schema: store.schemas["system"]
+                schema: schemas["star_system_schema.json"]
             },
             {
                 uri: getSchemaLinkForNHConfig("translation_schema.json", branch),
                 fileMatch: ["translations/**/*.json", "@@void@@/translations/*.json"],
-                schema: store.schemas["translation"]
+                schema: schemas["translation_schema.json"]
             },
             {
                 uri: getSchemaLinkForNHConfig("addon_manifest_schema.json", branch),
                 fileMatch: ["addon-manifest.json"],
-                schema: store.schemas["addon_manifest"]
+                schema: schemas["addon_manifest_schema.json"]
             },
             {
-                uri: getSchemaLinkForNHConfig("mod_manifest_schema.json", branch),
+                uri: getModManifestSchemaLink(),
                 fileMatch: ["manifest.json"],
-                schema: store.schemas["mod_manifest"]
+                schema: schemas["manifest_schema.json"]
+            },
+            {
+                uri: "#/project_settings_schema.json",
+                fileMatch: ["nh_proj.json"],
+                schema: projectSettingsSchema
             }
         ]
     };
 };
 
 export default class SchemaStoreManager {
-    static async fetchSchema<T>(name: string, xsd: boolean, branch: string): Promise<T> {
+    private static async fetchSchema<T>(name: string, xsd: boolean, branch: string): Promise<T> {
         console.debug(`Fetching schema: ${name}`);
+        if (name === "project_settings_schema.json") {
+            return projectSettingsSchema as unknown as T;
+        }
         const link =
             name === "manifest_schema.json"
-                ? getModManifestSchemaLink(branch)
+                ? getModManifestSchemaLink()
                 : getSchemaLinkForNHConfig(name, branch);
         const response = await fetch<T>(link, {
             method: "GET",
@@ -116,42 +127,39 @@ export default class SchemaStoreManager {
         }
     }
 
-    static async getSchema<T>(
-        store: SchemaStore,
-        name: string,
-        xsd: boolean,
-        branch: string
-    ): Promise<T> {
-        if (store.schemas[name]) {
-            return store.schemas[name] as T;
-        } else {
-            return await SchemaStoreManager.fetchSchema<T>(name, xsd, branch);
-        }
+    private static async fetchBranch(store: SchemaStore, branch: string) {
+        const schemas = await Promise.all(
+            schemaTypes.map(async (name) => {
+                const xsd = name.endsWith(".xsd");
+                const schema = await SchemaStoreManager.fetchSchema(name, xsd, branch);
+                return { [name]: schema };
+            })
+        );
+        store.branches[branch] = {
+            lastUpdated: new Date(),
+            schemas: Object.assign({}, ...schemas)
+        };
+        await manager.save(store);
+        return store.branches[branch].schemas;
     }
 
-    static async get(): Promise<SchemaStore> {
-        const currentStore = await manager.get();
-        const branch = (await SettingsManager.get()).schemaBranch;
-        // Check if the store is on a different branch or if it is outdated (has one day passed since last update)
-        if (
-            currentStore.lastBranch !== branch ||
-            new Date().getTime() - new Date(currentStore.lastUpdated).getTime() >
-                1000 * 60 * 60 * 24
-        ) {
+    static async getBranch(branch: string): Promise<SchemaRegistry> {
+        let store = await manager.get();
+        // Older versions of the schema store don't have a branches object
+        // so, we need to migrate them
+        if (!store.branches) {
             await manager.reset();
-            return await SchemaStoreManager.get();
+            store = await manager.getDefaultState();
         }
-        const newStore: SchemaStore = { ...currentStore };
-        for (const name of schemaTypes) {
-            newStore.schemas[name] = await SchemaStoreManager.getSchema(
-                currentStore,
-                name,
-                name.endsWith(".xsd"),
-                branch
-            );
+        const branchStore = store.branches[branch];
+        if (
+            !branchStore ||
+            new Date().getTime() - new Date(branchStore.lastUpdated).getTime() > 86400000 // <- 1 day
+        ) {
+            return SchemaStoreManager.fetchBranch(store, branch);
+        } else {
+            return store.branches[branch].schemas;
         }
-        await manager.save(newStore);
-        return newStore;
     }
 
     static async reset() {

@@ -18,6 +18,7 @@ fn filter_files(entry: &walkdir::DirEntry, root_path: &Path) -> bool {
     return !(
         file_name.starts_with(".") ||
             file_name.eq("config.json") ||
+            file_name.eq("nh_proj.json") ||
             file_name.eq("build") ||
             top_dir.eq("build") ||
             top_dir.starts_with(".") ||

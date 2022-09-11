@@ -1,4 +1,4 @@
-import { Project } from "../Project";
+import { errorProject, loadProject, Project } from "../Project";
 import AppData from "./AppData";
 
 type RawRecentProjects = string[];
@@ -11,11 +11,11 @@ export default class RecentProjects {
         const projects = [];
         for (const path of projectPaths) {
             if (projects.filter((p) => p.path === path).length === 0) {
-                let project = new Project("Error Loading Project", "", path);
+                let project = errorProject(path);
                 try {
-                    project = await Project.load(path);
+                    project = await loadProject(path);
                 } catch (e) {
-                    project = new Project("Error Loading Project", "", path);
+                    project = errorProject(path);
                 }
                 projects.push(project);
             }

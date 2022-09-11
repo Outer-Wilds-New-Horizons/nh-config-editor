@@ -5,7 +5,9 @@
     "version": "0.7.0",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
-        "schema": "ts-json-schema-generator -f tsconfig.json -p src/Common/AppData/Settings.ts -t Settings -o src/Common/AppData/SettingsSchema.json --no-type-check --minify true && prettier --write ./src/Common/AppData/SettingsSchema.json",
+        "settings-schema": "ts-json-schema-generator -f tsconfig.json -p src/Common/AppData/Settings.ts -t Settings -o src/Common/AppData/SettingsSchema.json --no-type-check --minify true && prettier --write ./src/Common/AppData/SettingsSchema.json",
+        "proj-settings-schema": "ts-json-schema-generator -f tsconfig.json -p src/Common/Project.ts -t ProjectSettings -o src/Common/ProjectSettingsSchema.json --no-type-check --minify true && prettier --write ./src/Common/ProjectSettingsSchema.json",
+        "schema": "pnpm settings-schema && pnpm proj-settings-schema",
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",

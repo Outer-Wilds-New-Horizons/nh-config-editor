@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { X } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-
-import type { Project } from "../Common/Project";
+import { Project } from "../Common/Project";
 
 export type RecentProjectProps = {
     project: Project;

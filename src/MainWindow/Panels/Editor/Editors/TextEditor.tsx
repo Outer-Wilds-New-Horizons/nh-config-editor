@@ -7,13 +7,14 @@ import CenteredSpinner from "../../../../Common/Spinner/CenteredSpinner";
 import { ThemeMonacoMap } from "../../../../Common/Theme/ThemeManager";
 import { getMonacoLanguage } from "../../../Store/FileUtils";
 import { useSettings } from "../../../../Wrapper";
-import { useAppDispatch } from "../../../Store/Hooks";
+import { useAppDispatch, useAppSelector } from "../../../Store/Hooks";
 import { setOtherErrors } from "../../../Store/OpenFilesSlice";
 import { IEditorProps } from "../Editor";
 import showErrors from "./TextEditorValidator";
 import IStandaloneCodeEditor = monaco.editor.IStandaloneCodeEditor;
 
 function TextEditor(props: IEditorProps) {
+    const schemaBranch = useAppSelector((state) => state.project.settings.schemaBranch);
     const dispatch = useAppDispatch();
     const model = useRef<[Monaco, IStandaloneCodeEditor]>();
     const { theme } = useSettings();
@@ -29,7 +30,8 @@ function TextEditor(props: IEditorProps) {
                 (await getCurrent().theme()) === "dark" ? "Default Dark" : "Default Light";
         }
         monacoInstance.editor.setTheme(ThemeMonacoMap[chosenTheme]);
-        const jsonDiagnostics = await getMonacoJsonDiagnostics();
+        const jsonDiagnostics = await getMonacoJsonDiagnostics(schemaBranch);
+        console.debug("Got JSON diagnostics", jsonDiagnostics);
         monacoInstance.languages.json.jsonDefaults.setDiagnosticsOptions(jsonDiagnostics);
         showErrors(props.file, model);
     };
@@ -44,7 +46,6 @@ function TextEditor(props: IEditorProps) {
             onValidate={() => {
                 if (model.current !== undefined) {
                     const errors = model.current[0].editor.getModelMarkers({});
-                    console.debug(errors);
                     if (props.file.otherErrors !== errors.length > 0) {
                         dispatch(
                             setOtherErrors({
@@ -59,6 +60,7 @@ function TextEditor(props: IEditorProps) {
             language={getMonacoLanguage(props.file)}
             value={props.fileData}
             className="z-40"
+            path={props.file.relativePath}
             onMount={handleComponentDidMount}
         />
     );

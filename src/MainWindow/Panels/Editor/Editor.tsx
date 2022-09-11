@@ -1,7 +1,6 @@
 import { ReactElement, useEffect, useMemo, useRef } from "react";
 import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
-import { SchemaStore } from "../../../Common/AppData/SchemaStore";
 import CenteredSpinner from "../../../Common/Spinner/CenteredSpinner";
 import { useAppDispatch, useAppSelector } from "../../Store/Hooks";
 import {
@@ -23,14 +22,12 @@ import TextEditor from "./Editors/TextEditor";
 
 export type EditorProps = {
     relativePath: string;
-    schemaStore: SchemaStore;
     isSelected?: boolean;
 };
 
 export type IEditorProps = {
     file: OpenFile;
     fileData: string;
-    schemaStore: SchemaStore;
     onChange?: (value: string) => void;
 };
 
@@ -44,6 +41,8 @@ const determineEditor = (
     } else if (isAudio(file)) {
         ChosenEditor = AudioView;
     } else if (usesInspector(file) && !alwaysUseTextEditor) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         ChosenEditor = Inspector;
     }
     return ChosenEditor;
@@ -108,7 +107,6 @@ function Editor(props: EditorProps) {
                         onChange={onDataChanged}
                         file={file}
                         fileData={file.memoryData!}
-                        schemaStore={props.schemaStore}
                     />
                 </Col>
             );

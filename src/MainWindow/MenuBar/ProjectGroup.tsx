@@ -2,16 +2,15 @@ import { shell } from "@tauri-apps/api";
 import { CaretRightFill, FolderFill, Tools, Wrench } from "react-bootstrap-icons";
 import IconDropDownItem from "../../Common/IconDropDownItem";
 import { openRunWindow } from "../../RunWindow/RunWindow";
-import { useAppDispatch } from "../Store/Hooks";
+import { useAppDispatch, useAppSelector } from "../Store/Hooks";
 import { debugBuild, releaseBuild } from "../Store/ProjectFilesSlice";
-import { useProject } from "../MainWindow";
 import MenuBarGroup from "./MenuBarGroup";
 
 function OpenExplorerItem() {
-    const project = useProject()!;
+    const projectPath = useAppSelector((state) => state.project.path);
 
     const onClick = () => {
-        shell.open(project.path);
+        shell.open(projectPath);
     };
 
     return (
@@ -27,10 +26,10 @@ function OpenExplorerItem() {
 }
 
 function RunItem() {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
 
     const onClick = () => {
-        openRunWindow(project.path);
+        openRunWindow(projectPath);
     };
 
     return (
@@ -47,7 +46,7 @@ function RunItem() {
 
 function BuildDebugItem() {
     const dispatch = useAppDispatch();
-    const project = useProject();
+    const project = useAppSelector((state) => state.project);
 
     const onClick = () => {
         dispatch(debugBuild({ project }));
@@ -67,7 +66,7 @@ function BuildDebugItem() {
 
 function BuildReleaseItem() {
     const dispatch = useAppDispatch();
-    const project = useProject()!;
+    const project = useAppSelector((state) => state.project);
 
     const onClick = () => {
         dispatch(releaseBuild({ project }));

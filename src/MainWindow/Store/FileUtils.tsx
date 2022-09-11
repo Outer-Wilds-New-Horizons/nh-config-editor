@@ -192,7 +192,8 @@ export const usesInspector = (file: ProjectFile | OpenFile): boolean => {
             rootDir !== null &&
             inspectorRootDirectories.includes(rootDir.toLowerCase())) ||
         file.name === "addon-manifest.json" ||
-        file.name === "manifest.json"
+        file.name === "manifest.json" ||
+        file.name === "nh_proj.json"
     );
 };
 
@@ -284,21 +285,25 @@ export const getInitialContent = (rootDir: string) => {
 // SCHEMAS
 
 export const getSchemaName = (file: ProjectFile | OpenFile): string => {
-    if (file.name === "addon-manifest.json") {
-        return "addon_manifest_schema.json";
-    } else if (file.name === "manifest.json") {
-        return "manifest_schema.json";
-    } else {
-        const rootDir = getRootDirectory(file.relativePath);
-        if (rootDir === "planets") {
-            return "body_schema.json";
-        } else if (rootDir === "systems") {
-            return "star_system_schema.json";
-        } else if (rootDir === "translations") {
-            return "translation_schema.json";
-        } else {
-            return "null";
-        }
+    const rootDir = getRootDirectory(file.relativePath);
+    switch (file.name) {
+        case "addon-manifest.json":
+            return "addon_manifest_schema.json";
+        case "manifest.json":
+            return "manifest_schema.json";
+        case "nh_proj.json":
+            return "project_settings_schema.json";
+        default:
+            switch (rootDir) {
+                case "planets":
+                    return "body_schema.json";
+                case "systems":
+                    return "star_system_schema.json";
+                case "translations":
+                    return "translation_schema.json";
+                default:
+                    return "null";
+            }
     }
 };
 

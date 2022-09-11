@@ -26,7 +26,6 @@ import {
 } from "../Store/OpenFilesSlice";
 import { invalidate } from "../Store/ProjectFilesSlice";
 import { addonManifestIcon, planetsIcon, systemsIcon, translationsIcon } from "../Store/FileUtils";
-import { useProject } from "../MainWindow";
 import MenuBarGroup from "./MenuBarGroup";
 
 function NewFileItem(props: {
@@ -35,7 +34,7 @@ function NewFileItem(props: {
     name: string;
     shortcutLetter: string;
 }) {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
 
     return (
@@ -47,7 +46,7 @@ function NewFileItem(props: {
                     createVoidFile({
                         name: props.name,
                         rootDir: `${props.name}s`,
-                        projectPath: project.path
+                        projectPath: projectPath
                     })
                 )
             }
@@ -59,7 +58,7 @@ function NewFileItem(props: {
 }
 
 function SaveFileItem() {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
     const selectedIndex = useAppSelector((state) => state.openFiles.selectedTabIndex);
     const selectedFile = useAppSelector((state) =>
@@ -68,7 +67,7 @@ function SaveFileItem() {
 
     const onClick = () => {
         if (selectedIndex !== -1 && selectedFile !== undefined) {
-            dispatch(saveFileData({ file: selectedFile, projectPath: project.path }));
+            dispatch(saveFileData({ file: selectedFile, projectPath: projectPath }));
         }
     };
 
@@ -90,13 +89,13 @@ function SaveFileItem() {
 }
 
 function SaveAllItem() {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
     const openFiles = useAppSelector((state) => selectAllOpenFiles(state.openFiles));
 
     const onClick = () => {
         for (const file of openFiles.filter((f) => f.memoryData !== f.diskData)) {
-            dispatch(saveFileData({ file, projectPath: project!.path }));
+            dispatch(saveFileData({ file, projectPath }));
         }
     };
 
