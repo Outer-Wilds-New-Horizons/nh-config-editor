@@ -34,7 +34,7 @@ pub fn list_dir(path: String) -> Result<Vec<String>, String> {
             result.push(entry.unwrap().path().display().to_string());
         }
         Ok(result)
-    }
+    };
 }
 
 #[tauri::command]
@@ -61,7 +61,7 @@ pub struct ProjectFile {
     relative_path: String,
     absolute_path: String,
     extension: String,
-    is_folder: bool
+    is_folder: bool,
 }
 
 #[tauri::command]
@@ -79,7 +79,7 @@ pub fn walk_project(path: String) -> Result<Vec<ProjectFile>, String> {
             relative_path,
             absolute_path,
             extension,
-            is_folder
+            is_folder,
         });
     }
     return Ok(result);
@@ -176,5 +176,5 @@ pub fn run_game(owml_path: String, port: i32) -> Result<(), String> {
         Err(format!("{}", result.unwrap_err()))
     } else {
         Ok(())
-    }
+    };
 }
