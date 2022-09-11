@@ -142,7 +142,6 @@ function StartWindow() {
         <>
             <ContextMenuRoot
                 onMenuItemClicked={(menuId, actionId, target) => {
-                    console.debug(`Context Action ${menuId}/${actionId} Done On:`, target);
                     contextMenuRegistry[menuId]?.[actionId]?.(target);
                     resetContextMenuState();
                 }}

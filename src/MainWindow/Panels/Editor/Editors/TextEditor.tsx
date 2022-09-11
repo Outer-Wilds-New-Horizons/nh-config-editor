@@ -31,7 +31,6 @@ function TextEditor(props: IEditorProps) {
         }
         monacoInstance.editor.setTheme(ThemeMonacoMap[chosenTheme]);
         const jsonDiagnostics = await getMonacoJsonDiagnostics(schemaBranch);
-        console.debug("Got JSON diagnostics", jsonDiagnostics);
         monacoInstance.languages.json.jsonDefaults.setDiagnosticsOptions(jsonDiagnostics);
         showErrors(props.file, model);
     };
