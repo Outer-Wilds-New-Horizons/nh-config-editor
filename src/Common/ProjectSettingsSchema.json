@@ -1,0 +1,19 @@
+{
+    "$ref": "#/definitions/ProjectSettings",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ProjectSettings": {
+            "$comment": "This schema file is updated automatically by the build process.",
+            "additionalProperties": false,
+            "properties": {
+                "schemaBranch": {
+                    "default": "main",
+                    "description": "The branch to use for schemas.",
+                    "type": "string"
+                }
+            },
+            "required": ["schemaBranch"],
+            "type": "object"
+        }
+    }
+}

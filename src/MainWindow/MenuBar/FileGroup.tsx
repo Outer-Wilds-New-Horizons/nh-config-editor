@@ -26,7 +26,6 @@ import {
 } from "../Store/OpenFilesSlice";
 import { invalidate } from "../Store/ProjectFilesSlice";
 import { addonManifestIcon, planetsIcon, systemsIcon, translationsIcon } from "../Store/FileUtils";
-import { useProject } from "../MainWindow";
 import MenuBarGroup from "./MenuBarGroup";
 
 function NewFileItem(props: {
@@ -35,6 +34,7 @@ function NewFileItem(props: {
     name: string;
     shortcutLetter: string;
 }) {
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
 
     return (
@@ -42,7 +42,13 @@ function NewFileItem(props: {
             annotation={`Ctrl+N+${props.shortcutLetter.toUpperCase()}`}
             shortcut={`ctrl+n+${props.shortcutLetter},command+n+${props.shortcutLetter}`}
             onClick={() =>
-                dispatch(createVoidFile({ name: props.name, rootDir: `${props.name}s` }))
+                dispatch(
+                    createVoidFile({
+                        name: props.name,
+                        rootDir: `${props.name}s`,
+                        projectPath: projectPath
+                    })
+                )
             }
             id={`new_${props.name}`}
             label={`New ${props.label}`}
@@ -52,7 +58,7 @@ function NewFileItem(props: {
 }
 
 function SaveFileItem() {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
     const selectedIndex = useAppSelector((state) => state.openFiles.selectedTabIndex);
     const selectedFile = useAppSelector((state) =>
@@ -61,7 +67,7 @@ function SaveFileItem() {
 
     const onClick = () => {
         if (selectedIndex !== -1 && selectedFile !== undefined) {
-            dispatch(saveFileData({ file: selectedFile, projectPath: project.path }));
+            dispatch(saveFileData({ file: selectedFile, projectPath: projectPath }));
         }
     };
 
@@ -83,13 +89,13 @@ function SaveFileItem() {
 }
 
 function SaveAllItem() {
-    const project = useProject();
+    const projectPath = useAppSelector((state) => state.project.path);
     const dispatch = useAppDispatch();
     const openFiles = useAppSelector((state) => selectAllOpenFiles(state.openFiles));
 
     const onClick = () => {
         for (const file of openFiles.filter((f) => f.memoryData !== f.diskData)) {
-            dispatch(saveFileData({ file, projectPath: project!.path }));
+            dispatch(saveFileData({ file, projectPath }));
         }
     };
 

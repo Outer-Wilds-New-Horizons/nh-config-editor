@@ -21,7 +21,7 @@
             "http": {
                 "request": true,
                 "scope": [
-                    "https://raw.githubusercontent.com/amazingalek/owml/master/schemas/*.json",
+                    "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/*.json",
                     "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/*/NewHorizons/Schemas/*.json",
                     "https://raw.githubusercontent.com/Outer-Wilds-New-Horizons/new-horizons/*/NewHorizons/Schemas/*.xsd"
                 ]
@@ -77,7 +77,12 @@
             "windows": {
                 "certificateThumbprint": null,
                 "digestAlgorithm": "sha256",
-                "timestampUrl": ""
+                "timestampUrl": "",
+                "wix": {
+                    "license": "../LICENSE",
+                    "bannerPath": "installer-images/TopBanner.png",
+                    "dialogImagePath": "installer-images/Background.png"
+                }
             }
         },
         "security": {

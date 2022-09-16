@@ -5,6 +5,8 @@ import projectFilesReducer from "./ProjectFilesSlice";
 import openFilesReducer from "./OpenFilesSlice";
 import windowBlurReducer from "./BlurSlice";
 import contextMenuReducer from "./ContextMenuSlice";
+import projectReducer from "./ProjectSlice";
+import schemaReducer from "./SchemaSlice";
 
 export const setupStore = () =>
     configureStore({
@@ -12,7 +14,9 @@ export const setupStore = () =>
             projectFiles: projectFilesReducer,
             openFiles: openFilesReducer,
             blur: windowBlurReducer,
-            contextMenu: contextMenuReducer
+            contextMenu: contextMenuReducer,
+            project: projectReducer,
+            schema: schemaReducer
         },
         enhancers:
             import.meta.env.NODE_ENV === "development"

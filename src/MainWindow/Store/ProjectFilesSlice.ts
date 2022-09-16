@@ -8,7 +8,7 @@ import { dialog } from "@tauri-apps/api";
 import { sep } from "@tauri-apps/api/path";
 import { SettingsManager } from "../../Common/AppData/Settings";
 import { getModManagerSettings } from "../../Common/ModManager";
-import { Project } from "../../Common/Project";
+import { debugBuildProject, Project } from "../../Common/Project";
 import { tauriCommands } from "../../Common/TauriCommands";
 import { initialLoadState, LoadState } from "./LoadState";
 import { getParentDirectory } from "./FileUtils";
@@ -24,15 +24,20 @@ const compareItems = (a: ProjectFile, b: ProjectFile): number => {
     }
 };
 
-export const loadProject = createAsyncThunk("projectFiles/loadProject", tauriCommands.walkProject);
+export const loadProjectFiles = createAsyncThunk(
+    "projectFiles/loadProject",
+    tauriCommands.walkProject
+);
+
 export const debugBuild = createAsyncThunk(
     "projectFiles/debugBuild",
     async (payload: { project: Project }) => {
         const managerSettings = await getModManagerSettings();
         const outputPath = `${managerSettings.owmlPath}${sep}Mods`;
-        await payload.project.copyToModsFolder(outputPath);
+        await debugBuildProject(payload.project, outputPath);
     }
 );
+
 export const releaseBuild = createAsyncThunk(
     "projectFiles/releaseBuild",
     async (payload: { project: Project }, thunkAPI) => {
@@ -87,19 +92,20 @@ const projectFilesSlice = createSlice({
     initialState: initialState as ProjectFilesSliceState,
     reducers: {
         invalidate: (state) => {
-            projectFilesAdapter.removeAll(state);
+            // projectFilesAdapter.removeAll(state);
             state.status = "idle";
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(loadProject.fulfilled, (state, action) => {
-            projectFilesAdapter.upsertMany(state, action.payload);
+        builder.addCase(loadProjectFiles.fulfilled, (state, action) => {
+            projectFilesAdapter.setMany(state, action.payload);
+            const filesToRemove = state.ids.filter(
+                (id) => !action.payload.some((file) => file.relativePath === id)
+            );
+            projectFilesAdapter.removeMany(state, filesToRemove);
             state.status = "done";
         });
-        builder.addCase(loadProject.pending, (state) => {
-            state.status = "loading";
-        });
-        builder.addCase(loadProject.rejected, (state, action) => {
+        builder.addCase(loadProjectFiles.rejected, (state, action) => {
             state.status = "error";
             state.error = action.error.message ?? "Unknown Error";
         });

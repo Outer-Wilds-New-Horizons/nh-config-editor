@@ -1,11 +1,10 @@
 import { Placement } from "@popperjs/core";
-import PropTypes from "prop-types";
 import { cloneElement } from "react";
 import { OverlayTrigger } from "react-bootstrap";
 
 export type InfoIconTriggerProps = {
-    popover: PropTypes.ReactElementLike;
-    icon: PropTypes.ReactElementLike;
+    popover: JSX.Element;
+    icon: JSX.Element;
     ariaLabel: string;
     className?: string;
     placement?: Placement;

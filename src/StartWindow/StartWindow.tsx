@@ -1,5 +1,5 @@
-import { ask, message, open } from "@tauri-apps/api/dialog";
 import { shell } from "@tauri-apps/api";
+import { ask, message, open } from "@tauri-apps/api/dialog";
 import { documentDir } from "@tauri-apps/api/path";
 import { exit } from "@tauri-apps/api/process";
 import { WebviewWindow } from "@tauri-apps/api/window";
@@ -20,15 +20,15 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { openAboutWindow } from "../AboutWindow/AboutWindow";
 import RecentProjects from "../Common/AppData/RecentProjects";
+import IconDropDownItem from "../Common/IconDropDownItem";
+import { errorProject, loadProject, openProjectInMainWindow, Project } from "../Common/Project";
+import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
+import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
 import ContextMenu from "./ContextMenu/ContextMenu";
 import ContextMenuRoot, {
     ContextMenuActionRegistry,
     ContextMenuState
 } from "./ContextMenu/ContextMenuRoot";
-import IconDropDownItem from "../Common/IconDropDownItem";
-import { Project } from "../Common/Project";
-import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
-import { openSettingsWindow } from "../SettingsWindow/SettingsWindow";
 import RecentProject from "./RecentProject";
 
 const contextMenuRegistry: ContextMenuActionRegistry = {
@@ -80,7 +80,7 @@ function StartWindow() {
             newRecentProjects.unshift(project);
             await RecentProjects.save(newRecentProjects);
             setRecentProjects(newRecentProjects);
-            await project.openInMain();
+            await openProjectInMainWindow(project);
         } else {
             const result = await ask(
                 "This project is no longer valid. Do you want to remove it from recent projects?",
@@ -109,7 +109,7 @@ function StartWindow() {
         });
 
         if (targetPath !== null) {
-            const newProject = await Project.load(targetPath as string);
+            const newProject = await loadProject(targetPath as string);
             if (newProject === null) {
                 await message(
                     "Failed To Load Project, Select The Folder That Contains manifest.json",
@@ -131,9 +131,7 @@ function StartWindow() {
     contextMenuRegistry["recentProject"]["reloadProject"] = async (oldProject: unknown) => {
         const project = oldProject as Project;
         const index = recentProjects.indexOf(project);
-        const newProject =
-            (await Project.load(project.path)) ??
-            new Project("Error Loading Project", "", project.path);
+        const newProject = (await loadProject(project.path)) ?? errorProject(project.path);
         const newRecentProjects = recentProjects.slice(0);
         newRecentProjects[index] = newProject;
         await RecentProjects.save(newRecentProjects);
@@ -144,7 +142,6 @@ function StartWindow() {
         <>
             <ContextMenuRoot
                 onMenuItemClicked={(menuId, actionId, target) => {
-                    console.debug(`Context Action ${menuId}/${actionId} Done On:`, target);
                     contextMenuRegistry[menuId]?.[actionId]?.(target);
                     resetContextMenuState();
                 }}

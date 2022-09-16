@@ -9,7 +9,6 @@ import {
     X
 } from "react-bootstrap-icons";
 import IconDropDownItem from "../../Common/IconDropDownItem";
-import { useProject } from "../MainWindow";
 import { openInExternal } from "../Store/FileUtils";
 import { useAppDispatch, useAppSelector } from "../Store/Hooks";
 import {
@@ -24,7 +23,7 @@ import MainWindowContextMenuType from "./MainWindowContextMenuType";
 
 function OpenFileContextMenu() {
     const dispatch = useAppDispatch();
-    const project = useProject()!;
+    const projectPath = useAppSelector((state) => state.project.path);
 
     const selectedOpenFile = useAppSelector((state) => {
         if (state.contextMenu.currentTarget === null) return null;
@@ -45,7 +44,7 @@ function OpenFileContextMenu() {
 
     const save = () => {
         if (selectedOpenFile) {
-            dispatch(saveFileData({ file: selectedOpenFile, projectPath: project.path }));
+            dispatch(saveFileData({ file: selectedOpenFile, projectPath: projectPath }));
         }
     };
 

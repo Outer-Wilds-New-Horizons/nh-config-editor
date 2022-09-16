@@ -38,11 +38,6 @@ export type Settings = {
     alwaysUseTextEditor: boolean;
 
     /**
-     * @description The branch to use for schemas, set to `main` for stable builds, and `dev` for nightly builds. Check the GitHub repo for other names. (Reload Required)
-     */
-    schemaBranch: string;
-
-    /**
      * @description The path to the Outer Wilds Mod Manager config directory (the folder with settings.json in it), used to launch the game and output the mod.
      */
     modManagerPath: string;
@@ -57,7 +52,6 @@ export const blankSettings: Settings = {
     defaultProjectFolder: "",
     minify: false,
     alwaysUseTextEditor: false,
-    schemaBranch: "main",
     modManagerPath: ""
 };
 
@@ -68,7 +62,6 @@ export const defaultSettings = async (): Promise<Settings> => ({
     defaultProjectFolder: (await documentDir()).slice(0, -1),
     minify: true,
     alwaysUseTextEditor: false,
-    schemaBranch: "main",
     modManagerPath: `${await dataDir()}${MANAGER_FOLDER_NAME}`
 });
 

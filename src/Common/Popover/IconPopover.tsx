@@ -1,5 +1,4 @@
 import { Placement } from "@popperjs/core";
-import PropTypes from "prop-types";
 import { Popover, PopoverBody, PopoverHeader } from "react-bootstrap";
 import IconPopoverTrigger from "./IconPopoverTrigger";
 
@@ -7,7 +6,7 @@ export type DescriptionPopoverProps = {
     id: string;
     title: string;
     body: string;
-    icon: PropTypes.ReactElementLike;
+    icon: JSX.Element;
     className?: string;
     placement?: Placement;
 };

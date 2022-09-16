@@ -4,7 +4,10 @@ $info: rgb(0, 106, 108);
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
-//noinspection SassScssResolvedByNameOnly
+.color-picker {
+    font-family: $font-family-base !important;
+}
+
 .menubar-item {
     background-color: $body-bg !important;
     color: $body-color !important;

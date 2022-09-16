@@ -1,8 +1,12 @@
 import Form, { UiSchema } from "@rjsf/core";
+import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
+import { connect } from "react-redux";
 import { getDocsLinkForNHConfig, getSchemaName } from "../../../../Store/FileUtils";
 import { useAppDispatch } from "../../../../Store/Hooks";
 import { setOtherErrors } from "../../../../Store/OpenFilesSlice";
+import { schemaSelectors } from "../../../../Store/SchemaSlice";
+import { RootState } from "../../../../Store/Store";
 import { IEditorProps } from "../../Editor";
 import InspectorBoolean from "./Fields/InspectorBoolean";
 import InspectorArrayFieldTemplate from "./FieldTemplates/InspectorArrayFieldTemplate";
@@ -14,7 +18,7 @@ import {
     validationErrorsToErrorSchema
 } from "./InspectorValidation";
 
-function Inspector(props: IEditorProps) {
+function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState(JSON.parse(props.fileData));
 
@@ -37,7 +41,7 @@ function Inspector(props: IEditorProps) {
 
     const formContext = {
         docsSchemaLink:
-            props.file.name === "manifest.json"
+            props.file.name === "manifest.json" || props.file.name === "nh_proj.json"
                 ? null
                 : getDocsLinkForNHConfig(getSchemaName(props.file))
     };
@@ -60,7 +64,7 @@ function Inspector(props: IEditorProps) {
             formData={formData}
             formContext={formContext}
             schema={{
-                ...(props.schemaStore.schemas[getSchemaName(props.file)] as object),
+                ...(props.schema as object),
                 $schema: "http://json-schema.org/draft-07/schema"
             }}
             uiSchema={uiSchema}
@@ -87,4 +91,12 @@ function Inspector(props: IEditorProps) {
     );
 }
 
-export default Inspector;
+const mapStateToProps = () => {
+    const uniqueSelectSchema = schemaSelectors.selectSchemaFactory();
+    return (state: RootState, ownProps: IEditorProps) => {
+        const selectedSchema = uniqueSelectSchema(state.schema, getSchemaName(ownProps.file));
+        return { schema: selectedSchema };
+    };
+};
+
+export default connect(mapStateToProps)(Inspector);

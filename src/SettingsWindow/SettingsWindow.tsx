@@ -83,9 +83,8 @@ function SettingsWindow() {
         await emit("nh://settings-changed", settings);
 
         const themeChanged = settings.theme !== initialSettings.theme;
-        const schemaBranchChanged = settings.schemaBranch !== initialSettings.schemaBranch;
 
-        if ([themeChanged, schemaBranchChanged].includes(true)) {
+        if ([themeChanged].includes(true)) {
             const result = await ask(
                 "You need to reload the app to apply these changes. Do you want to reload now? (Any unsaved changes will be lost!)",
                 {
@@ -122,7 +121,6 @@ function SettingsWindow() {
                     <div className="position-absolute top-0 bottom-0 w-100">
                         <Form
                             onChange={(e) => {
-                                console.debug(e.formData);
                                 setSettings(e.formData);
                             }}
                             formData={settings}

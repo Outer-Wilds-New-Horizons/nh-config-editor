@@ -11,6 +11,10 @@ $gray-800: #343a40;
 $gray-900: #212529;
 $black: #000;
 
+.color-picker {
+    box-shadow: none !important;
+}
+
 @mixin scrollbars($size, $foreground-color, $background-color, $hover-color, $active-color) {
     &::-webkit-scrollbar {
         width: $size;
