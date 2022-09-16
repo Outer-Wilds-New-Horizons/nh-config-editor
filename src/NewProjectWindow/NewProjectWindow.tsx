@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import RecentProjects from "../Common/AppData/RecentProjects";
-import { Project } from "../Common/Project";
+import { defaultProjectSettings, openProjectInMainWindow, Project } from "../Common/Project";
 import { tauriCommands } from "../Common/TauriCommands";
 import { useSettings } from "../Wrapper";
 
@@ -74,12 +74,18 @@ function NewProjectWindow() {
         await invoke("mk_dir", { path: `${projectPath}${sep}systems` });
         await invoke("mk_dir", { path: `${projectPath}${sep}translations` });
 
-        const newProject = new Project(projectName, uniqueName, projectPath);
+        const newProject: Project = {
+            path: projectPath,
+            name: projectName,
+            uniqueName: uniqueName,
+            valid: true,
+            settings: defaultProjectSettings
+        };
         const data = await RecentProjects.get();
         data.unshift(newProject);
         await RecentProjects.save(data);
 
-        await newProject.openInMain();
+        await openProjectInMainWindow(newProject);
     };
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
