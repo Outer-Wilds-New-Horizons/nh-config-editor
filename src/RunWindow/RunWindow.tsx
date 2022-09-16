@@ -11,7 +11,7 @@ import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import { getModManagerSettings } from "../Common/ModManager";
-import { loadProjectFromURLParams, Project } from "../Common/Project";
+import { debugBuildProject, loadProjectFromURLParams, Project } from "../Common/Project";
 import CenteredSpinner from "../Common/Spinner/CenteredSpinner";
 import IconPopover from "../Common/Popover/IconPopover";
 
@@ -57,7 +57,7 @@ function RunWindow() {
         setIsRunning(true);
         try {
             const modManagerSettings = await getModManagerSettings();
-            await project?.copyToModsFolder(`${modManagerSettings.owmlPath}${sep}Mods`);
+            await debugBuildProject(project, `${modManagerSettings.owmlPath}${sep}Mods`);
             await invoke("run_game", { owmlPath: modManagerSettings.owmlPath, port: logPort });
         } catch (e) {
             await message(`${e}`, {
