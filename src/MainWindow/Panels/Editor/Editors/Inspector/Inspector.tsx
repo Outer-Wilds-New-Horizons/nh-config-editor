@@ -1,4 +1,5 @@
-import Form, { UiSchema } from "@rjsf/core";
+import { AjvError, UiSchema } from "@rjsf/core";
+import FormNoDefaults from "./FormNoDefaults";
 import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
 import { connect } from "react-redux";
@@ -47,10 +48,12 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
     };
 
     return (
-        <Form
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        <FormNoDefaults
             autoComplete="off"
-            onChange={(newData) => onChange(newData.formData)}
-            onError={(e) => {
+            onChange={(newData: { formData: object }) => onChange(newData.formData)}
+            onError={(e: string[]) => {
                 // Why is e set as any??????
                 // Docs say it's an array of errors so...?
                 dispatch(
@@ -70,7 +73,7 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
             uiSchema={uiSchema}
             extraErrors={validationErrorsToErrorSchema(props.file.errors)}
             fields={customFields}
-            transformErrors={(e) => {
+            transformErrors={(e: AjvError[]) => {
                 const errors = transformErrors(e);
                 if (props.file.otherErrors !== errors.length > 0) {
                     dispatch(
