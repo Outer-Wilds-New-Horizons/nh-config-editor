@@ -51,8 +51,6 @@ const osModule = (message: OsModuleMessage) => {
     }
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const paths: Record<BaseDirectory, string> = {
     1: "Audio",
     2: "Cache",
@@ -73,7 +71,12 @@ const paths: Record<BaseDirectory, string> = {
     17: "Resource",
     18: "App",
     19: "Log",
-    20: "Temp"
+    20: "Temp",
+    21: "App",
+    22: "App",
+    23: "App",
+    24: "App",
+    25: "App"
 };
 
 const pathModule = (message: PathModuleMessage) => {

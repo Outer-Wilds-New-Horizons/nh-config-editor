@@ -1500,7 +1500,7 @@ checksum = "e4a24736216ec316047a1fc4252e27dabb04218aa4a3f37c6e7ddbf1f9782b54"
 
 [[package]]
 name = "nh-editor"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "base64 0.20.0",
  "fs_extra",
