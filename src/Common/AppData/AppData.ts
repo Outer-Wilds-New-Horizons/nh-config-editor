@@ -1,5 +1,5 @@
 import { createDir } from "@tauri-apps/api/fs";
-import { appDir, sep } from "@tauri-apps/api/path";
+import { appLocalDataDir, sep } from "@tauri-apps/api/path";
 import { tauriCommands } from "../TauriCommands";
 
 /**
@@ -23,8 +23,8 @@ export default class AppData<T> {
     }
 
     static async createAppDataDir() {
-        if (!(await tauriCommands.fileExists(await appDir()))) {
-            await createDir(`${await appDir()}`);
+        if (!(await tauriCommands.fileExists(await appLocalDataDir()))) {
+            await createDir(`${await appLocalDataDir()}`);
         }
     }
 
@@ -37,7 +37,7 @@ export default class AppData<T> {
 
     async get(): Promise<T> {
         await AppData.createAppDataDir();
-        const path = `${await appDir()}${sep}${this.filename}`;
+        const path = `${await appLocalDataDir()}${sep}${this.filename}`;
         if (await tauriCommands.fileExists(path)) {
             const file = await tauriCommands.readFileText(path);
             return JSON.parse(file) as T;
@@ -50,7 +50,7 @@ export default class AppData<T> {
     async save(data: T) {
         await AppData.createAppDataDir();
         await tauriCommands.writeFileText(
-            `${await appDir()}${sep}${this.filename}`,
+            `${await appLocalDataDir()}${sep}${this.filename}`,
             JSON.stringify(data)
         );
     }

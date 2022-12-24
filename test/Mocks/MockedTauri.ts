@@ -71,7 +71,12 @@ const paths: Record<BaseDirectory, string> = {
     17: "Resource",
     18: "App",
     19: "Log",
-    20: "Temp"
+    20: "Temp",
+    21: "App",
+    22: "App",
+    23: "App",
+    24: "App",
+    25: "App"
 };
 
 const pathModule = (message: PathModuleMessage) => {

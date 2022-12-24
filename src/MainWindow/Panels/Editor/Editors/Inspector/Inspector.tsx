@@ -1,4 +1,5 @@
-import Form, { UiSchema } from "@rjsf/core";
+import { AjvError, UiSchema } from "@rjsf/core";
+import FormNoDefaults from "./FormNoDefaults";
 import { JSONSchema7 } from "json-schema";
 import { useState } from "react";
 import { connect } from "react-redux";
@@ -18,7 +19,24 @@ import {
     validationErrorsToErrorSchema
 } from "./InspectorValidation";
 
-function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function clearEmpties(o: any) {
+    for (const k in o) {
+        if (o[k] === undefined || o[k] === null) {
+            delete o[k];
+        }
+        if (!o[k] || typeof o[k] !== "object") {
+            continue;
+        }
+        clearEmpties(o[k]);
+        if (Object.keys(o[k]).length === 0) {
+            delete o[k];
+        }
+    }
+    return o;
+}
+
+function Inspector(props: IEditorProps & { schema?: string | JSONSchema7 }) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState(JSON.parse(props.fileData));
 
@@ -35,6 +53,8 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
     };
 
     const onChange = (newData: object) => {
+        newData = clearEmpties(newData);
+        console.debug(newData);
         setFormData(newData);
         props.onChange?.(JSON.stringify(newData, null, 4));
     };
@@ -47,10 +67,12 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
     };
 
     return (
-        <Form
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        <FormNoDefaults
             autoComplete="off"
-            onChange={(newData) => onChange(newData.formData)}
-            onError={(e) => {
+            onChange={(newData: { formData: object }) => onChange(newData.formData)}
+            onError={(e: string[]) => {
                 // Why is e set as any??????
                 // Docs say it's an array of errors so...?
                 dispatch(
@@ -70,7 +92,7 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
             uiSchema={uiSchema}
             extraErrors={validationErrorsToErrorSchema(props.file.errors)}
             fields={customFields}
-            transformErrors={(e) => {
+            transformErrors={(e: AjvError[]) => {
                 const errors = transformErrors(e);
                 if (props.file.otherErrors !== errors.length > 0) {
                     dispatch(
