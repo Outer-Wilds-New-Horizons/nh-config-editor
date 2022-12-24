@@ -19,7 +19,24 @@ import {
     validationErrorsToErrorSchema
 } from "./InspectorValidation";
 
-function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function clearEmpties(o: any) {
+    for (const k in o) {
+        if (o[k] === undefined || o[k] === null) {
+            delete o[k];
+        }
+        if (!o[k] || typeof o[k] !== "object") {
+            continue;
+        }
+        clearEmpties(o[k]);
+        if (Object.keys(o[k]).length === 0) {
+            delete o[k];
+        }
+    }
+    return o;
+}
+
+function Inspector(props: IEditorProps & { schema?: string | JSONSchema7 }) {
     const dispatch = useAppDispatch();
     const [formData, setFormData] = useState(JSON.parse(props.fileData));
 
@@ -36,6 +53,8 @@ function Inspector(props: IEditorProps & { schema?: JSONSchema7 }) {
     };
 
     const onChange = (newData: object) => {
+        newData = clearEmpties(newData);
+        console.debug(newData);
         setFormData(newData);
         props.onChange?.(JSON.stringify(newData, null, 4));
     };
